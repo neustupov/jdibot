@@ -1,6 +1,7 @@
 package org.neustupov.javadevinterviewbot;
 
 import lombok.Setter;
+import org.neustupov.javadevinterviewbot.botapi.TelegramFacade;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramWebhookBot;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
@@ -13,8 +14,11 @@ public class JavaDevInterviewBot extends TelegramWebhookBot {
   private String botUserName;
   private String botToken;
 
-  public JavaDevInterviewBot(DefaultBotOptions options) {
+  private TelegramFacade telegramFacade;
+
+  public JavaDevInterviewBot(DefaultBotOptions options, TelegramFacade telegramFacade) {
     super(options);
+    this.telegramFacade = telegramFacade;
   }
 
   @Override
@@ -34,8 +38,8 @@ public class JavaDevInterviewBot extends TelegramWebhookBot {
 
   @Override
   public BotApiMethod<?> onWebhookUpdateReceived(Update update) {
-    if (update.getMessage() != null && update.getMessage().hasText()){
-      long chat_id = update.getMessage().getChatId();
+    if ((update.getMessage() != null && update.getMessage().hasText()) || update.hasCallbackQuery()) {
+      return telegramFacade.handleUpdate(update);
     }
     return null;
   }

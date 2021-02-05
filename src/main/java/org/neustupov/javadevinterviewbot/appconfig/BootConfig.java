@@ -1,11 +1,14 @@
-package org.neustupov.javadevinterviewbot.config;
+package org.neustupov.javadevinterviewbot.appconfig;
 
 import lombok.Getter;
 import lombok.Setter;
 import org.neustupov.javadevinterviewbot.JavaDevInterviewBot;
+import org.neustupov.javadevinterviewbot.botapi.TelegramFacade;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.meta.ApiContext;
 
@@ -20,12 +23,21 @@ public class BootConfig {
   private String botToken;
 
   @Bean
-  public JavaDevInterviewBot JavaDevInterviewBot() {
+  public JavaDevInterviewBot javaDevInterviewBot(TelegramFacade telegramFacade) {
     DefaultBotOptions options = ApiContext.getInstance(DefaultBotOptions.class);
-    JavaDevInterviewBot javaDevInterviewBot = new JavaDevInterviewBot(options);
+    JavaDevInterviewBot javaDevInterviewBot = new JavaDevInterviewBot(options, telegramFacade);
     javaDevInterviewBot.setWebHookPath(webHookPath);
     javaDevInterviewBot.setBotUserName(botUserName);
     javaDevInterviewBot.setBotToken(botToken);
     return javaDevInterviewBot;
+  }
+
+  @Bean
+  public MessageSource messageSource() {
+    ReloadableResourceBundleMessageSource messageSource =
+        new ReloadableResourceBundleMessageSource();
+    messageSource.setBasename("classpath:messages");
+    messageSource.setDefaultEncoding("UTF-8");
+    return messageSource;
   }
 }
