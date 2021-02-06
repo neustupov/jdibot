@@ -33,4 +33,9 @@ public class CategoryRepositoryInMemoryImpl implements CategoryRepository {
         .filter(q -> q.getCategory().equals(Category.OOP))
         .collect(Collectors.toList());
   }
+
+  @Override
+  public Question getQuestionByLink(String link) {
+    return qList.stream().filter(q -> q.getLink().equals(link)).findAny().get();
+  }
 }

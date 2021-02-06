@@ -1,9 +1,10 @@
 package org.neustupov.javadevinterviewbot.botapi;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.neustupov.javadevinterviewbot.botapi.callbacks.CallbackProcessor;
 import org.neustupov.javadevinterviewbot.botapi.states.BotState;
-import org.neustupov.javadevinterviewbot.botapi.states.Category;
-import org.neustupov.javadevinterviewbot.botapi.states.Level;
 import org.neustupov.javadevinterviewbot.cache.UserDataCache;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
@@ -14,27 +15,31 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 
 @Slf4j
 @Component
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class TelegramFacade {
 
-  private BotStateContext botStateContext;
-  private UserDataCache userDataCache;
+  BotStateContext botStateContext;
+  UserDataCache userDataCache;
+  CallbackProcessor callbackProcessor;
 
   public TelegramFacade(BotStateContext botStateContext,
-      UserDataCache userDataCache) {
+      UserDataCache userDataCache,
+      CallbackProcessor callbackProcessor) {
     this.botStateContext = botStateContext;
     this.userDataCache = userDataCache;
+    this.callbackProcessor = callbackProcessor;
   }
 
   public BotApiMethod<?> handleUpdate(Update update) {
     SendMessage replyMessage = null;
     Message message = update.getMessage();
 
-    if (update.hasCallbackQuery()){
+    if (update.hasCallbackQuery()) {
       CallbackQuery callbackQuery = update.getCallbackQuery();
       log.info("New CallbackQuery from User:{}, userId:{}, with daa:{}",
           callbackQuery.getFrom().getFirstName() + " " + callbackQuery.getFrom().getLastName(),
           callbackQuery.getFrom().getId(), callbackQuery.getData());
-      return processCallbackQuery(callbackQuery);
+      return callbackProcessor.processCallbackQuery(callbackQuery);
     }
 
     if (message != null && message.hasText()) {
@@ -70,33 +75,12 @@ public class TelegramFacade {
         break;
     }
 
-    userDataCache.setUserCurrentBotState(userId, botState);
-    return botStateContext.processInputMessage(botState, message);
-  }
-
-  private BotApiMethod<?> processCallbackQuery(CallbackQuery callbackQuery){
-    final long chatId = callbackQuery.getMessage().getChatId();
-    final int userId = callbackQuery.getFrom().getId();
-    final Message message = callbackQuery.getMessage();
-    BotApiMethod<?> callbackAnswer = null;
-
-    switch (callbackQuery.getData()){
-      case "buttonQuestions":
-        userDataCache.setUserCurrentBotState(userId, BotState.SHOW_LEVEL_MENU);
-        callbackAnswer = botStateContext.processInputMessage(BotState.SHOW_LEVEL_MENU, message);
-        break;
-      case "buttonJunior":
-        userDataCache.setUserCurrentBotState(userId, BotState.SHOW_CATEGORY_MENU);
-        userDataCache.getUserContext(userId).setLevel(Level.JUNIOR);
-        callbackAnswer = botStateContext.processInputMessage(BotState.SHOW_CATEGORY_MENU, message);
-        break;
-      case "buttonOOP":
-        userDataCache.setUserCurrentBotState(userId, BotState.SHOW_CATEGORY);
-        userDataCache.getUserContext(userId).setCategory(Category.OOP);
-        callbackAnswer = botStateContext.processInputMessage(BotState.SHOW_CATEGORY, message);
-        break;
+    if (inputMsg.startsWith("/q")) {
+      botState = BotState.SHOW_QUESTION;
+      return botStateContext.processInputMessage(botState, message);
     }
 
-    return callbackAnswer;
+    userDataCache.setUserCurrentBotState(userId, botState);
+    return botStateContext.processInputMessage(botState, message);
   }
 }

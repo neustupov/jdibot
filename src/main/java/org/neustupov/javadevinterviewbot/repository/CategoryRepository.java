@@ -7,4 +7,5 @@ import org.neustupov.javadevinterviewbot.model.Question;
 public interface CategoryRepository {
 
   List<Question> getAllQuestionsByCategory(Category category);
+  Question getQuestionByLink(String link);
 }

@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import java.util.List;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.neustupov.javadevinterviewbot.botapi.handlers.InputMessageHandler;
 import org.neustupov.javadevinterviewbot.botapi.states.BotState;
@@ -17,10 +19,11 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 
 @Slf4j
 @Component
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class CategoryListsHandler implements InputMessageHandler {
 
-  private UserDataCache userDataCache;
-  private CategoryRepository categoryRepository;
+  UserDataCache userDataCache;
+  CategoryRepository categoryRepository;
 
   public CategoryListsHandler(UserDataCache userDataCache,
       CategoryRepository categoryRepository) {
