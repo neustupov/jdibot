@@ -1,6 +1,8 @@
 package org.neustupov.javadevinterviewbot;
 
+import lombok.AccessLevel;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 import org.neustupov.javadevinterviewbot.botapi.TelegramFacade;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramWebhookBot;
@@ -8,13 +10,14 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class JavaDevInterviewBot extends TelegramWebhookBot {
 
-  private String webHookPath;
-  private String botUserName;
-  private String botToken;
+  String webHookPath;
+  String botUserName;
+  String botToken;
 
-  private TelegramFacade telegramFacade;
+  TelegramFacade telegramFacade;
 
   public JavaDevInterviewBot(DefaultBotOptions options, TelegramFacade telegramFacade) {
     super(options);

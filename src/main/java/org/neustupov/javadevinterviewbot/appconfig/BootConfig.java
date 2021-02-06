@@ -1,7 +1,9 @@
 package org.neustupov.javadevinterviewbot.appconfig;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 import org.neustupov.javadevinterviewbot.JavaDevInterviewBot;
 import org.neustupov.javadevinterviewbot.botapi.TelegramFacade;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -15,12 +17,13 @@ import org.telegram.telegrambots.meta.ApiContext;
 @Getter
 @Setter
 @Configuration
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @ConfigurationProperties(prefix = "telegrambot")
 public class BootConfig {
 
-  private String webHookPath;
-  private String botUserName;
-  private String botToken;
+  String webHookPath;
+  String botUserName;
+  String botToken;
 
   @Bean
   public JavaDevInterviewBot javaDevInterviewBot(TelegramFacade telegramFacade) {
