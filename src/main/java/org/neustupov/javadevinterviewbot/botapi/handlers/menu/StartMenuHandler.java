@@ -31,7 +31,7 @@ public class StartMenuHandler implements InputMessageHandler {
     long chatId = message.getChatId();
     SendMessage replyToUser = replyMessageService.getReplyMessage(chatId, "reply.menu");
     Map<String, List<String>> buttonNames = getButtonNames();
-    replyToUser.setReplyMarkup(getInlineMessageButtons(buttonNames));
+    replyToUser.setReplyMarkup(getInlineMessageButtons(buttonNames, false));
     return replyToUser;
   }
 

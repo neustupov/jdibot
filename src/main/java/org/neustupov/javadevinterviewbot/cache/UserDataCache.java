@@ -25,7 +25,6 @@ public class UserDataCache implements DataCache {
     } else {
       userStateStack.push(botState);
     }
-    //stateMap.put(userId, botState);
   }
 
   public BotState getUserCurrentBotState(int userId) {
@@ -43,13 +42,18 @@ public class UserDataCache implements DataCache {
   public BotState getPreviousUserBotState(int userId) {
     Stack<BotState> botStateStack = stateMap.get(userId);
     BotState botState = BotState.SHOW_START_MENU;
-    if (botStateStack != null){
-      BotState curBotState = botStateStack.pop();
+    if (botStateStack != null && !botStateStack.empty()){
+      botStateStack.pop();
+      BotState curBotState = botStateStack.peek();
       if (curBotState != null){
         botState = curBotState;
       }
     }
     return botState;
+  }
+
+  public void cleanStates(int userId){
+    stateMap.put(userId, new Stack<>());
   }
 
   @Override

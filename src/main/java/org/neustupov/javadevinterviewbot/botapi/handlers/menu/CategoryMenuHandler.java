@@ -32,7 +32,7 @@ public class CategoryMenuHandler implements InputMessageHandler {
     long chatId = message.getChatId();
     SendMessage replyToUser = replyMessageService.getReplyMessage(chatId, "reply.category");
     Map<String, List<String>> buttonNames = getButtonNames();
-    replyToUser.setReplyMarkup(getInlineMessageButtons(buttonNames));
+    replyToUser.setReplyMarkup(getInlineMessageButtons(buttonNames, true));
     return replyToUser;
   }
 

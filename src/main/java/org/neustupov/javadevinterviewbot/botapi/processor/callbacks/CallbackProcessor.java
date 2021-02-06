@@ -1,4 +1,4 @@
-package org.neustupov.javadevinterviewbot.botapi.callbacks;
+package org.neustupov.javadevinterviewbot.botapi.processor.callbacks;
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -32,9 +32,9 @@ public class CallbackProcessor {
     final Message message = callbackQuery.getMessage();
     BotApiMethod<?> callbackAnswer = null;
 
-    String calbackData = callbackQuery.getData();
+    String callbackData = callbackQuery.getData();
 
-    switch (calbackData) {
+    switch (callbackData) {
       case "buttonQuestions":
         userDataCache.setUserCurrentBotState(userId, BotState.SHOW_LEVEL_MENU);
         callbackAnswer = botStateContext.processInputMessage(BotState.SHOW_LEVEL_MENU, message);
@@ -51,7 +51,7 @@ public class CallbackProcessor {
         break;
       case "backButton":
         BotState previousBotState = userDataCache.getPreviousUserBotState(userId);
-        userDataCache.setUserCurrentBotState(userId, previousBotState);
+        //userDataCache.setUserCurrentBotState(userId, previousBotState);
         callbackAnswer = botStateContext.processInputMessage(previousBotState, message);
         break;
     }

@@ -3,7 +3,8 @@ package org.neustupov.javadevinterviewbot.botapi;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.neustupov.javadevinterviewbot.botapi.callbacks.CallbackProcessor;
+import org.neustupov.javadevinterviewbot.botapi.processor.callbacks.CallbackProcessor;
+import org.neustupov.javadevinterviewbot.botapi.processor.messages.MessageProcessor;
 import org.neustupov.javadevinterviewbot.botapi.states.BotState;
 import org.neustupov.javadevinterviewbot.cache.UserDataCache;
 import org.springframework.stereotype.Component;
@@ -21,13 +22,16 @@ public class TelegramFacade {
   BotStateContext botStateContext;
   UserDataCache userDataCache;
   CallbackProcessor callbackProcessor;
+  MessageProcessor messageProcessor;
 
   public TelegramFacade(BotStateContext botStateContext,
       UserDataCache userDataCache,
-      CallbackProcessor callbackProcessor) {
+      CallbackProcessor callbackProcessor,
+      MessageProcessor messageProcessor) {
     this.botStateContext = botStateContext;
     this.userDataCache = userDataCache;
     this.callbackProcessor = callbackProcessor;
+    this.messageProcessor = messageProcessor;
   }
 
   public BotApiMethod<?> handleUpdate(Update update) {
@@ -46,41 +50,8 @@ public class TelegramFacade {
       log.info("New message from User:{}, chatId:{}, with text: {}",
           message.getFrom().getFirstName() + " " + message.getFrom().getLastName(),
           message.getChatId(), message.getText());
-      replyMessage = handleInputMessage(message);
+      replyMessage = messageProcessor.handleInputMessage(message);
     }
     return replyMessage;
-  }
-
-  private SendMessage handleInputMessage(Message message) {
-    String inputMsg = message.getText();
-    int userId = message.getFrom().getId();
-    BotState botState;
-
-    switch (inputMsg) {
-      case "/start":
-        botState = BotState.SHOW_START_MENU;
-        break;
-      case "junior":
-      case "middle":
-      case "senior":
-        botState = BotState.SHOW_LEVEL_MENU;
-        break;
-      case "oop":
-      case "collection":
-      case "core":
-        botState = BotState.SHOW_CATEGORY_MENU;
-        break;
-      default:
-        botState = userDataCache.getUserCurrentBotState(userId);
-        break;
-    }
-
-    if (inputMsg.startsWith("/q")) {
-      botState = BotState.SHOW_QUESTION;
-      return botStateContext.processInputMessage(botState, message);
-    }
-
-    userDataCache.setUserCurrentBotState(userId, botState);
-    return botStateContext.processInputMessage(botState, message);
   }
 }

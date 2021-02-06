@@ -44,7 +44,9 @@ public class CategoryListsHandler implements InputMessageHandler {
       sb.append(q.getSmallDescription());
       sb.append("\n");
     });
-    return new SendMessage(chatId, sb.toString());
+    SendMessage sm = new SendMessage(chatId, sb.toString());
+    sm.setReplyMarkup(getBackButton());
+    return sm;
   }
 
   @Override

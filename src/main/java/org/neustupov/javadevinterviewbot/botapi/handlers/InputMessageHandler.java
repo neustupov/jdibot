@@ -15,7 +15,8 @@ public interface InputMessageHandler {
 
   BotState getHandlerName();
 
-  default InlineKeyboardMarkup getInlineMessageButtons(Map<String, List<String>> buttonNames){
+  default InlineKeyboardMarkup getInlineMessageButtons(Map<String, List<String>> buttonNames,
+      boolean needBackButton) {
     List<String> buttons = buttonNames.get("buttons");
     InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
     InlineKeyboardButton buttonQuestions = new InlineKeyboardButton().setText(buttons.get(0));
@@ -34,9 +35,28 @@ public interface InputMessageHandler {
 
     List<List<InlineKeyboardButton>> rows = new ArrayList<>();
     rows.add(menuButtons);
+    if (needBackButton) {
+      rows.add(getSimpleBackButton());
+    }
 
     inlineKeyboardMarkup.setKeyboard(rows);
 
     return inlineKeyboardMarkup;
+  }
+
+  default InlineKeyboardMarkup getBackButton() {
+    InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+    List<List<InlineKeyboardButton>> rows = new ArrayList<>();
+    rows.add(getSimpleBackButton());
+    inlineKeyboardMarkup.setKeyboard(rows);
+    return inlineKeyboardMarkup;
+  }
+
+  default List<InlineKeyboardButton> getSimpleBackButton() {
+    InlineKeyboardButton buttonBack = new InlineKeyboardButton().setText("Назад");
+    buttonBack.setCallbackData("backButton");
+    List<InlineKeyboardButton> backButtons = new ArrayList<>();
+    backButtons.add(buttonBack);
+    return backButtons;
   }
 }
