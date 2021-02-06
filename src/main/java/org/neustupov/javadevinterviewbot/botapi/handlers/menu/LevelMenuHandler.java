@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker;
 import org.neustupov.javadevinterviewbot.botapi.handlers.InputMessageHandler;
 import org.neustupov.javadevinterviewbot.botapi.states.BotState;
 import org.neustupov.javadevinterviewbot.service.ReplyMessageService;
@@ -14,13 +17,17 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 
 @Slf4j
 @Component
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class LevelMenuHandler implements InputMessageHandler {
 
-  private ReplyMessageService replyMessageService;
+  ReplyMessageService replyMessageService;
+  ButtonMaker buttonMaker;
 
   public LevelMenuHandler(
-      ReplyMessageService replyMessageService) {
+      ReplyMessageService replyMessageService,
+      ButtonMaker buttonMaker) {
     this.replyMessageService = replyMessageService;
+    this.buttonMaker = buttonMaker;
   }
 
   @Override
@@ -28,15 +35,15 @@ public class LevelMenuHandler implements InputMessageHandler {
     return processUsersInput(message);
   }
 
-  private SendMessage processUsersInput(Message message){
+  private SendMessage processUsersInput(Message message) {
     long chatId = message.getChatId();
     SendMessage replyToUser = replyMessageService.getReplyMessage(chatId, "reply.level");
     Map<String, List<String>> buttonNames = getButtonNames();
-    replyToUser.setReplyMarkup(getInlineMessageButtons(buttonNames, true));
+    replyToUser.setReplyMarkup(buttonMaker.getInlineMessageButtons(buttonNames, true));
     return replyToUser;
   }
 
-  private Map<String, List<String>> getButtonNames(){
+  private Map<String, List<String>> getButtonNames() {
     List<String> buttons = new ArrayList<>();
     buttons.add("Junior");
     buttons.add("Middle");

@@ -7,6 +7,7 @@ import java.util.List;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker;
 import org.neustupov.javadevinterviewbot.botapi.handlers.InputMessageHandler;
 import org.neustupov.javadevinterviewbot.botapi.states.BotState;
 import org.neustupov.javadevinterviewbot.cache.UserDataCache;
@@ -24,28 +25,23 @@ public class CategoryListsHandler implements InputMessageHandler {
 
   UserDataCache userDataCache;
   CategoryRepository categoryRepository;
+  ButtonMaker buttonMaker;
 
   public CategoryListsHandler(UserDataCache userDataCache,
-      CategoryRepository categoryRepository) {
+      CategoryRepository categoryRepository,
+      ButtonMaker buttonMaker) {
     this.userDataCache = userDataCache;
     this.categoryRepository = categoryRepository;
+    this.buttonMaker = buttonMaker;
   }
 
   @Override
   public SendMessage handle(Message message) {
     long chatId = message.getChatId();
-    int userId = message.getFrom().getId();
-    UserContext userContext = userDataCache.getUserContext(userId);
-    List<Question> qList =  categoryRepository.getAllQuestionsByCategory(userContext.getCategory());
-    StringBuffer sb = new StringBuffer();
-    qList.forEach(q-> {
-      sb.append(q.getLink());
-      sb.append(" ");
-      sb.append(q.getSmallDescription());
-      sb.append("\n");
-    });
-    SendMessage sm = new SendMessage(chatId, sb.toString());
-    sm.setReplyMarkup(getBackButton());
+    UserContext userContext = userDataCache.getUserContext((int)chatId);
+    List<Question> qList =  categoryRepository.getAllQuestionsByCategoryAndLevel(userContext.getCategory(), userContext.getLevel());
+    SendMessage sm = new SendMessage(chatId, parseQuestions(qList));
+    sm.setReplyMarkup(buttonMaker.getBackButton());
     return sm;
   }
 

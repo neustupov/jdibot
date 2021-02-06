@@ -18,7 +18,7 @@ public class UserDataCache implements DataCache {
 
   public void setUserCurrentBotState(int userId, BotState botState) {
     Stack<BotState> userStateStack = stateMap.get(userId);
-    if(userStateStack == null){
+    if (userStateStack == null) {
       userStateStack = new Stack<>();
       userStateStack.push(botState);
       stateMap.put(userId, userStateStack);
@@ -30,9 +30,9 @@ public class UserDataCache implements DataCache {
   public BotState getUserCurrentBotState(int userId) {
     Stack<BotState> botStateStack = stateMap.get(userId);
     BotState botState = BotState.SHOW_START_MENU;
-    if (botStateStack != null){
+    if (botStateStack != null) {
       BotState curBotState = botStateStack.peek();
-      if (curBotState != null){
+      if (curBotState != null) {
         botState = curBotState;
       }
     }
@@ -42,17 +42,20 @@ public class UserDataCache implements DataCache {
   public BotState getPreviousUserBotState(int userId) {
     Stack<BotState> botStateStack = stateMap.get(userId);
     BotState botState = BotState.SHOW_START_MENU;
-    if (botStateStack != null && !botStateStack.empty()){
+    if (botStateStack != null && !botStateStack.empty()) {
       botStateStack.pop();
-      BotState curBotState = botStateStack.peek();
-      if (curBotState != null){
+      BotState curBotState = null;
+      if (!botStateStack.empty()) {
+        curBotState = botStateStack.peek();
+      }
+      if (curBotState != null) {
         botState = curBotState;
       }
     }
     return botState;
   }
 
-  public void cleanStates(int userId){
+  public void cleanStates(int userId) {
     stateMap.put(userId, new Stack<>());
   }
 
@@ -64,7 +67,7 @@ public class UserDataCache implements DataCache {
   @Override
   public UserContext getUserContext(int userId) {
     UserContext userContext = userContextMap.get(userId);
-    if (userContext == null){
+    if (userContext == null) {
       userContext = new UserContext();
       userContextMap.put(userId, userContext);
     }

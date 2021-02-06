@@ -1,6 +1,9 @@
 package org.neustupov.javadevinterviewbot.botapi.handlers.lists;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker;
 import org.neustupov.javadevinterviewbot.botapi.handlers.InputMessageHandler;
 import org.neustupov.javadevinterviewbot.botapi.states.BotState;
 import org.neustupov.javadevinterviewbot.model.Question;
@@ -11,13 +14,17 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 
 @Slf4j
 @Component
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class QuestionHandler implements InputMessageHandler {
 
-  private CategoryRepository categoryRepository;
+  CategoryRepository categoryRepository;
+  ButtonMaker buttonMaker;
 
   public QuestionHandler(
-      CategoryRepository categoryRepository) {
+      CategoryRepository categoryRepository,
+      ButtonMaker buttonMaker) {
     this.categoryRepository = categoryRepository;
+    this.buttonMaker = buttonMaker;
   }
 
   @Override
@@ -25,7 +32,7 @@ public class QuestionHandler implements InputMessageHandler {
     long chatId = message.getChatId();
     Question question = categoryRepository.getQuestionByLink(message.getText());
     SendMessage sm = new SendMessage(chatId, question.getLargeDescription());
-    sm.setReplyMarkup(getBackButton());
+    sm.setReplyMarkup(buttonMaker.getBackButton());
     return sm;
   }
 

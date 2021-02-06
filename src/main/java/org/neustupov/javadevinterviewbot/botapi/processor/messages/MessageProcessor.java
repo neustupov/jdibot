@@ -33,7 +33,8 @@ public class MessageProcessor {
     switch (inputMsg) {
       case "/start":
         botState = BotState.SHOW_START_MENU;
-        userDataCache.cleanStates(message.getFrom().getId());
+        userDataCache.cleanStates(userId);
+        userDataCache.setUserCurrentBotState(userId, botState);
         break;
       default:
         botState = userDataCache.getUserCurrentBotState(userId);
@@ -46,7 +47,7 @@ public class MessageProcessor {
       return botStateContext.processInputMessage(botState, message);
     }
 
-    userDataCache.setUserCurrentBotState(userId, botState);
+    //userDataCache.setUserCurrentBotState(userId, botState);
     return botStateContext.processInputMessage(botState, message);
   }
 }
