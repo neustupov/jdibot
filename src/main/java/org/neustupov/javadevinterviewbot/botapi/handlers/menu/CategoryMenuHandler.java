@@ -1,5 +1,7 @@
 package org.neustupov.javadevinterviewbot.botapi.handlers.menu;
 
+import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Buttons.OOP;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,7 +47,7 @@ public class CategoryMenuHandler implements InputMessageHandler {
 
   private Map<String, List<String>> getButtonNames() {
     List<String> buttons = new ArrayList<>();
-    buttons.add("ООП");
+    buttons.add(OOP);
     buttons.add("Коллекции");
     buttons.add("Паттерны");
     List<String> callbacks = new ArrayList<>();

@@ -40,7 +40,7 @@ public class TelegramFacade {
 
     if (update.hasCallbackQuery()) {
       CallbackQuery callbackQuery = update.getCallbackQuery();
-      log.info("New CallbackQuery from User:{}, userId:{}, with daa:{}",
+      log.info("New CallbackQuery from User:{}, userId:{}, with data:{}",
           callbackQuery.getFrom().getFirstName() + " " + callbackQuery.getFrom().getLastName(),
           callbackQuery.getFrom().getId(), callbackQuery.getData());
       return callbackProcessor.processCallbackQuery(callbackQuery);

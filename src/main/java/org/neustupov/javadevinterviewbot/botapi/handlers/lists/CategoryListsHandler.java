@@ -49,15 +49,4 @@ public class CategoryListsHandler implements InputMessageHandler {
   public BotState getHandlerName() {
     return BotState.SHOW_CATEGORY;
   }
-
-  private String parseToJson(Object object){
-    ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-    String json = "";
-    try {
-      json = ow.writeValueAsString(object);
-    } catch (JsonProcessingException e) {
-      e.printStackTrace();
-    }
-    return json;
-  }
 }

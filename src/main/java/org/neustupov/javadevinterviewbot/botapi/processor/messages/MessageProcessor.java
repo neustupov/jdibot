@@ -34,6 +34,7 @@ public class MessageProcessor {
       case "/start":
         botState = BotState.SHOW_START_MENU;
         userDataCache.cleanStates(userId);
+        userDataCache.cleanSearch(userId);
         userDataCache.setUserCurrentBotState(userId, botState);
         break;
       default:

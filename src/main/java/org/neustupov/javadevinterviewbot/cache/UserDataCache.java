@@ -59,6 +59,13 @@ public class UserDataCache implements DataCache {
     stateMap.put(userId, new Stack<>());
   }
 
+  public void cleanSearch(int userId) {
+    UserContext userContext = userContextMap.get(userId);
+    if (userContext != null) {
+      userContext.setSearchField("");
+    }
+  }
+
   @Override
   public void setUserContext(int userId, UserContext userContext) {
     userContextMap.put(userId, userContext);
