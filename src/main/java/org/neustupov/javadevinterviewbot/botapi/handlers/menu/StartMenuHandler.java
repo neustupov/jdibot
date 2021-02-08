@@ -1,5 +1,10 @@
 package org.neustupov.javadevinterviewbot.botapi.handlers.menu;
 
+import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.BUTTONS;
+import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Buttons.*;
+import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.CALLBACKS;
+import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Callbacks.*;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,16 +50,16 @@ public class StartMenuHandler implements InputMessageHandler {
 
   private Map<String, List<String>> getButtonNames() {
     List<String> buttons = new ArrayList<>();
-    buttons.add("Вопросы");
-    buttons.add("Поиск");
-    buttons.add("Тестирование");
+    buttons.add(QUESTIONS);
+    buttons.add(SEARCH);
+    buttons.add(TESTS);
     List<String> callbacks = new ArrayList<>();
-    callbacks.add("buttonQuestions");
-    callbacks.add("buttonSearch");
-    callbacks.add("buttonTest");
+    callbacks.add(QUESTIONS_BUTTON);
+    callbacks.add(SEARCH_BUTTON);
+    callbacks.add(TESTS_BUTTON);
     Map<String, List<String>> buttonsMap = new HashMap<>();
-    buttonsMap.put("buttons", buttons);
-    buttonsMap.put("callbacks", callbacks);
+    buttonsMap.put(BUTTONS, buttons);
+    buttonsMap.put(CALLBACKS, callbacks);
     return buttonsMap;
   }
 

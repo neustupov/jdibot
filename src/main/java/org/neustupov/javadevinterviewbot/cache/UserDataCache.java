@@ -1,5 +1,9 @@
 package org.neustupov.javadevinterviewbot.cache;
 
+import static org.neustupov.javadevinterviewbot.botapi.states.BotState.FILLING_SEARCH;
+import static org.neustupov.javadevinterviewbot.botapi.states.BotState.SHOW_SEARCH;
+import static org.neustupov.javadevinterviewbot.botapi.states.BotState.SHOW_SEARCH_RESULT;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
@@ -47,6 +51,11 @@ public class UserDataCache implements DataCache {
       BotState curBotState = null;
       if (!botStateStack.empty()) {
         curBotState = botStateStack.peek();
+        /*if (curBotState.equals(SHOW_SEARCH_RESULT) || curBotState.equals(FILLING_SEARCH)){
+          botStateStack.pop();
+          botStateStack.push(SHOW_SEARCH);
+          curBotState = SHOW_SEARCH;
+        }*/
       }
       if (curBotState != null) {
         botState = curBotState;

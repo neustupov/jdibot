@@ -1,5 +1,10 @@
 package org.neustupov.javadevinterviewbot.botapi.handlers.menu;
 
+import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.BUTTONS;
+import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Buttons.*;
+import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.CALLBACKS;
+import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Callbacks.*;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,16 +50,16 @@ public class LevelMenuHandler implements InputMessageHandler {
 
   private Map<String, List<String>> getButtonNames() {
     List<String> buttons = new ArrayList<>();
-    buttons.add("Junior");
-    buttons.add("Middle");
-    buttons.add("Senior");
+    buttons.add(JUNIOR);
+    buttons.add(MIDDLE);
+    buttons.add(SENIOR);
     List<String> callbacks = new ArrayList<>();
-    callbacks.add("buttonJunior");
-    callbacks.add("buttonMiddle");
-    callbacks.add("buttonSenior");
+    callbacks.add(JUNIOR_LEVEL_BUTTON);
+    callbacks.add(MIDDLE_LEVEL_BUTTON);
+    callbacks.add(SENIOR_LEVEL_BUTTON);
     Map<String, List<String>> buttonsMap = new HashMap<>();
-    buttonsMap.put("buttons", buttons);
-    buttonsMap.put("callbacks", callbacks);
+    buttonsMap.put(BUTTONS, buttons);
+    buttonsMap.put(CALLBACKS, callbacks);
     return buttonsMap;
   }
 

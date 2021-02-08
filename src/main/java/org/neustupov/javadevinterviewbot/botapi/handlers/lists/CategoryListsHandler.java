@@ -1,8 +1,5 @@
 package org.neustupov.javadevinterviewbot.botapi.handlers.lists;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;

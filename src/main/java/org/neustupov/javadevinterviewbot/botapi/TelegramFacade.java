@@ -5,7 +5,6 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.neustupov.javadevinterviewbot.botapi.processor.callbacks.CallbackProcessor;
 import org.neustupov.javadevinterviewbot.botapi.processor.messages.MessageProcessor;
-import org.neustupov.javadevinterviewbot.botapi.states.BotState;
 import org.neustupov.javadevinterviewbot.cache.UserDataCache;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;

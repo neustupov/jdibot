@@ -17,20 +17,43 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 @Component
 public class ButtonMaker {
 
-  private static final String BUTTONS = "buttons";
-  private static final String CALLBACKS = "callbacks";
+  public static final String BUTTONS = "buttons";
+  public static final String CALLBACKS = "callbacks";
 
   public interface Buttons{
     String BACK = "Назад";
     String NEW_SEARCH = "Новый поиск";
     String BACK_TO_START_MENU = "Вернуться в главное меню";
+
     String OOP = "ООП";
+    String COLLECTIONS = "Коллекции";
+    String PATTERNS = "Паттерны";
+
+    String JUNIOR = "Junior";
+    String MIDDLE = "Middle";
+    String SENIOR = "Senior";
+
+    String QUESTIONS = "Вопросы";
+    String SEARCH = "Поиск";
+    String TESTS = "Тестирование";
   }
 
   public interface Callbacks{
     String BACK_BUTTON = "backButton";
     String NEW_SEARCH_BUTTON = "newSearchButton";
     String BACK_TO_START_MENU_BUTTON = "backToStartMenuButton";
+
+    String OOP_CATEGORY_BUTTON = "buttonOOP";
+    String COLLECTIONS_CATEGORY_BUTTON = "buttonCollections";
+    String PATTERNS_CATEGORY_BUTTON = "buttonPatterns";
+
+    String JUNIOR_LEVEL_BUTTON = "buttonJunior";
+    String MIDDLE_LEVEL_BUTTON = "buttonMiddle";
+    String SENIOR_LEVEL_BUTTON = "buttonSenior";
+
+    String QUESTIONS_BUTTON = "buttonQuestions";
+    String SEARCH_BUTTON = "buttonSearch";
+    String TESTS_BUTTON = "buttonTest";
   }
 
   public InlineKeyboardMarkup getInlineMessageButtons(Map<String, List<String>> buttonNames,
