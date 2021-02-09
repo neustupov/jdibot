@@ -63,6 +63,30 @@ public class CategoryRepositoryInMemoryImpl implements CategoryRepository {
                 + "рекурсивные типы данных, такие как списки и деревья. Стандартный набор коллекций Java служит для избавления программиста от необходимости самостоятельно реализовывать эти типы данных "
                 + "и снабжает его дополнительными возможностями.")
         .build());
+    qList.add(Question.builder()
+        .link("/q0004")
+        .category(Category.OOP)
+        .level(Level.JUNIOR)
+        .smallDescription("Тест")
+        .largeDescription(
+            "Тест тест")
+        .build());
+    qList.add(Question.builder()
+        .link("/q0005")
+        .category(Category.OOP)
+        .level(Level.JUNIOR)
+        .smallDescription("Тест1")
+        .largeDescription(
+            "Тест1 тест")
+        .build());
+    qList.add(Question.builder()
+        .link("/q0006")
+        .category(Category.OOP)
+        .level(Level.JUNIOR)
+        .smallDescription("Тест2")
+        .largeDescription(
+            "Тест2 тест")
+        .build());
   }
 
   @Override

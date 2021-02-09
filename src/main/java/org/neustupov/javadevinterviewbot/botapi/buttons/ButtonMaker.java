@@ -114,7 +114,6 @@ public class ButtonMaker {
     List<InlineKeyboardButton> menuButtonsRowSecond = new ArrayList<>();
     menuButtonsRowSecond.add(buttonBaskToStartMenu);
 
-
     List<List<InlineKeyboardButton>> rows = new ArrayList<>();
     rows.add(menuButtonsRowFirst);
     rows.add(menuButtonsRowSecond);

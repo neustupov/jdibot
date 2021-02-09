@@ -4,13 +4,12 @@ import java.util.List;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker;
 import org.neustupov.javadevinterviewbot.botapi.handlers.InputMessageHandler;
+import org.neustupov.javadevinterviewbot.botapi.messagecreator.ResponseMessageCreator;
 import org.neustupov.javadevinterviewbot.botapi.states.BotState;
 import org.neustupov.javadevinterviewbot.cache.UserDataCache;
 import org.neustupov.javadevinterviewbot.model.Question;
 import org.neustupov.javadevinterviewbot.repository.CategoryRepositoryInMemoryImpl;
-import org.neustupov.javadevinterviewbot.service.ReplyMessageService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -18,28 +17,29 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 @Slf4j
 @Component
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class FillingSearchForm implements InputMessageHandler {
+public class FillingSearchFormHandler implements InputMessageHandler {
 
-  ReplyMessageService replyMessageService;
   UserDataCache userDataCache;
   CategoryRepositoryInMemoryImpl categoryRepositoryInMemory;
-  ButtonMaker buttonMaker;
+  ResponseMessageCreator responseMessageCreator;
 
-  public FillingSearchForm(
-      ReplyMessageService replyMessageService,
-      UserDataCache userDataCache,
+  public FillingSearchFormHandler(UserDataCache userDataCache,
       CategoryRepositoryInMemoryImpl categoryRepositoryInMemory,
-      ButtonMaker buttonMaker) {
-    this.replyMessageService = replyMessageService;
+      ResponseMessageCreator responseMessageCreator) {
     this.userDataCache = userDataCache;
     this.categoryRepositoryInMemory = categoryRepositoryInMemory;
-    this.buttonMaker = buttonMaker;
+    this.responseMessageCreator = responseMessageCreator;
   }
 
   @Override
   public SendMessage handle(Message message) {
     int userId = message.getFrom().getId();
     long chatId = message.getChatId();
+    List<Question> qList = categoryRepositoryInMemory.search(getSearchText(chatId, userId, message));
+    return responseMessageCreator.getMessage(qList, chatId, userId);
+  }
+
+  private String getSearchText(long chatId, int userId, Message message){
     String searchStringFromUserCache = userDataCache.getUserContext((int) chatId).getSearchField();
     String searchString = "";
     //TODO тут проблема в том, что при получении ответа по колбеку у нас сообщение приходит от бота а не от пользователя,
@@ -53,16 +53,7 @@ public class FillingSearchForm implements InputMessageHandler {
     } else {
       userDataCache.getUserContext(userId).setSearchField(searchString);
     }
-    List<Question> qList = categoryRepositoryInMemory.search(searchString);
-    SendMessage sendMessage = replyMessageService
-        .getReplyMessage(chatId, "reply.empty-search-result");
-    if (qList == null || qList.isEmpty()) {
-      userDataCache.setUserCurrentBotState(userId, BotState.FILLING_SEARCH);
-    } else {
-      sendMessage.setText(parseQuestions(qList));
-    }
-    sendMessage.setReplyMarkup(buttonMaker.getBackFromSearchButtons());
-    return sendMessage;
+    return searchString;
   }
 
   @Override
