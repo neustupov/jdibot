@@ -1,5 +1,10 @@
 package org.neustupov.javadevinterviewbot.botapi.handlers.menu;
 
+import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.BUTTONS;
+import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Buttons.*;
+import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.CALLBACKS;
+import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Callbacks.*;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,16 +50,16 @@ public class CategoryMenuHandler implements InputMessageHandler {
 
   private Map<String, List<String>> getButtonNames() {
     List<String> buttons = new ArrayList<>();
-    buttons.add("ООП");
-    buttons.add("Коллекции");
-    buttons.add("Паттерны");
+    buttons.add(OOP);
+    buttons.add(COLLECTIONS);
+    buttons.add(PATTERNS);
     List<String> callbacks = new ArrayList<>();
-    callbacks.add("buttonOOP");
-    callbacks.add("buttonCollections");
-    callbacks.add("buttonPatterns");
+    callbacks.add(OOP_CATEGORY_BUTTON);
+    callbacks.add(COLLECTIONS_CATEGORY_BUTTON);
+    callbacks.add(PATTERNS_CATEGORY_BUTTON);
     Map<String, List<String>> buttonsMap = new HashMap<>();
-    buttonsMap.put("buttons", buttons);
-    buttonsMap.put("callbacks", callbacks);
+    buttonsMap.put(BUTTONS, buttons);
+    buttonsMap.put(CALLBACKS, callbacks);
     return buttonsMap;
   }
 
