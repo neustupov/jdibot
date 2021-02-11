@@ -8,10 +8,10 @@ import org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker;
 import org.neustupov.javadevinterviewbot.botapi.handlers.InputMessageHandler;
 import org.neustupov.javadevinterviewbot.botapi.messagecreator.ResponseMessageCreator;
 import org.neustupov.javadevinterviewbot.botapi.states.BotState;
-import org.neustupov.javadevinterviewbot.cache.UserDataCache;
+import org.neustupov.javadevinterviewbot.cache.DataCache;
 import org.neustupov.javadevinterviewbot.model.Question;
 import org.neustupov.javadevinterviewbot.model.UserContext;
-import org.neustupov.javadevinterviewbot.repository.CategoryRepository;
+import org.neustupov.javadevinterviewbot.repository.CommonQuestionRepository;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -21,17 +21,18 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CategoryListsHandler implements InputMessageHandler {
 
-  UserDataCache userDataCache;
-  CategoryRepository categoryRepository;
+  //TODO сообщения должен готовить ResponseMessageCreator вынести все туда
+  DataCache dataCache;
+  CommonQuestionRepository commonQuestionRepository;
   ButtonMaker buttonMaker;
   ResponseMessageCreator responseMessageCreator;
 
-  public CategoryListsHandler(UserDataCache userDataCache,
-      CategoryRepository categoryRepository,
+  public CategoryListsHandler(DataCache dataCache,
+      CommonQuestionRepository commonQuestionRepository,
       ButtonMaker buttonMaker,
       ResponseMessageCreator responseMessageCreator) {
-    this.userDataCache = userDataCache;
-    this.categoryRepository = categoryRepository;
+    this.dataCache = dataCache;
+    this.commonQuestionRepository = commonQuestionRepository;
     this.buttonMaker = buttonMaker;
     this.responseMessageCreator = responseMessageCreator;
   }
@@ -39,9 +40,9 @@ public class CategoryListsHandler implements InputMessageHandler {
   @Override
   public SendMessage handle(Message message) {
     long chatId = message.getChatId();
-    UserContext userContext = userDataCache.getUserContext((int) chatId);
-    List<Question> qList = categoryRepository
-        .getAllQuestionsByCategoryAndLevel(userContext.getCategory(), userContext.getLevel());
+    UserContext userContext = dataCache.getUserContext((int) chatId);
+    List<Question> qList = commonQuestionRepository
+        .getAllByCategoryAndLevel(userContext.getCategory(), userContext.getLevel());
     SendMessage sm = new SendMessage(chatId, responseMessageCreator.parseQuestions(qList));
     sm.setReplyMarkup(buttonMaker.getBackButton());
     return sm;

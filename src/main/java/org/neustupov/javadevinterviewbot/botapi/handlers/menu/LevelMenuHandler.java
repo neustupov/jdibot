@@ -25,6 +25,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class LevelMenuHandler implements InputMessageHandler {
 
+  //TODO сообщения должен готовить ResponseMessageCreator вынести все туда
   ReplyMessageService replyMessageService;
   ButtonMaker buttonMaker;
 
@@ -48,6 +49,7 @@ public class LevelMenuHandler implements InputMessageHandler {
     return replyToUser;
   }
 
+  //TODO переделать на мапу <Кнопка, Колбек> и перенести в ButtonMaker
   private Map<String, List<String>> getButtonNames() {
     List<String> buttons = new ArrayList<>();
     buttons.add(JUNIOR);

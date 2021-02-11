@@ -15,6 +15,6 @@ public class UserContext {
   Level level;
   Category category;
   String searchField;
-  int skip;
-  int limit;
+  int from;
+  int to;
 }

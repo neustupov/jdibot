@@ -1,4 +1,4 @@
-package org.neustupov.javadevinterviewbot.botapi.handlers.fillingdata;
+package org.neustupov.javadevinterviewbot.botapi.handlers.filldata;
 
 import java.util.List;
 import lombok.AccessLevel;
@@ -7,9 +7,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.neustupov.javadevinterviewbot.botapi.handlers.InputMessageHandler;
 import org.neustupov.javadevinterviewbot.botapi.messagecreator.ResponseMessageCreator;
 import org.neustupov.javadevinterviewbot.botapi.states.BotState;
-import org.neustupov.javadevinterviewbot.cache.UserDataCache;
+import org.neustupov.javadevinterviewbot.cache.DataCache;
 import org.neustupov.javadevinterviewbot.model.Question;
-import org.neustupov.javadevinterviewbot.repository.CategoryRepositoryInMemoryImpl;
+import org.neustupov.javadevinterviewbot.repository.CommonQuestionRepository;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -17,16 +17,17 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 @Slf4j
 @Component
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class FillingSearchFormHandler implements InputMessageHandler {
+public class FillSearchHandler implements InputMessageHandler {
 
-  UserDataCache userDataCache;
-  CategoryRepositoryInMemoryImpl categoryRepositoryInMemory;
+  //TODO сообщения должен готовить ResponseMessageCreator вынести все туда
+  DataCache dataCache;
+  CommonQuestionRepository categoryRepositoryInMemory;
   ResponseMessageCreator responseMessageCreator;
 
-  public FillingSearchFormHandler(UserDataCache userDataCache,
-      CategoryRepositoryInMemoryImpl categoryRepositoryInMemory,
+  public FillSearchHandler(DataCache dataCache,
+      CommonQuestionRepository categoryRepositoryInMemory,
       ResponseMessageCreator responseMessageCreator) {
-    this.userDataCache = userDataCache;
+    this.dataCache = dataCache;
     this.categoryRepositoryInMemory = categoryRepositoryInMemory;
     this.responseMessageCreator = responseMessageCreator;
   }
@@ -36,11 +37,11 @@ public class FillingSearchFormHandler implements InputMessageHandler {
     int userId = message.getFrom().getId();
     long chatId = message.getChatId();
     List<Question> qList = categoryRepositoryInMemory.search(getSearchText(chatId, userId, message));
-    return responseMessageCreator.getMessage(qList, chatId, userId);
+    return responseMessageCreator.getMessage(qList, chatId, userId, null, null);
   }
 
   private String getSearchText(long chatId, int userId, Message message){
-    String searchStringFromUserCache = userDataCache.getUserContext((int) chatId).getSearchField();
+    String searchStringFromUserCache = dataCache.getUserContext((int) chatId).getSearchField();
     String searchString = "";
     //TODO тут проблема в том, что при получении ответа по колбеку у нас сообщение приходит от бота а не от пользователя,
     //возможно проще и логичнее будет переделать на отдельные хендлера для колбеков
@@ -51,7 +52,7 @@ public class FillingSearchFormHandler implements InputMessageHandler {
     if (searchString == null || searchString.isEmpty()) {
       searchString = searchStringFromUserCache;
     } else {
-      userDataCache.getUserContext(userId).setSearchField(searchString);
+      dataCache.getUserContext(userId).setSearchField(searchString);
     }
     return searchString;
   }

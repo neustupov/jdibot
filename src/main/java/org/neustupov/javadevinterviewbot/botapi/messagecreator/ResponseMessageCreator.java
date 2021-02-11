@@ -7,7 +7,7 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker;
 import org.neustupov.javadevinterviewbot.botapi.states.BotState;
-import org.neustupov.javadevinterviewbot.cache.UserDataCache;
+import org.neustupov.javadevinterviewbot.cache.DataCache;
 import org.neustupov.javadevinterviewbot.model.Question;
 import org.neustupov.javadevinterviewbot.service.ReplyMessageService;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,25 +23,34 @@ public class ResponseMessageCreator {
 
   ReplyMessageService replyMessageService;
   ButtonMaker buttonMaker;
-  UserDataCache userDataCache;
+  DataCache dataCache;
+
+  //TODO тут либо делаем методы под каждый хендлер, либо разносим все по стратегиям - сначала собираем сообщения
+  //потом цепляем кнопки
+
 
   public ResponseMessageCreator(
       ReplyMessageService replyMessageService,
-      ButtonMaker buttonMaker, UserDataCache userDataCache) {
+      ButtonMaker buttonMaker, DataCache dataCache) {
     this.replyMessageService = replyMessageService;
     this.buttonMaker = buttonMaker;
-    this.userDataCache = userDataCache;
+    this.dataCache = dataCache;
   }
 
-  public SendMessage getMessage(List<Question> qList, long chatId, int userId) {
+  public SendMessage getMessage(List<Question> qList, long chatId, int userId, Integer from,
+      Integer to) {
     SendMessage sendMessage = replyMessageService
         .getReplyMessage(chatId, "reply.empty-search-result");
     if (qList == null || qList.isEmpty()) {
-      userDataCache.setUserCurrentBotState(userId, BotState.FILLING_SEARCH);
+      dataCache.setUserCurrentBotState(userId, BotState.FILLING_SEARCH);
     } else {
       List<Question> qListSelected = new ArrayList<>(qList);
       if (qList.size() > maxObjects) {
-        qListSelected = getCurrentList(userId, qList, 0, maxObjects);
+        if (from == null && to == null) {
+          qListSelected = getCurrentList(userId, qList, 0, maxObjects);
+        } else {
+          qListSelected = getCurrentList(userId, qList, from, to);
+        }
       }
       sendMessage.setText(parseQuestions(qListSelected));
     }
@@ -62,8 +71,8 @@ public class ResponseMessageCreator {
   }
 
   private List<Question> getCurrentList(int userId, List<Question> qList, int from, int to) {
-    userDataCache.getUserContext(userId).setSkip(from);
-    userDataCache.getUserContext(userId).setLimit(to);
+    dataCache.getUserContext(userId).setFrom(from);
+    dataCache.getUserContext(userId).setTo(to);
     return qList.stream()
         .skip(from)
         .limit(to - from).collect(Collectors.toList());

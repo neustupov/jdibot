@@ -1,5 +1,7 @@
 package org.neustupov.javadevinterviewbot.model;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
@@ -12,9 +14,19 @@ import org.neustupov.javadevinterviewbot.botapi.states.Level;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Question {
 
-  Category category;
-  Level level;
+  @NotNull
+  @NotEmpty
   String link;
+  @NotNull
+  @NotEmpty
+  Category category;
+  @NotNull
+  @NotEmpty
+  Level level;
+  @NotNull
+  @NotEmpty
   String smallDescription;
+  @NotNull
+  @NotEmpty
   String largeDescription;
 }
