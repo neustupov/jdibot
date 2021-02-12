@@ -20,7 +20,8 @@ public class ButtonMaker {
   public static final String BUTTONS = "buttons";
   public static final String CALLBACKS = "callbacks";
 
-  public interface Buttons{
+  public interface Buttons {
+
     String BACK = "Назад";
     String NEW_SEARCH = "Новый поиск";
     String BACK_TO_START_MENU = "Вернуться в главное меню";
@@ -38,7 +39,8 @@ public class ButtonMaker {
     String TESTS = "Тестирование";
   }
 
-  public interface Callbacks{
+  public interface Callbacks {
+
     String BACK_BUTTON = "backButton";
     String NEW_SEARCH_BUTTON = "newSearchButton";
     String BACK_TO_START_MENU_BUTTON = "backToStartMenuButton";
@@ -56,32 +58,19 @@ public class ButtonMaker {
     String TESTS_BUTTON = "buttonTest";
   }
 
-  public InlineKeyboardMarkup getInlineMessageButtons(Map<String, List<String>> buttonNames,
+  public InlineKeyboardMarkup getInlineMessageButtons(Map<String, String> buttonMap,
       boolean needBackButton) {
-    List<String> buttons = buttonNames.get(BUTTONS);
     InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
-    InlineKeyboardButton buttonQuestions = new InlineKeyboardButton().setText(buttons.get(0));
-    InlineKeyboardButton buttonSearch = new InlineKeyboardButton().setText(buttons.get(1));
-    InlineKeyboardButton buttonTest = new InlineKeyboardButton().setText(buttons.get(2));
-
-    List<String> callbacks = buttonNames.get(CALLBACKS);
-    buttonQuestions.setCallbackData(callbacks.get(0));
-    buttonSearch.setCallbackData(callbacks.get(1));
-    buttonTest.setCallbackData(callbacks.get(2));
-
     List<InlineKeyboardButton> menuButtons = new ArrayList<>();
-    menuButtons.add(buttonQuestions);
-    menuButtons.add(buttonSearch);
-    menuButtons.add(buttonTest);
-
+    buttonMap.keySet()
+        .forEach(key -> menuButtons
+            .add(new InlineKeyboardButton().setText(key).setCallbackData(buttonMap.get(key))));
     List<List<InlineKeyboardButton>> rows = new ArrayList<>();
     rows.add(menuButtons);
     if (needBackButton) {
       rows.add(getSimpleBackButton());
     }
-
     inlineKeyboardMarkup.setKeyboard(rows);
-
     return inlineKeyboardMarkup;
   }
 
@@ -101,11 +90,12 @@ public class ButtonMaker {
     return backButtons;
   }
 
-  public InlineKeyboardMarkup getBackFromSearchButtons(){
+  public InlineKeyboardMarkup getBackFromSearchButtons() {
     InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
 
     InlineKeyboardButton buttonNewSearch = new InlineKeyboardButton().setText(NEW_SEARCH);
-    InlineKeyboardButton buttonBaskToStartMenu = new InlineKeyboardButton().setText(BACK_TO_START_MENU);
+    InlineKeyboardButton buttonBaskToStartMenu = new InlineKeyboardButton()
+        .setText(BACK_TO_START_MENU);
     buttonNewSearch.setCallbackData(NEW_SEARCH_BUTTON);
     buttonBaskToStartMenu.setCallbackData(BACK_TO_START_MENU_BUTTON);
 

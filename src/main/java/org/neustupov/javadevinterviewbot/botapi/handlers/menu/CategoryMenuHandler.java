@@ -7,6 +7,7 @@ import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Callb
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.AccessLevel;
@@ -44,25 +45,16 @@ public class CategoryMenuHandler implements InputMessageHandler {
   private SendMessage processUsersInput(Message message) {
     long chatId = message.getChatId();
     SendMessage replyToUser = replyMessageService.getReplyMessage(chatId, "reply.category");
-    Map<String, List<String>> buttonNames = getButtonNames();
-    replyToUser.setReplyMarkup(buttonMaker.getInlineMessageButtons(buttonNames, true));
+    replyToUser.setReplyMarkup(buttonMaker.getInlineMessageButtons(getButtonNames(), true));
     return replyToUser;
   }
 
-  //TODO переделать на мапу <Кнопка, Колбек> и перенести в ButtonMaker
-  private Map<String, List<String>> getButtonNames() {
-    List<String> buttons = new ArrayList<>();
-    buttons.add(OOP);
-    buttons.add(COLLECTIONS);
-    buttons.add(PATTERNS);
-    List<String> callbacks = new ArrayList<>();
-    callbacks.add(OOP_CATEGORY_BUTTON);
-    callbacks.add(COLLECTIONS_CATEGORY_BUTTON);
-    callbacks.add(PATTERNS_CATEGORY_BUTTON);
-    Map<String, List<String>> buttonsMap = new HashMap<>();
-    buttonsMap.put(BUTTONS, buttons);
-    buttonsMap.put(CALLBACKS, callbacks);
-    return buttonsMap;
+  private Map<String, String> getButtonNames() {
+    Map<String, String> buttonMap = new LinkedHashMap<>();
+    buttonMap.put(OOP, OOP_CATEGORY_BUTTON);
+    buttonMap.put(COLLECTIONS, COLLECTIONS_CATEGORY_BUTTON);
+    buttonMap.put(PATTERNS, PATTERNS_CATEGORY_BUTTON);
+    return buttonMap;
   }
 
   @Override

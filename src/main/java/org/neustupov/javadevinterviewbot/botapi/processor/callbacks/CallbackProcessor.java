@@ -32,6 +32,8 @@ public class CallbackProcessor {
     this.botStateContext = botStateContext;
   }
 
+  //TODO для категорий будет много кнопок - лучше вынести обработку всех кнопок в отдельные бины и
+  //сделать цепочку обязанностей
   public BotApiMethod<?> processCallbackQuery(CallbackQuery callbackQuery) {
     final int userId = callbackQuery.getFrom().getId();
     final Message message = callbackQuery.getMessage();
