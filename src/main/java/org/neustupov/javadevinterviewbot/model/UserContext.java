@@ -15,6 +15,6 @@ public class UserContext {
   Level level;
   Category category;
   String searchField;
-  int from;
-  int to;
+  RangePair range;
+  String route;
 }

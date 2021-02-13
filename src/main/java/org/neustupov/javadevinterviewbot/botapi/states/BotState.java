@@ -11,5 +11,7 @@ public enum  BotState {
   SHOW_SEARCH_RESULT,
 
 
-  FILLING_SEARCH
+  FILLING_SEARCH,
+
+  PAGINATION_PAGE
 }

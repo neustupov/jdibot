@@ -37,7 +37,7 @@ public class FillSearchHandler implements InputMessageHandler {
     int userId = message.getFrom().getId();
     long chatId = message.getChatId();
     List<Question> qList = categoryRepositoryInMemory.search(getSearchText(chatId, userId, message));
-    return responseMessageCreator.getMessage(qList, chatId, userId, null, null);
+    return responseMessageCreator.getMessage(qList, chatId, userId, null);
   }
 
   private String getSearchText(long chatId, int userId, Message message){

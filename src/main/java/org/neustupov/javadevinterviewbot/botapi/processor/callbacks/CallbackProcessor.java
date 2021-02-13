@@ -72,12 +72,21 @@ public class CallbackProcessor {
         break;
       case BACK_BUTTON:
         BotState previousBotState = dataCache.getPreviousUserBotState(userId);
+        dataCache.cleanRange(userId);
         callbackAnswer = botStateContext.processInputMessage(previousBotState, message);
         break;
       case BACK_TO_START_MENU_BUTTON:
         dataCache.cleanStates(userId);
         dataCache.cleanSearch(userId);
         callbackAnswer = botStateContext.processInputMessage(BotState.SHOW_START_MENU, message);
+        break;
+      case NEXT_BUTTON:
+        dataCache.getUserContext(userId).setRoute("next");
+        callbackAnswer = botStateContext.processInputMessage(BotState.PAGINATION_PAGE, message);
+        break;
+      case PREVIOUS_BUTTON:
+        dataCache.getUserContext(userId).setRoute("previous");
+        callbackAnswer = botStateContext.processInputMessage(BotState.PAGINATION_PAGE, message);
         break;
     }
 

@@ -3,11 +3,16 @@ package org.neustupov.javadevinterviewbot.botapi.buttons;
 import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Buttons.BACK;
 import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Buttons.BACK_TO_START_MENU;
 import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Buttons.NEW_SEARCH;
+import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Buttons.NEXT;
+import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Buttons.PREVIOUS;
 import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Callbacks.BACK_BUTTON;
 import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Callbacks.BACK_TO_START_MENU_BUTTON;
 import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Callbacks.NEW_SEARCH_BUTTON;
+import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Callbacks.NEXT_BUTTON;
+import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Callbacks.PREVIOUS_BUTTON;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Component;
@@ -16,9 +21,6 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 
 @Component
 public class ButtonMaker {
-
-  public static final String BUTTONS = "buttons";
-  public static final String CALLBACKS = "callbacks";
 
   public interface Buttons {
 
@@ -37,6 +39,9 @@ public class ButtonMaker {
     String QUESTIONS = "Вопросы";
     String SEARCH = "Поиск";
     String TESTS = "Тестирование";
+
+    String PREVIOUS = "<-";
+    String NEXT = "->";
   }
 
   public interface Callbacks {
@@ -56,6 +61,9 @@ public class ButtonMaker {
     String QUESTIONS_BUTTON = "buttonQuestions";
     String SEARCH_BUTTON = "buttonSearch";
     String TESTS_BUTTON = "buttonTest";
+
+    String PREVIOUS_BUTTON = "<-Button";
+    String NEXT_BUTTON = "->Button";
   }
 
   public InlineKeyboardMarkup getInlineMessageButtons(Map<String, String> buttonMap,
@@ -111,5 +119,36 @@ public class ButtonMaker {
     inlineKeyboardMarkup.setKeyboard(rows);
 
     return inlineKeyboardMarkup;
+  }
+
+  public InlineKeyboardMarkup getPaginationButton(boolean previous, boolean next) {
+    InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+    List<List<InlineKeyboardButton>> rows = new ArrayList<>();
+
+    List<InlineKeyboardButton> paginationButton = new ArrayList<>();
+    if (previous) {
+      InlineKeyboardButton buttonPrevious = new InlineKeyboardButton().setText(PREVIOUS);
+      buttonPrevious.setCallbackData(PREVIOUS_BUTTON);
+      paginationButton.add(buttonPrevious);
+    }
+    if (next) {
+      InlineKeyboardButton buttonNext = new InlineKeyboardButton().setText(NEXT);
+      buttonNext.setCallbackData(NEXT_BUTTON);
+      paginationButton.add(buttonNext);
+    }
+    rows.add(paginationButton);
+    rows.add(getSimpleBackButton());
+    inlineKeyboardMarkup.setKeyboard(rows);
+    return inlineKeyboardMarkup;
+  }
+
+  public Map<String, String> getStringMap(String first, String firstCallback,
+      String second, String secondCallback, String third,
+      String thirdCallback) {
+    Map<String, String> buttonMap = new LinkedHashMap<>();
+    buttonMap.put(first, firstCallback);
+    buttonMap.put(second, secondCallback);
+    buttonMap.put(third, thirdCallback);
+    return buttonMap;
   }
 }

@@ -67,6 +67,21 @@ public class UserDataCache implements DataCache {
   }
 
   @Override
+  public void cleanRange(int userId) {
+    UserContext userContext = userContextMap.get(userId);
+    if (userContext != null) {
+      userContext.setRange(null);
+    }
+  }
+
+  @Override
+  public void cleanAll(int userId) {
+    cleanStates(userId);
+    cleanSearch(userId);
+    cleanRange(userId);
+  }
+
+  @Override
   public void setUserContext(int userId, UserContext userContext) {
     userContextMap.put(userId, userContext);
   }

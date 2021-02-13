@@ -39,12 +39,14 @@ public class CategoryListsHandler implements InputMessageHandler {
 
   @Override
   public SendMessage handle(Message message) {
-    long chatId = message.getChatId();
-    UserContext userContext = dataCache.getUserContext((int) chatId);
+    Long chatId = message.getChatId();
+    //int userId = message.getFrom().getId();
+    UserContext userContext = dataCache.getUserContext(chatId.intValue());
     List<Question> qList = commonQuestionRepository
         .getAllByCategoryAndLevel(userContext.getCategory(), userContext.getLevel());
-    SendMessage sm = new SendMessage(chatId, responseMessageCreator.parseQuestions(qList));
-    sm.setReplyMarkup(buttonMaker.getBackButton());
+    SendMessage sm = responseMessageCreator.getMessage(qList, chatId, chatId.intValue(), null);
+   // SendMessage sm = new SendMessage(chatId, responseMessageCreator.parseQuestions(qList));
+    //sm.setReplyMarkup(buttonMaker.getBackButton());
     return sm;
   }
 

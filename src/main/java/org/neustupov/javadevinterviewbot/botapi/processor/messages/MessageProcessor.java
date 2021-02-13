@@ -41,8 +41,7 @@ public class MessageProcessor {
     switch (inputMsg) {
       case START:
         botState = BotState.SHOW_START_MENU;
-        dataCache.cleanStates(userId);
-        dataCache.cleanSearch(userId);
+        dataCache.cleanAll(userId);
         dataCache.setUserCurrentBotState(userId, botState);
         break;
       default:

@@ -1,14 +1,8 @@
 package org.neustupov.javadevinterviewbot.botapi.handlers.menu;
 
-import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.BUTTONS;
 import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Buttons.*;
-import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.CALLBACKS;
 import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Callbacks.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -50,11 +44,9 @@ public class CategoryMenuHandler implements InputMessageHandler {
   }
 
   private Map<String, String> getButtonNames() {
-    Map<String, String> buttonMap = new LinkedHashMap<>();
-    buttonMap.put(OOP, OOP_CATEGORY_BUTTON);
-    buttonMap.put(COLLECTIONS, COLLECTIONS_CATEGORY_BUTTON);
-    buttonMap.put(PATTERNS, PATTERNS_CATEGORY_BUTTON);
-    return buttonMap;
+    return buttonMaker.getStringMap(OOP, OOP_CATEGORY_BUTTON,
+        COLLECTIONS, COLLECTIONS_CATEGORY_BUTTON,
+        PATTERNS, PATTERNS_CATEGORY_BUTTON);
   }
 
   @Override

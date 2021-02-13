@@ -18,4 +18,8 @@ public interface DataCache {
   void cleanSearch(int userId);
 
   void cleanStates(int userId);
+
+  void cleanRange(int userId);
+
+  void cleanAll(int userId);
 }
