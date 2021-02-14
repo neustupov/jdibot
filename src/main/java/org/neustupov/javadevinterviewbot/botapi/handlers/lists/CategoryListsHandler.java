@@ -24,30 +24,23 @@ public class CategoryListsHandler implements InputMessageHandler {
   //TODO сообщения должен готовить ResponseMessageCreator вынести все туда
   DataCache dataCache;
   CommonQuestionRepository commonQuestionRepository;
-  ButtonMaker buttonMaker;
   ResponseMessageCreator responseMessageCreator;
 
   public CategoryListsHandler(DataCache dataCache,
       CommonQuestionRepository commonQuestionRepository,
-      ButtonMaker buttonMaker,
       ResponseMessageCreator responseMessageCreator) {
     this.dataCache = dataCache;
     this.commonQuestionRepository = commonQuestionRepository;
-    this.buttonMaker = buttonMaker;
     this.responseMessageCreator = responseMessageCreator;
   }
 
   @Override
   public SendMessage handle(Message message) {
     Long chatId = message.getChatId();
-    //int userId = message.getFrom().getId();
     UserContext userContext = dataCache.getUserContext(chatId.intValue());
     List<Question> qList = commonQuestionRepository
         .getAllByCategoryAndLevel(userContext.getCategory(), userContext.getLevel());
-    SendMessage sm = responseMessageCreator.getMessage(qList, chatId, chatId.intValue(), null);
-   // SendMessage sm = new SendMessage(chatId, responseMessageCreator.parseQuestions(qList));
-    //sm.setReplyMarkup(buttonMaker.getBackButton());
-    return sm;
+    return responseMessageCreator.getMessage(qList, chatId, chatId.intValue(), null);
   }
 
   @Override

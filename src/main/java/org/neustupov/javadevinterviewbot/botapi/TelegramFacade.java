@@ -5,6 +5,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.neustupov.javadevinterviewbot.botapi.processor.callbacks.CallbackProcessor;
 import org.neustupov.javadevinterviewbot.botapi.processor.messages.MessageProcessor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -22,7 +23,7 @@ public class TelegramFacade {
 
   public TelegramFacade(
       CallbackProcessor callbackProcessor,
-      MessageProcessor messageProcessor) {
+      @Lazy MessageProcessor messageProcessor) {
     this.callbackProcessor = callbackProcessor;
     this.messageProcessor = messageProcessor;
   }

@@ -41,7 +41,6 @@ public class PaginationHandler implements InputMessageHandler {
 
   @Override
   public SendMessage handle(Message message) {
-    //int userId = message.getFrom().getId();
     Long chatId = message.getChatId();
     String searchStringFromUserCache = dataCache.getUserContext(chatId.intValue()).getSearchField();
     List<Question> qList = null;

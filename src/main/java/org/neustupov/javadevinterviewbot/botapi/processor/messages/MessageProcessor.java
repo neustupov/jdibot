@@ -6,9 +6,12 @@ import static org.neustupov.javadevinterviewbot.botapi.processor.messages.Messag
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.neustupov.javadevinterviewbot.JavaDevInterviewBot;
 import org.neustupov.javadevinterviewbot.botapi.BotStateContext;
 import org.neustupov.javadevinterviewbot.botapi.states.BotState;
 import org.neustupov.javadevinterviewbot.cache.DataCache;
+import org.neustupov.javadevinterviewbot.service.ReplyMessageService;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -20,6 +23,8 @@ public class MessageProcessor {
 
   DataCache dataCache;
   BotStateContext botStateContext;
+  @Lazy JavaDevInterviewBot bot;
+  ReplyMessageService replyMessageService;
 
   interface Commands {
 
@@ -28,14 +33,18 @@ public class MessageProcessor {
   }
 
   public MessageProcessor(DataCache dataCache,
-      BotStateContext botStateContext) {
+      BotStateContext botStateContext, JavaDevInterviewBot bot,
+      ReplyMessageService replyMessageService) {
     this.dataCache = dataCache;
     this.botStateContext = botStateContext;
+    this.bot = bot;
+    this.replyMessageService = replyMessageService;
   }
 
   public SendMessage handleInputMessage(Message message) {
     String inputMsg = message.getText();
     int userId = message.getFrom().getId();
+    long chatId = message.getChatId();
     BotState botState;
 
     switch (inputMsg) {
@@ -43,6 +52,7 @@ public class MessageProcessor {
         botState = BotState.SHOW_START_MENU;
         dataCache.cleanAll(userId);
         dataCache.setUserCurrentBotState(userId, botState);
+        bot.sendPhoto(chatId, replyMessageService.getReplyText("reply.pictureText"), "static/images/bot-pic.jpg");
         break;
       default:
         botState = dataCache.getUserCurrentBotState(userId);

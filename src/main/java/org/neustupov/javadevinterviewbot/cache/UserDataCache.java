@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserDataCache implements DataCache {
 
+  //TODO переделать бес стека - не понадобился
   Map<Integer, Stack<BotState>> stateMap = new HashMap<>();
   Map<Integer, UserContext> userContextMap = new HashMap<>();
 
