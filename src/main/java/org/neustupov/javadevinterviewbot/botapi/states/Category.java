@@ -4,5 +4,6 @@ public enum Category {
 
   OOP,
   COLLECTIONS,
-  PATTERNS
+  PATTERNS,
+  SPRING
 }

@@ -75,10 +75,24 @@ public class UserDataCache implements DataCache {
   }
 
   @Override
+  public void cleanCategory(int userId) {
+    UserContext userContext = userContextMap.get(userId);
+    if (userContext != null) {
+      userContext.setCategory(null);
+    }
+  }
+
+  @Override
+  public void cleanLevel(int userId) {
+    UserContext userContext = userContextMap.get(userId);
+    if (userContext != null) {
+      userContext.setLevel(null);
+    }
+  }
+
+  @Override
   public void cleanAll(int userId) {
-    cleanStates(userId);
-    cleanSearch(userId);
-    cleanRange(userId);
+    userContextMap.put(userId, new UserContext());
   }
 
   @Override

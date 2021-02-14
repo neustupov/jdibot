@@ -1,11 +1,9 @@
 package org.neustupov.javadevinterviewbot.botapi.messagecreator;
 
-import static org.neustupov.javadevinterviewbot.botapi.handlers.filldata.PaginationHandler.Pagination.NEXT;
-import static org.neustupov.javadevinterviewbot.botapi.handlers.filldata.PaginationHandler.Pagination.PREVIOUS;
-
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker;
@@ -17,6 +15,7 @@ import org.neustupov.javadevinterviewbot.service.ReplyMessageService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.Message;
 
 @Component
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -28,16 +27,37 @@ public class ResponseMessageCreator {
   ReplyMessageService replyMessageService;
   ButtonMaker buttonMaker;
   DataCache dataCache;
+  PaginationService paginationService;
 
   //TODO тут либо делаем методы под каждый хендлер, либо разносим все по стратегиям - сначала собираем сообщения
   //потом цепляем кнопки
 
   public ResponseMessageCreator(
       ReplyMessageService replyMessageService,
-      ButtonMaker buttonMaker, DataCache dataCache) {
+      ButtonMaker buttonMaker, DataCache dataCache,
+      PaginationService paginationService) {
     this.replyMessageService = replyMessageService;
     this.buttonMaker = buttonMaker;
     this.dataCache = dataCache;
+    this.paginationService = paginationService;
+  }
+
+  public SendMessage getSimplyMessage(long chatId, String replyMessage, BotState state,
+      boolean backToStartMenuButton) {
+    dataCache.setUserCurrentBotState((int) chatId, state);
+    SendMessage replyToUser = replyMessageService.getReplyMessage(chatId, replyMessage);
+    if (backToStartMenuButton) {
+      replyToUser.setReplyMarkup(buttonMaker.getBackToStartMenuButton());
+    }
+    return replyToUser;
+  }
+
+  public SendMessage getSimpleMessageWithButtons(Long chatId, String message,
+      Map<String, String> buttonNames) {
+    BotState botState = dataCache.getUserCurrentBotState(chatId.intValue());
+    SendMessage replyToUser = replyMessageService.getReplyMessage(chatId, message);
+    replyToUser.setReplyMarkup(buttonMaker.getInlineMessageButtons(buttonNames, botState));
+    return replyToUser;
   }
 
   public SendMessage getMessage(List<Question> qList, long chatId, int userId, String pagination) {
@@ -51,30 +71,29 @@ public class ResponseMessageCreator {
       if (qList.size() > maxObjects) {
         if (range == null) {
           RangePair rangePair = RangePair.builder().from(0).to(maxObjects).build();
-          qListSelected = getCurrentList(userId, qList, rangePair);
+          qListSelected = paginationService.getCurrentList(userId, qList, rangePair);
         } else {
-          qListSelected = getCurrentList(userId, qList,
-              getNewRange(qList.size(), range, pagination));
+          qListSelected = paginationService.getCurrentList(userId, qList,
+              paginationService.getNewRange(qList.size(), range, pagination));
         }
       }
       sendMessage.setText(parseQuestions(qListSelected));
-    }//TODO добавить кнопки для пагинации <- и ->
-    RangePair newRange = dataCache.getUserContext(userId).getRange();
-    if (newRange != null) {
-      boolean next = false;
-      boolean previous = false;
-      if (newRange.getFrom() != null && newRange.getFrom() > 0) {
-        previous = true;
-      }
-      if (qList != null && ((newRange.getTo() != null && qList.size() > newRange.getTo()))) {
-        next = true;
-      }
-      sendMessage.setReplyMarkup(buttonMaker.getPaginationButton(previous, next));
     }
+    RangePair newRange = dataCache.getUserContext(userId).getRange();
+    boolean next = false;
+    boolean previous = false;
+    if (newRange != null) {
+      next = paginationService.addNextButton(qList, newRange);
+      previous = paginationService.addPreviousButton(newRange);
+    }
+    BotState userCurrentBotState = dataCache.getUserCurrentBotState(userId);
+    sendMessage
+        .setReplyMarkup(buttonMaker.getPaginationButton(previous, next, userCurrentBotState));
+
     return sendMessage;
   }
 
-  public String parseQuestions(List<Question> qList) {
+  private String parseQuestions(List<Question> qList) {
     StringBuffer sb = new StringBuffer();
     qList.forEach(q -> {
       sb.append(q.getLink());
@@ -85,36 +104,13 @@ public class ResponseMessageCreator {
     return sb.toString();
   }
 
-  private List<Question> getCurrentList(int userId, List<Question> qList, RangePair rangePair) {
-    dataCache.getUserContext(userId).setRange(rangePair);
-    return qList.stream()
-        .skip(rangePair.getFrom())
-        .limit(rangePair.getTo() - rangePair.getFrom()).collect(Collectors.toList());
-  }
-
-  private RangePair getNewRange(Integer listSize, RangePair rangePair, String pagination) {
-    int from = rangePair.getFrom();
-    int to = rangePair.getTo();
-    switch (pagination) {
-      case NEXT:
-        from = from + maxObjects;
-        int tempTo = to + maxObjects;
-        if (tempTo <= listSize) {
-          to = tempTo;
-        } else {
-          to = listSize;
-        }
-        break;
-      case PREVIOUS:
-        int tempFrom = from - maxObjects;
-        if (tempFrom >= 0) {
-          from = tempFrom;
-        } else {
-          from = 0;
-        }
-        to = to - maxObjects;
-        break;
-    }
-    return RangePair.builder().from(from).to(to).build();
+  public Map<String, String> getStringMap(String first, String firstCallback,
+      String second, String secondCallback, String third,
+      String thirdCallback) {
+    Map<String, String> buttonMap = new LinkedHashMap<>();
+    buttonMap.put(first, firstCallback);
+    buttonMap.put(second, secondCallback);
+    buttonMap.put(third, thirdCallback);
+    return buttonMap;
   }
 }

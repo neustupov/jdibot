@@ -48,8 +48,8 @@ public class CallbackProcessor {
         break;
       case SEARCH_BUTTON:
       case NEW_SEARCH_BUTTON:
+        dataCache.cleanAll(userId);
         dataCache.setUserCurrentBotState(userId, BotState.SHOW_SEARCH);
-        dataCache.cleanSearch(userId);
         callbackAnswer = botStateContext.processInputMessage(BotState.SHOW_SEARCH, message);
         break;
       case TESTS_BUTTON:
@@ -70,15 +70,32 @@ public class CallbackProcessor {
         dataCache.getUserContext(userId).setCategory(Category.COLLECTIONS);
         callbackAnswer = botStateContext.processInputMessage(BotState.SHOW_CATEGORY, message);
         break;
+      case SPRING_BUTTON:
+        dataCache.setUserCurrentBotState(userId, BotState.SHOW_SPRING_CATEGORY_MENU);
+        dataCache.getUserContext(userId).setCategory(Category.SPRING);
+        callbackAnswer = botStateContext.processInputMessage(BotState.SHOW_SPRING_CATEGORY_MENU, message);
+        break;
       case BACK_BUTTON:
         BotState previousBotState = dataCache.getPreviousUserBotState(userId);
         dataCache.cleanRange(userId);
         callbackAnswer = botStateContext.processInputMessage(previousBotState, message);
         break;
       case BACK_TO_START_MENU_BUTTON:
-        dataCache.cleanStates(userId);
-        dataCache.cleanSearch(userId);
+        dataCache.cleanAll(userId);
         callbackAnswer = botStateContext.processInputMessage(BotState.SHOW_START_MENU, message);
+        break;
+      case BACK_TO_CATEGORY_BUTTON:
+        dataCache.cleanCategory(userId);
+        dataCache.cleanRange(userId);
+        dataCache.setUserCurrentBotState(userId, BotState.SHOW_CATEGORY_MENU);
+        callbackAnswer = botStateContext.processInputMessage(BotState.SHOW_CATEGORY_MENU, message);
+        break;
+      case BACK_TO_LEVEL_BUTTON:
+        dataCache.cleanLevel(userId);
+        dataCache.cleanCategory(userId);
+        dataCache.cleanRange(userId);
+        dataCache.setUserCurrentBotState(userId, BotState.SHOW_LEVEL_MENU);
+        callbackAnswer = botStateContext.processInputMessage(BotState.SHOW_LEVEL_MENU, message);
         break;
       case NEXT_BUTTON:
         dataCache.getUserContext(userId).setRoute("next");

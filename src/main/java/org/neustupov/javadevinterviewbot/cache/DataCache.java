@@ -21,5 +21,9 @@ public interface DataCache {
 
   void cleanRange(int userId);
 
+  void cleanCategory(int userId);
+
+  void cleanLevel(int userId);
+
   void cleanAll(int userId);
 }
