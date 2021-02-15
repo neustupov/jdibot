@@ -82,6 +82,7 @@ public class CallbackProcessor {
         break;
       case BACK_TO_START_MENU_BUTTON:
         dataCache.cleanAll(userId);
+        dataCache.setUserCurrentBotState(userId, BotState.SHOW_START_MENU);
         callbackAnswer = botStateContext.processInputMessage(BotState.SHOW_START_MENU, message);
         break;
       case BACK_TO_CATEGORY_BUTTON:

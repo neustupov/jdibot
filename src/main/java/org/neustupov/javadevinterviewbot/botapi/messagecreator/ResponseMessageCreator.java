@@ -8,6 +8,7 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker;
 import org.neustupov.javadevinterviewbot.botapi.states.BotState;
+import org.neustupov.javadevinterviewbot.botapi.states.Category;
 import org.neustupov.javadevinterviewbot.cache.DataCache;
 import org.neustupov.javadevinterviewbot.model.Question;
 import org.neustupov.javadevinterviewbot.model.RangePair;
@@ -63,6 +64,7 @@ public class ResponseMessageCreator {
     SendMessage sendMessage = replyMessageService
         .getReplyMessage(chatId, "reply.empty-search-result");
     RangePair range = dataCache.getUserContext(userId).getRange();
+    Category category = dataCache.getUserContext(userId).getCategory();
     if (qList == null || qList.isEmpty()) {
       dataCache.setUserCurrentBotState(userId, BotState.FILLING_SEARCH);
     } else {
@@ -76,7 +78,7 @@ public class ResponseMessageCreator {
               paginationService.getNewRange(qList.size(), range, pagination));
         }
       }
-      sendMessage.setText(parseQuestions(qListSelected));
+      sendMessage.setText(parseQuestions(category, qListSelected));
     }
     RangePair newRange = dataCache.getUserContext(userId).getRange();
     boolean next = false;
@@ -92,8 +94,13 @@ public class ResponseMessageCreator {
     return sendMessage;
   }
 
-  private String parseQuestions(List<Question> qList) {
+  private String parseQuestions(Category category, List<Question> qList) {
     StringBuffer sb = new StringBuffer();
+    if (category != null) {
+      sb.append(category.toString());
+      sb.append("\n");
+      sb.append("\n");
+    }
     qList.forEach(q -> {
       sb.append(q.getLink());
       sb.append(" ");

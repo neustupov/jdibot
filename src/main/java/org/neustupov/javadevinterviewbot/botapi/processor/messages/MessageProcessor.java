@@ -3,6 +3,7 @@ package org.neustupov.javadevinterviewbot.botapi.processor.messages;
 import static org.neustupov.javadevinterviewbot.botapi.processor.messages.MessageProcessor.Commands.QUESTION;
 import static org.neustupov.javadevinterviewbot.botapi.processor.messages.MessageProcessor.Commands.START;
 
+import com.vdurmont.emoji.Emoji;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +12,7 @@ import org.neustupov.javadevinterviewbot.botapi.BotStateContext;
 import org.neustupov.javadevinterviewbot.botapi.states.BotState;
 import org.neustupov.javadevinterviewbot.cache.DataCache;
 import org.neustupov.javadevinterviewbot.service.ReplyMessageService;
+import org.neustupov.javadevinterviewbot.utils.Emojis;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -23,7 +25,8 @@ public class MessageProcessor {
 
   DataCache dataCache;
   BotStateContext botStateContext;
-  @Lazy JavaDevInterviewBot bot;
+  @Lazy
+  JavaDevInterviewBot bot;
   ReplyMessageService replyMessageService;
 
   interface Commands {
@@ -52,7 +55,8 @@ public class MessageProcessor {
         botState = BotState.SHOW_START_MENU;
         dataCache.cleanAll(userId);
         dataCache.setUserCurrentBotState(userId, botState);
-        bot.sendPhoto(chatId, replyMessageService.getReplyText("reply.pictureText"), "static/images/bot-pic.jpg");
+        bot.sendPhoto(chatId, replyMessageService.getReplyText("reply.pictureText", Emojis.WAVE),
+            "static/images/bot-pic.jpg");
         break;
       default:
         botState = dataCache.getUserCurrentBotState(userId);

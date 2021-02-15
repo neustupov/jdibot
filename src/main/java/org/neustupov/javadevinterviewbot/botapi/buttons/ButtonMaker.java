@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.neustupov.javadevinterviewbot.botapi.states.BotState;
+import org.neustupov.javadevinterviewbot.utils.Emojis;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -106,15 +107,17 @@ public class ButtonMaker {
   }
 
   private List<InlineKeyboardButton> getSimpleBackButton() {
-    return getInlineKeyboardButtons(BACK, BACK_BUTTON);
+    return getInlineKeyboardButtons(Emojis.BACK + " " + BACK, BACK_BUTTON);
   }
 
   private List<InlineKeyboardButton> getBackToLevel() {
-    return getInlineKeyboardButtons(BACK_TO_LEVEL, BACK_TO_LEVEL_BUTTON);
+    return getInlineKeyboardButtons(Emojis.BACK + "   " + BACK_TO_LEVEL + "   " + Emojis.BACK,
+        BACK_TO_LEVEL_BUTTON);
   }
 
   private List<InlineKeyboardButton> getBackToStart() {
-    return getInlineKeyboardButtons(BACK_TO_START_MENU, BACK_TO_START_MENU_BUTTON);
+    return getInlineKeyboardButtons(Emojis.TOP + "   " + BACK_TO_START_MENU + "   " + Emojis.TOP,
+        BACK_TO_START_MENU_BUTTON);
   }
 
   private List<InlineKeyboardButton> getBackToCategory() {
