@@ -1,15 +1,13 @@
 package org.neustupov.javadevinterviewbot.botapi.buttons;
 
-import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Buttons.BACK;
-import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Buttons.BACK_TO_START_MENU;
-import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Buttons.NEW_SEARCH;
-import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Callbacks.BACK_BUTTON;
-import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Callbacks.BACK_TO_START_MENU_BUTTON;
-import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Callbacks.NEW_SEARCH_BUTTON;
+import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Buttons.*;
+import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Callbacks.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import org.neustupov.javadevinterviewbot.botapi.states.BotState;
+import org.neustupov.javadevinterviewbot.utils.Emojis;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -17,17 +15,21 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 @Component
 public class ButtonMaker {
 
-  public static final String BUTTONS = "buttons";
-  public static final String CALLBACKS = "callbacks";
+  public interface Buttons {
 
-  public interface Buttons{
     String BACK = "Назад";
     String NEW_SEARCH = "Новый поиск";
     String BACK_TO_START_MENU = "Вернуться в главное меню";
+    String BACK_TO_CATEGORY = "Вернуться к категориям";
+    String BACK_TO_LEVEL = "Вернуться к уровню";
 
     String OOP = "ООП";
     String COLLECTIONS = "Коллекции";
     String PATTERNS = "Паттерны";
+    String SPRING = "Spring";
+    String SPRING_PART_1 = "Spring part 1";
+    String SPRING_PART_2 = "Spring part 2";
+    String SPRING_PART_3 = "Spring part 3";
 
     String JUNIOR = "Junior";
     String MIDDLE = "Middle";
@@ -36,16 +38,26 @@ public class ButtonMaker {
     String QUESTIONS = "Вопросы";
     String SEARCH = "Поиск";
     String TESTS = "Тестирование";
+
+    String PREVIOUS = "<-";
+    String NEXT = "->";
   }
 
-  public interface Callbacks{
+  public interface Callbacks {
+
     String BACK_BUTTON = "backButton";
     String NEW_SEARCH_BUTTON = "newSearchButton";
     String BACK_TO_START_MENU_BUTTON = "backToStartMenuButton";
+    String BACK_TO_CATEGORY_BUTTON = "backToCategoryButton";
+    String BACK_TO_LEVEL_BUTTON = "backToLevelButton";
 
     String OOP_CATEGORY_BUTTON = "buttonOOP";
     String COLLECTIONS_CATEGORY_BUTTON = "buttonCollections";
     String PATTERNS_CATEGORY_BUTTON = "buttonPatterns";
+    String SPRING_BUTTON = "buttonSpring";
+    String SPRING_PART_1_BUTTON = "buttonSpring_1";
+    String SPRING_PART_2_BUTTON = "buttonSpring_2";
+    String SPRING_PART_3_BUTTON = "buttonSpring_3";
 
     String JUNIOR_LEVEL_BUTTON = "buttonJunior";
     String MIDDLE_LEVEL_BUTTON = "buttonMiddle";
@@ -54,34 +66,26 @@ public class ButtonMaker {
     String QUESTIONS_BUTTON = "buttonQuestions";
     String SEARCH_BUTTON = "buttonSearch";
     String TESTS_BUTTON = "buttonTest";
+
+    String PREVIOUS_BUTTON = "<-Button";
+    String NEXT_BUTTON = "->Button";
   }
 
-  public InlineKeyboardMarkup getInlineMessageButtons(Map<String, List<String>> buttonNames,
-      boolean needBackButton) {
-    List<String> buttons = buttonNames.get(BUTTONS);
+  public InlineKeyboardMarkup getInlineMessageButtons(Map<String, String> buttonMap,
+      BotState botState) {
     InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
-    InlineKeyboardButton buttonQuestions = new InlineKeyboardButton().setText(buttons.get(0));
-    InlineKeyboardButton buttonSearch = new InlineKeyboardButton().setText(buttons.get(1));
-    InlineKeyboardButton buttonTest = new InlineKeyboardButton().setText(buttons.get(2));
-
-    List<String> callbacks = buttonNames.get(CALLBACKS);
-    buttonQuestions.setCallbackData(callbacks.get(0));
-    buttonSearch.setCallbackData(callbacks.get(1));
-    buttonTest.setCallbackData(callbacks.get(2));
-
     List<InlineKeyboardButton> menuButtons = new ArrayList<>();
-    menuButtons.add(buttonQuestions);
-    menuButtons.add(buttonSearch);
-    menuButtons.add(buttonTest);
-
+    buttonMap.keySet()
+        .forEach(key -> menuButtons
+            .add(new InlineKeyboardButton().setText(key).setCallbackData(buttonMap.get(key))));
     List<List<InlineKeyboardButton>> rows = new ArrayList<>();
     rows.add(menuButtons);
-    if (needBackButton) {
-      rows.add(getSimpleBackButton());
+    if (botState.equals(BotState.SHOW_CATEGORY_MENU)) {
+      rows.add(getBackToLevel());
+    } else if (botState.equals(BotState.SHOW_LEVEL_MENU)) {
+      rows.add(getBackToStart());
     }
-
     inlineKeyboardMarkup.setKeyboard(rows);
-
     return inlineKeyboardMarkup;
   }
 
@@ -93,33 +97,64 @@ public class ButtonMaker {
     return inlineKeyboardMarkup;
   }
 
-  private List<InlineKeyboardButton> getSimpleBackButton() {
-    InlineKeyboardButton buttonBack = new InlineKeyboardButton().setText(BACK);
-    buttonBack.setCallbackData(BACK_BUTTON);
-    List<InlineKeyboardButton> backButtons = new ArrayList<>();
-    backButtons.add(buttonBack);
-    return backButtons;
-  }
-
-  public InlineKeyboardMarkup getBackFromSearchButtons(){
+  public InlineKeyboardMarkup getBackToStartMenuButton() {
     InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
-
-    InlineKeyboardButton buttonNewSearch = new InlineKeyboardButton().setText(NEW_SEARCH);
-    InlineKeyboardButton buttonBaskToStartMenu = new InlineKeyboardButton().setText(BACK_TO_START_MENU);
-    buttonNewSearch.setCallbackData(NEW_SEARCH_BUTTON);
-    buttonBaskToStartMenu.setCallbackData(BACK_TO_START_MENU_BUTTON);
-
-    List<InlineKeyboardButton> menuButtonsRowFirst = new ArrayList<>();
-    menuButtonsRowFirst.add(buttonNewSearch);
-    List<InlineKeyboardButton> menuButtonsRowSecond = new ArrayList<>();
-    menuButtonsRowSecond.add(buttonBaskToStartMenu);
-
     List<List<InlineKeyboardButton>> rows = new ArrayList<>();
-    rows.add(menuButtonsRowFirst);
-    rows.add(menuButtonsRowSecond);
-
+    rows.add(getBackToStart());
     inlineKeyboardMarkup.setKeyboard(rows);
 
+    return inlineKeyboardMarkup;
+  }
+
+  private List<InlineKeyboardButton> getSimpleBackButton() {
+    return getInlineKeyboardButtons(Emojis.BACK + " " + BACK, BACK_BUTTON);
+  }
+
+  private List<InlineKeyboardButton> getBackToLevel() {
+    return getInlineKeyboardButtons(Emojis.BACK + "   " + BACK_TO_LEVEL + "   " + Emojis.BACK,
+        BACK_TO_LEVEL_BUTTON);
+  }
+
+  private List<InlineKeyboardButton> getBackToStart() {
+    return getInlineKeyboardButtons(Emojis.TOP + "   " + BACK_TO_START_MENU + "   " + Emojis.TOP,
+        BACK_TO_START_MENU_BUTTON);
+  }
+
+  private List<InlineKeyboardButton> getBackToCategory() {
+    return getInlineKeyboardButtons(BACK_TO_CATEGORY, BACK_TO_CATEGORY_BUTTON);
+  }
+
+  private List<InlineKeyboardButton> getInlineKeyboardButtons(String button,
+      String callback) {
+    InlineKeyboardButton backToStart = new InlineKeyboardButton().setText(button);
+    backToStart.setCallbackData(callback);
+    List<InlineKeyboardButton> backToStartButton = new ArrayList<>();
+    backToStartButton.add(backToStart);
+    return backToStartButton;
+  }
+
+  public InlineKeyboardMarkup getPaginationButton(boolean previous, boolean next, BotState state) {
+    InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+    List<List<InlineKeyboardButton>> rows = new ArrayList<>();
+
+    List<InlineKeyboardButton> paginationButton = new ArrayList<>();
+    if (previous) {
+      InlineKeyboardButton buttonPrevious = new InlineKeyboardButton().setText(PREVIOUS);
+      buttonPrevious.setCallbackData(PREVIOUS_BUTTON);
+      paginationButton.add(buttonPrevious);
+    }
+    if (next) {
+      InlineKeyboardButton buttonNext = new InlineKeyboardButton().setText(NEXT);
+      buttonNext.setCallbackData(NEXT_BUTTON);
+      paginationButton.add(buttonNext);
+    }
+    rows.add(paginationButton);
+    if (state.equals(BotState.FILLING_SEARCH)) {
+      rows.add(getBackToStart());
+    } else if (state.equals(BotState.SHOW_CATEGORY)) {
+      rows.add(getBackToCategory());
+    }
+    inlineKeyboardMarkup.setKeyboard(rows);
     return inlineKeyboardMarkup;
   }
 }

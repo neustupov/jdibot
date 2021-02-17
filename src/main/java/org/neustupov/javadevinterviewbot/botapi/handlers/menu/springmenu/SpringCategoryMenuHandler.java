@@ -1,9 +1,8 @@
-package org.neustupov.javadevinterviewbot.botapi.handlers.menu;
+package org.neustupov.javadevinterviewbot.botapi.handlers.menu.springmenu;
 
 import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Buttons.*;
 import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Callbacks.*;
 
-import java.util.HashMap;
 import java.util.Map;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -18,11 +17,11 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 @Slf4j
 @Component
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CategoryMenuHandler implements InputMessageHandler {
+public class SpringCategoryMenuHandler implements InputMessageHandler {
 
   ResponseMessageCreator responseMessageCreator;
 
-  public CategoryMenuHandler(
+  public SpringCategoryMenuHandler(
       ResponseMessageCreator responseMessageCreator) {
     this.responseMessageCreator = responseMessageCreator;
   }
@@ -39,16 +38,13 @@ public class CategoryMenuHandler implements InputMessageHandler {
   }
 
   private Map<String, String> getButtonNames() {
-    Map<String, String> resultMap = new HashMap<>();
-    resultMap.put(OOP, OOP_CATEGORY_BUTTON);
-    resultMap.put(COLLECTIONS, COLLECTIONS_CATEGORY_BUTTON);
-    resultMap.put(PATTERNS, PATTERNS_CATEGORY_BUTTON);
-    resultMap.put(SPRING, SPRING_BUTTON);
-    return resultMap;
+    return responseMessageCreator.getStringMap(SPRING_PART_1, SPRING_PART_1_BUTTON,
+        SPRING_PART_2, SPRING_PART_2_BUTTON,
+        SPRING_PART_3, SPRING_PART_3_BUTTON);
   }
 
   @Override
   public BotState getHandlerName() {
-    return BotState.SHOW_CATEGORY_MENU;
+    return BotState.SHOW_SPRING_CATEGORY_MENU;
   }
 }

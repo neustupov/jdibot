@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserDataCache implements DataCache {
 
+  //TODO переделать бес стека - не понадобился
   Map<Integer, Stack<BotState>> stateMap = new HashMap<>();
   Map<Integer, UserContext> userContextMap = new HashMap<>();
 
@@ -64,6 +65,35 @@ public class UserDataCache implements DataCache {
     if (userContext != null) {
       userContext.setSearchField("");
     }
+  }
+
+  @Override
+  public void cleanRange(int userId) {
+    UserContext userContext = userContextMap.get(userId);
+    if (userContext != null) {
+      userContext.setRange(null);
+    }
+  }
+
+  @Override
+  public void cleanCategory(int userId) {
+    UserContext userContext = userContextMap.get(userId);
+    if (userContext != null) {
+      userContext.setCategory(null);
+    }
+  }
+
+  @Override
+  public void cleanLevel(int userId) {
+    UserContext userContext = userContextMap.get(userId);
+    if (userContext != null) {
+      userContext.setLevel(null);
+    }
+  }
+
+  @Override
+  public void cleanAll(int userId) {
+    userContextMap.put(userId, new UserContext());
   }
 
   @Override

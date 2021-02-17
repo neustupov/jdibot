@@ -4,9 +4,8 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.neustupov.javadevinterviewbot.botapi.handlers.InputMessageHandler;
+import org.neustupov.javadevinterviewbot.botapi.messagecreator.ResponseMessageCreator;
 import org.neustupov.javadevinterviewbot.botapi.states.BotState;
-import org.neustupov.javadevinterviewbot.cache.UserDataCache;
-import org.neustupov.javadevinterviewbot.service.ReplyMessageService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -16,14 +15,11 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SearchHandler implements InputMessageHandler {
 
-  ReplyMessageService replyMessageService;
-  UserDataCache userDataCache;
+  ResponseMessageCreator responseMessageCreator;
 
   public SearchHandler(
-      ReplyMessageService replyMessageService,
-      UserDataCache userDataCache) {
-    this.replyMessageService = replyMessageService;
-    this.userDataCache = userDataCache;
+      ResponseMessageCreator responseMessageCreator) {
+    this.responseMessageCreator = responseMessageCreator;
   }
 
   @Override
@@ -31,11 +27,10 @@ public class SearchHandler implements InputMessageHandler {
     return processUsersInput(message);
   }
 
-  private SendMessage processUsersInput(Message message){
+  private SendMessage processUsersInput(Message message) {
     long chatId = message.getChatId();
-    SendMessage replyToUser = replyMessageService.getReplyMessage(chatId, "reply.search");
-    userDataCache.setUserCurrentBotState((int) chatId, BotState.FILLING_SEARCH);
-    return replyToUser;
+    return responseMessageCreator
+        .getSimplyMessage(chatId, "reply.search", BotState.FILLING_SEARCH, true);
   }
 
   @Override

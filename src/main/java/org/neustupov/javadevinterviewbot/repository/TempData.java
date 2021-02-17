@@ -1,20 +1,21 @@
 package org.neustupov.javadevinterviewbot.repository;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.Map;
+import lombok.Getter;
 import org.neustupov.javadevinterviewbot.botapi.states.Category;
 import org.neustupov.javadevinterviewbot.botapi.states.Level;
 import org.neustupov.javadevinterviewbot.model.Question;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
-@Repository
-public class CategoryRepositoryInMemoryImpl implements CategoryRepository {
+@Component
+public class TempData {
 
-  private List<Question> qList = new ArrayList<>();
+  @Getter
+  private Map<String, Question> qList = new HashMap<>();
 
   {
-    qList.add(Question.builder()
+    qList.put("/q0000", Question.builder()
         .link("/q0000")
         .category(Category.OOP)
         .level(Level.JUNIOR)
@@ -36,7 +37,7 @@ public class CategoryRepositoryInMemoryImpl implements CategoryRepository {
                 + "производится наследование, называется базовым, родительским или суперклассом. Новый класс — потомком, наследником, дочерним или производным классом."
                 + "Полиморфизм – свойство системы использовать объекты с одинаковым интерфейсом без информации о типе и внутренней структуре объекта")
         .build());
-    qList.add(Question.builder()
+    qList.put("/q0001", Question.builder()
         .link("/q0001")
         .category(Category.OOP)
         .level(Level.JUNIOR)
@@ -44,7 +45,7 @@ public class CategoryRepositoryInMemoryImpl implements CategoryRepository {
         .largeDescription(
             "Класс – это описатель общих свойств группы объектов. Этими свойствами могут быть как характеристики объектов (размер, вес, цвет и т.п.), так и поведения, роли и т.п.")
         .build());
-    qList.add(Question.builder()
+    qList.put("/q0002", Question.builder()
         .link("/q0002")
         .level(Level.JUNIOR)
         .category(Category.COLLECTIONS)
@@ -52,7 +53,7 @@ public class CategoryRepositoryInMemoryImpl implements CategoryRepository {
         .largeDescription(
             "Коллекциями/контейнерами в Java принято называть классы, основная цель которых – хранить набор других элементов.")
         .build());
-    qList.add(Question.builder()
+    qList.put("/q0003", Question.builder()
         .link("/q0003")
         .level(Level.JUNIOR)
         .category(Category.COLLECTIONS)
@@ -63,7 +64,7 @@ public class CategoryRepositoryInMemoryImpl implements CategoryRepository {
                 + "рекурсивные типы данных, такие как списки и деревья. Стандартный набор коллекций Java служит для избавления программиста от необходимости самостоятельно реализовывать эти типы данных "
                 + "и снабжает его дополнительными возможностями.")
         .build());
-    qList.add(Question.builder()
+    qList.put("/q0004", Question.builder()
         .link("/q0004")
         .category(Category.OOP)
         .level(Level.JUNIOR)
@@ -71,7 +72,7 @@ public class CategoryRepositoryInMemoryImpl implements CategoryRepository {
         .largeDescription(
             "Тест тест")
         .build());
-    qList.add(Question.builder()
+    qList.put("/q0005", Question.builder()
         .link("/q0005")
         .category(Category.OOP)
         .level(Level.JUNIOR)
@@ -79,7 +80,7 @@ public class CategoryRepositoryInMemoryImpl implements CategoryRepository {
         .largeDescription(
             "Тест1 тест")
         .build());
-    qList.add(Question.builder()
+    qList.put("/q0006", Question.builder()
         .link("/q0006")
         .category(Category.OOP)
         .level(Level.JUNIOR)
@@ -87,24 +88,5 @@ public class CategoryRepositoryInMemoryImpl implements CategoryRepository {
         .largeDescription(
             "Тест2 тест")
         .build());
-  }
-
-  @Override
-  public List<Question> getAllQuestionsByCategoryAndLevel(Category category, Level level) {
-    return qList.stream()
-        .filter(q -> q.getCategory().equals(category) && q.getLevel().equals(level))
-        .collect(Collectors.toList());
-  }
-
-  @Override
-  public Question getQuestionByLink(String link) {
-    return qList.stream().filter(q -> q.getLink().equals(link)).findAny().get();
-  }
-
-  @Override
-  public List<Question> search(String searchString) {
-    return qList.stream()
-        .filter(q -> q.getSmallDescription().toLowerCase().contains(searchString.toLowerCase()))
-        .collect(Collectors.toList());
   }
 }
