@@ -26,6 +26,7 @@ public class QuestionRepositoryInMemoryImpl implements CommonQuestionRepository 
     Question result = qMap.get(question.getLink());
     if (result != null) {
       result.setLink(question.getLink());
+      result.setImage(question.getImage());
       result.setLevel(question.getLevel());
       result.setCategory(question.getCategory());
       result.setSmallDescription(question.getSmallDescription());

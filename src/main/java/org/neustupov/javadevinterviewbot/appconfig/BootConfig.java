@@ -11,9 +11,10 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
-import org.telegram.telegrambots.bots.DefaultBotOptions;
-import org.telegram.telegrambots.meta.ApiContext;
 
+/**
+ * Класс конфигурации бота
+ */
 @Getter
 @Setter
 @Configuration
@@ -27,8 +28,7 @@ public class BootConfig {
 
   @Bean
   public JavaDevInterviewBot javaDevInterviewBot(TelegramFacade telegramFacade) {
-    DefaultBotOptions options = ApiContext.getInstance(DefaultBotOptions.class);
-    JavaDevInterviewBot javaDevInterviewBot = new JavaDevInterviewBot(options, telegramFacade);
+    JavaDevInterviewBot javaDevInterviewBot = new JavaDevInterviewBot(telegramFacade);
     javaDevInterviewBot.setWebHookPath(webHookPath);
     javaDevInterviewBot.setBotUserName(botUserName);
     javaDevInterviewBot.setBotToken(botToken);

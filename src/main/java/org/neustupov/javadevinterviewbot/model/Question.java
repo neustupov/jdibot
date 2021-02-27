@@ -6,6 +6,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
+import org.bson.types.Binary;
 import org.neustupov.javadevinterviewbot.botapi.states.Category;
 import org.neustupov.javadevinterviewbot.botapi.states.Level;
 
@@ -17,6 +18,7 @@ public class Question {
   @NotNull
   @NotEmpty
   String link;
+  Binary image;
   @NotNull
   @NotEmpty
   Category category;

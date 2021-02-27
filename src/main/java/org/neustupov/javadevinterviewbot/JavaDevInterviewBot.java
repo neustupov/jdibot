@@ -12,6 +12,7 @@ import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramWebhookBot;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
@@ -26,8 +27,7 @@ public class JavaDevInterviewBot extends TelegramWebhookBot {
 
   TelegramFacade telegramFacade;
 
-  public JavaDevInterviewBot(DefaultBotOptions options, TelegramFacade telegramFacade) {
-    super(options);
+  public JavaDevInterviewBot(TelegramFacade telegramFacade) {
     this.telegramFacade = telegramFacade;
   }
 
@@ -62,21 +62,22 @@ public class JavaDevInterviewBot extends TelegramWebhookBot {
    * @param imageCaption Текст под фото
    * @param imagePath Путь к файлу
    */
-  public void sendPhoto(long chatId, String imageCaption, String imagePath) {
+  public void sendPhoto(Long chatId, String imageCaption, String imagePath) {
     File image = null;
     try {
       image = ResourceUtils.getFile("classpath:" + imagePath);
     } catch (FileNotFoundException e) {
-      log.error("Не найден файл по пути: " + imagePath);
+      log.error("Не найден файл по пути: " + imagePath, e);
     }
     if (image != null) {
-      SendPhoto sendPhoto = new SendPhoto().setPhoto(image);
-      sendPhoto.setChatId(chatId);
-      sendPhoto.setCaption(imageCaption);
+      SendPhoto sendPhoto = SendPhoto.builder()
+          .photo(new InputFile(image))
+          .chatId(chatId.toString())
+          .caption(imageCaption).build();
       try {
         execute(sendPhoto);
       } catch (TelegramApiException e) {
-        log.error("Не удалось отправить файл " + image.getName() + " " + e.getMessage());
+        log.error("Не удалось отправить файл " + image.getName() + " " + e.getMessage(), e);
       }
     }
   }

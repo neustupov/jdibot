@@ -13,8 +13,6 @@ public interface DataCache {
 
   UserContext getUserContext(int userId);
 
-  BotState getPreviousUserBotState(int userId);
-
   void cleanSearch(int userId);
 
   void cleanStates(int userId);

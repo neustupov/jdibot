@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker;
 import org.neustupov.javadevinterviewbot.botapi.handlers.InputMessageHandler;
 import org.neustupov.javadevinterviewbot.botapi.states.BotState;
+import org.neustupov.javadevinterviewbot.cache.DataCache;
 import org.neustupov.javadevinterviewbot.model.Question;
 import org.neustupov.javadevinterviewbot.repository.CommonQuestionRepository;
 import org.springframework.stereotype.Component;
@@ -30,10 +31,11 @@ public class QuestionHandler implements InputMessageHandler {
 
   @Override
   public SendMessage handle(Message message) {
-    long chatId = message.getChatId();
+    Long chatId = message.getChatId();
     Question question = commonQuestionRepository.findByLink(message.getText());
-    SendMessage sm = new SendMessage(chatId, question.getLargeDescription());
-    sm.setReplyMarkup(buttonMaker.getBackButton());
+    SendMessage sm = SendMessage.builder().chatId(chatId.toString())
+        .text(question.getLargeDescription()).build();
+    sm.setReplyMarkup(buttonMaker.getBackToQuestionsButton());
     return sm;
   }
 

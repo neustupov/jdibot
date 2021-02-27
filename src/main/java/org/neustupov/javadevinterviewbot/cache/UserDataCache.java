@@ -2,7 +2,6 @@ package org.neustupov.javadevinterviewbot.cache;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Stack;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.neustupov.javadevinterviewbot.botapi.states.BotState;
@@ -13,51 +12,19 @@ import org.springframework.stereotype.Component;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserDataCache implements DataCache {
 
-  //TODO переделать бес стека - не понадобился
-  Map<Integer, Stack<BotState>> stateMap = new HashMap<>();
+  Map<Integer, BotState> stateMap = new HashMap<>();
   Map<Integer, UserContext> userContextMap = new HashMap<>();
 
   public void setUserCurrentBotState(int userId, BotState botState) {
-    Stack<BotState> userStateStack = stateMap.get(userId);
-    if (userStateStack == null) {
-      userStateStack = new Stack<>();
-      userStateStack.push(botState);
-      stateMap.put(userId, userStateStack);
-    } else {
-      userStateStack.push(botState);
-    }
+    stateMap.put(userId, botState);
   }
 
   public BotState getUserCurrentBotState(int userId) {
-    Stack<BotState> botStateStack = stateMap.get(userId);
-    BotState botState = BotState.SHOW_START_MENU;
-    if (botStateStack != null) {
-      BotState curBotState = botStateStack.peek();
-      if (curBotState != null) {
-        botState = curBotState;
-      }
-    }
-    return botState;
-  }
-
-  public BotState getPreviousUserBotState(int userId) {
-    Stack<BotState> botStateStack = stateMap.get(userId);
-    BotState botState = BotState.SHOW_START_MENU;
-    if (botStateStack != null && !botStateStack.empty()) {
-      botStateStack.pop();
-      BotState curBotState = null;
-      if (!botStateStack.empty()) {
-        curBotState = botStateStack.peek();
-      }
-      if (curBotState != null) {
-        botState = curBotState;
-      }
-    }
-    return botState;
+    return stateMap.get(userId);
   }
 
   public void cleanStates(int userId) {
-    stateMap.put(userId, new Stack<>());
+    stateMap.put(userId, null);
   }
 
   public void cleanSearch(int userId) {
