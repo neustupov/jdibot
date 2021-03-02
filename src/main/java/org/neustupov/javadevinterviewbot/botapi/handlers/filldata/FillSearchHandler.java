@@ -52,7 +52,7 @@ public class FillSearchHandler implements InputMessageHandler {
     if (searchString == null || searchString.isEmpty()) {
       searchString = searchStringFromUserCache;
     } else {
-      dataCache.getUserContext(userId).setSearchField(searchString);
+      dataCache.setSearchField(userId, searchString);
     }
     return searchString;
   }
