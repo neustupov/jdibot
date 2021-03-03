@@ -9,7 +9,7 @@ import org.neustupov.javadevinterviewbot.botapi.messagecreator.ResponseMessageCr
 import org.neustupov.javadevinterviewbot.botapi.states.BotState;
 import org.neustupov.javadevinterviewbot.cache.DataCache;
 import org.neustupov.javadevinterviewbot.model.Question;
-import org.neustupov.javadevinterviewbot.repository.CommonQuestionRepository;
+import org.neustupov.javadevinterviewbot.repository.QuestionRepository;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -21,11 +21,11 @@ public class FillSearchHandler implements InputMessageHandler {
 
   //TODO сообщения должен готовить ResponseMessageCreator вынести все туда
   DataCache dataCache;
-  CommonQuestionRepository categoryRepositoryInMemory;
+  QuestionRepository categoryRepositoryInMemory;
   ResponseMessageCreator responseMessageCreator;
 
   public FillSearchHandler(DataCache dataCache,
-      CommonQuestionRepository categoryRepositoryInMemory,
+      QuestionRepository categoryRepositoryInMemory,
       ResponseMessageCreator responseMessageCreator) {
     this.dataCache = dataCache;
     this.categoryRepositoryInMemory = categoryRepositoryInMemory;

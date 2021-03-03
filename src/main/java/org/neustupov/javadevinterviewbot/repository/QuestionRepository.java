@@ -6,7 +6,7 @@ import org.neustupov.javadevinterviewbot.botapi.states.Category;
 import org.neustupov.javadevinterviewbot.botapi.states.Level;
 import org.neustupov.javadevinterviewbot.model.Question;
 
-public interface CommonQuestionRepository {
+public interface QuestionRepository {
 
   Question save(Question question);
   Iterable<Question> save(Collection<Question> question);

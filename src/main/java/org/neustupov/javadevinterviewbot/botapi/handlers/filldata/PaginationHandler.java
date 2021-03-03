@@ -12,7 +12,7 @@ import org.neustupov.javadevinterviewbot.botapi.messagecreator.ResponseMessageCr
 import org.neustupov.javadevinterviewbot.botapi.states.BotState;
 import org.neustupov.javadevinterviewbot.cache.DataCache;
 import org.neustupov.javadevinterviewbot.model.Question;
-import org.neustupov.javadevinterviewbot.repository.CommonQuestionRepository;
+import org.neustupov.javadevinterviewbot.repository.QuestionRepository;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -28,14 +28,14 @@ public class PaginationHandler implements InputMessageHandler {
   }
 
   DataCache dataCache;
-  CommonQuestionRepository commonQuestionRepository;
+  QuestionRepository questionRepository;
   ResponseMessageCreator responseMessageCreator;
 
   public PaginationHandler(DataCache dataCache,
-      CommonQuestionRepository commonQuestionRepository,
+      QuestionRepository questionRepository,
       ResponseMessageCreator responseMessageCreator) {
     this.dataCache = dataCache;
-    this.commonQuestionRepository = commonQuestionRepository;
+    this.questionRepository = questionRepository;
     this.responseMessageCreator = responseMessageCreator;
   }
 
@@ -46,11 +46,11 @@ public class PaginationHandler implements InputMessageHandler {
     List<Question> qList = null;
     String categoryOrSearch = getCategoryOrSearch(chatId.intValue());
     if (Objects.equals(categoryOrSearch, "category")) {
-      qList = commonQuestionRepository
+      qList = questionRepository
           .getAllByCategoryAndLevel(dataCache.getUserContext(chatId.intValue()).getCategory(),
               dataCache.getUserContext(chatId.intValue()).getLevel());
     } else if (Objects.equals(categoryOrSearch, "search")) {
-      qList = commonQuestionRepository.search(searchStringFromUserCache);
+      qList = questionRepository.search(searchStringFromUserCache);
     }
     String pagination = getPagination(chatId.intValue());
     return responseMessageCreator.getMessage(qList, chatId, chatId.intValue(), pagination);

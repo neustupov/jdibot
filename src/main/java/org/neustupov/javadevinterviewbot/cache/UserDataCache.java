@@ -1,7 +1,5 @@
 package org.neustupov.javadevinterviewbot.cache;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -10,7 +8,9 @@ import org.neustupov.javadevinterviewbot.botapi.states.Category;
 import org.neustupov.javadevinterviewbot.botapi.states.Level;
 import org.neustupov.javadevinterviewbot.model.RangePair;
 import org.neustupov.javadevinterviewbot.model.UserContext;
+import org.neustupov.javadevinterviewbot.model.UserState;
 import org.neustupov.javadevinterviewbot.repository.UserContextRepository;
+import org.neustupov.javadevinterviewbot.repository.UserStateRepository;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -18,21 +18,30 @@ import org.springframework.stereotype.Component;
 public class UserDataCache implements DataCache {
 
   UserContextRepository contextRepository;
-
-  Map<Long, BotState> stateMap = new HashMap<>();
+  UserStateRepository userStateRepository;
 
 
   public UserDataCache(
-      UserContextRepository contextRepository) {
+      UserContextRepository contextRepository,
+      UserStateRepository userStateRepository) {
     this.contextRepository = contextRepository;
+    this.userStateRepository = userStateRepository;
   }
 
   public void setUserCurrentBotState(long userId, BotState botState) {
-    stateMap.put(userId, botState);
+    Optional<UserState> userStateOptional = userStateRepository.findById(userId);
+    if (userStateOptional.isPresent()){
+      UserState userState = userStateOptional.get();
+      userState.setBotState(botState);
+      userStateRepository.save(userState);
+    } else {
+      userStateRepository.save(new UserState(userId));
+    }
   }
 
   public BotState getUserCurrentBotState(long userId) {
-    return stateMap.get(userId);
+    Optional<UserState> userState = userStateRepository.findById(userId);
+    return userState.map(UserState::getBotState).orElse(null);
   }
 
   public void setUserLevel(long userId, Level level){
@@ -71,7 +80,10 @@ public class UserDataCache implements DataCache {
   }
 
   public void cleanStates(long userId) {
-    stateMap.put(userId, null);
+    userStateRepository.findById(userId).ifPresent(userState -> {
+      userState.setBotState(null);
+      userStateRepository.save(userState);
+    });
   }
 
   public void cleanSearch(long userId) {

@@ -12,7 +12,7 @@ import org.neustupov.javadevinterviewbot.model.Question;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class QuestionRepositoryInMemoryImpl implements CommonQuestionRepository {
+public class QuestionRepositoryInMemoryImpl implements QuestionRepository {
 
   private Map<String, Question> qMap;
 

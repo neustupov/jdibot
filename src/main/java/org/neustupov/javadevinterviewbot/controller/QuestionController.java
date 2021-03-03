@@ -3,7 +3,7 @@ package org.neustupov.javadevinterviewbot.controller;
 import java.net.URI;
 import javax.validation.Valid;
 import org.neustupov.javadevinterviewbot.model.Question;
-import org.neustupov.javadevinterviewbot.repository.CommonQuestionRepository;
+import org.neustupov.javadevinterviewbot.repository.QuestionRepository;
 import org.neustupov.javadevinterviewbot.validation.QuestionValidationError;
 import org.neustupov.javadevinterviewbot.validation.QuestionValidationErrorBuilder;
 import org.springframework.http.HttpStatus;
@@ -24,10 +24,10 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RequestMapping("/api")
 public class QuestionController {
 
-  private CommonQuestionRepository repository;
+  private QuestionRepository repository;
 
   public QuestionController(
-      CommonQuestionRepository repository) {
+      QuestionRepository repository) {
     this.repository = repository;
   }
 

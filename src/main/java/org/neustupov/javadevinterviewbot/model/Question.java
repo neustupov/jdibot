@@ -9,12 +9,14 @@ import lombok.experimental.FieldDefaults;
 import org.bson.types.Binary;
 import org.neustupov.javadevinterviewbot.botapi.states.Category;
 import org.neustupov.javadevinterviewbot.botapi.states.Level;
+import org.springframework.data.annotation.Id;
 
 @Data
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Question {
 
+  @Id
   @NotNull
   @NotEmpty
   String link;
