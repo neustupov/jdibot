@@ -17,9 +17,7 @@ import org.springframework.data.annotation.Id;
 public class Question {
 
   @Id
-  @NotNull
-  @NotEmpty
-  String link;
+  long id;
   Binary image;
   @NotNull
   @NotEmpty

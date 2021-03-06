@@ -1,34 +1,47 @@
 package org.neustupov.javadevinterviewbot.controller;
 
+import java.io.IOException;
 import java.net.URI;
+import java.util.List;
+import java.util.Optional;
 import javax.validation.Valid;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
+import org.bson.types.Binary;
 import org.neustupov.javadevinterviewbot.model.Question;
-import org.neustupov.javadevinterviewbot.repository.QuestionRepository;
+import org.neustupov.javadevinterviewbot.repository.QuestionRepositoryMongo;
+import org.neustupov.javadevinterviewbot.repository.QuestionTempData;
 import org.neustupov.javadevinterviewbot.validation.QuestionValidationError;
 import org.neustupov.javadevinterviewbot.validation.QuestionValidationErrorBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
 @RequestMapping("/api")
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class QuestionController {
 
-  private QuestionRepository repository;
+  QuestionRepositoryMongo repository;
+  QuestionTempData questionTempData;
 
   public QuestionController(
-      QuestionRepository repository) {
+      QuestionRepositoryMongo repository,
+      QuestionTempData questionTempData) {
     this.repository = repository;
+    this.questionTempData = questionTempData;
+  }
+
+  @GetMapping("/init")
+  public ResponseEntity<Iterable<Question>> init() {
+    questionTempData.initSeq();
+    questionTempData.init();
+    List<Question> qList = questionTempData.getQList();
+    repository.saveAll(qList);
+    return ResponseEntity.ok(repository.findAll());
   }
 
   @GetMapping("/question")
@@ -36,9 +49,11 @@ public class QuestionController {
     return ResponseEntity.ok(repository.findAll());
   }
 
-  @GetMapping("/question/{link}")
-  public ResponseEntity<Question> getQuestionByLink(@PathVariable String link) {
-    return ResponseEntity.ok(repository.findByLink(link));
+  @GetMapping("/question/{id}")
+  public ResponseEntity<Question> getQuestionById(@PathVariable String id) {
+    Optional<Question> questionOptional = repository.findById(id);
+    return questionOptional.map(ResponseEntity::ok)
+        .orElseGet(() -> ResponseEntity.notFound().build());
   }
 
   @RequestMapping(value = "/question", method = {RequestMethod.POST, RequestMethod.PUT})
@@ -48,14 +63,27 @@ public class QuestionController {
           .body(QuestionValidationErrorBuilder.fromBindingsErrors(errors));
     }
     Question result = repository.save(question);
-    URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{link}")
-        .buildAndExpand(result.getLink()).toUri();
+    URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+        .buildAndExpand(result.getId()).toUri();
     return ResponseEntity.created(location).build();
   }
 
-  @DeleteMapping("/question/{link}")
-  public ResponseEntity<Question> deletQuestion(@PathVariable String link) {
-    repository.delete(Question.builder().link(link).build());
+  @PostMapping(value = "/question/{id}/image")
+  public ResponseEntity<?> addImageToQuestion(@PathVariable String id,
+      @RequestParam("image") MultipartFile multipartFile) throws IOException {
+    Optional<Question> questionOptional = repository.findById(id);
+    if (questionOptional.isPresent()) {
+      Question question = questionOptional.get();
+      question.setImage(new Binary(multipartFile.getBytes()));
+      repository.save(question);
+      return ResponseEntity.ok(repository.findById(id));
+    }
+    return ResponseEntity.notFound().build();
+  }
+
+  @DeleteMapping("/question/{id}")
+  public ResponseEntity<Question> deleteQuestion(@PathVariable String id) {
+    repository.delete(Question.builder().id(Long.parseLong(id)).build());
     return ResponseEntity.noContent().build();
   }
 
