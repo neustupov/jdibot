@@ -5,6 +5,7 @@ import java.util.List;
 import lombok.Getter;
 import org.neustupov.javadevinterviewbot.botapi.states.Category;
 import org.neustupov.javadevinterviewbot.botapi.states.Level;
+import org.neustupov.javadevinterviewbot.model.GenericBuilder;
 import org.neustupov.javadevinterviewbot.model.Question;
 import org.neustupov.javadevinterviewbot.service.QuestionNumService;
 import org.springframework.stereotype.Component;
@@ -24,12 +25,12 @@ public class QuestionTempData {
 
   public void init() {
     qList = Arrays.asList(
-        Question.builder()
-            .id(questionNumService.getNext())
-            .category(Category.OOP)
-            .level(Level.JUNIOR)
-            .smallDescription("Назовите принципы ООП и расскажите о каждом")
-            .largeDescription(
+        GenericBuilder.of(Question::new)
+            .with(Question::setId, questionNumService.getNext())
+            .with(Question::setCategory, Category.OOP)
+            .with(Question::setLevel, Level.JUNIOR)
+            .with(Question::setSmallDescription, "Назовите принципы ООП и расскажите о каждом")
+            .with(Question::setLargeDescription,
                 "Объе́ктно-ориенти́рованное программи́рование (ООП) — это методология программирования, основанная на представлении программы в виде совокупности объектов, каждый из которых "
                     + "является экземпляром определенного класса, а классы образуют иерархию наследования."
                     + "Основные принципы ООП: абстракция, инкапсуляция, наследование, полиморфизм."
@@ -46,60 +47,57 @@ public class QuestionTempData {
                     + "производится наследование, называется базовым, родительским или суперклассом. Новый класс — потомком, наследником, дочерним или производным классом."
                     + "Полиморфизм – свойство системы использовать объекты с одинаковым интерфейсом без информации о типе и внутренней структуре объекта")
             .build(),
-        Question.builder()
-            .id(questionNumService.getNext())
-            .category(Category.OOP)
-            .level(Level.JUNIOR)
-            .smallDescription("Дайте определение понятию “класс”")
-            .largeDescription(
+        GenericBuilder.of(Question::new)
+            .with(Question::setId, questionNumService.getNext())
+            .with(Question::setCategory, Category.OOP)
+            .with(Question::setLevel, Level.JUNIOR)
+            .with(Question::setSmallDescription, "Дайте определение понятию “класс”")
+            .with(Question::setLargeDescription,
                 "Класс – это описатель общих свойств группы объектов. Этими свойствами могут быть как характеристики объектов (размер, вес, цвет и т.п.), так и поведения, роли и т.п.")
             .build(),
-        Question.builder()
-            .id(questionNumService.getNext())
-            .level(Level.JUNIOR)
-            .category(Category.COLLECTIONS)
-            .smallDescription("Дайте определение понятию “коллекция”")
-            .largeDescription(
+        GenericBuilder.of(Question::new)
+            .with(Question::setId, questionNumService.getNext())
+            .with(Question::setCategory, Category.COLLECTIONS)
+            .with(Question::setLevel, Level.JUNIOR)
+            .with(Question::setSmallDescription, "Дайте определение понятию “коллекция”")
+            .with(Question::setLargeDescription,
                 "Коллекциями/контейнерами в Java принято называть классы, основная цель которых – хранить набор других элементов.")
             .build(),
-        Question.builder()
-            .id(questionNumService.getNext())
-            .level(Level.JUNIOR)
-            .category(Category.COLLECTIONS)
-            .smallDescription("Назовите преимущества использования коллекций")
-            .largeDescription(
+        GenericBuilder.of(Question::new)
+            .with(Question::setId, questionNumService.getNext())
+            .with(Question::setCategory, Category.COLLECTIONS)
+            .with(Question::setLevel, Level.JUNIOR)
+            .with(Question::setSmallDescription, "Назовите преимущества использования коллекций")
+            .with(Question::setLargeDescription,
                 "Массивы обладают значительными недостатками. Одним из них является конечный размер массива, как следствие, необходимость следить за размером массива. Другим — индексная "
                     + "адресация, что не всегда удобно, т.к. ограничивает возможности добавления и удаления объектов. Чтобы избавиться от этих недостатков уже несколько десятилетий программисты используют "
                     + "рекурсивные типы данных, такие как списки и деревья. Стандартный набор коллекций Java служит для избавления программиста от необходимости самостоятельно реализовывать эти типы данных "
                     + "и снабжает его дополнительными возможностями.")
             .build(),
-        Question.builder()
-            .id(questionNumService.getNext())
-            .category(Category.OOP)
-            .level(Level.JUNIOR)
-            .smallDescription("Тест")
-            .largeDescription(
-                "Тест тест")
+        GenericBuilder.of(Question::new)
+            .with(Question::setId, questionNumService.getNext())
+            .with(Question::setCategory, Category.OOP)
+            .with(Question::setLevel, Level.JUNIOR)
+            .with(Question::setSmallDescription, "Тест")
+            .with(Question::setLargeDescription, "Тест тест")
             .build(),
-        Question.builder()
-            .id(questionNumService.getNext())
-            .category(Category.OOP)
-            .level(Level.JUNIOR)
-            .smallDescription("Тест1")
-            .largeDescription(
-                "Тест1 тест")
+        GenericBuilder.of(Question::new)
+            .with(Question::setId, questionNumService.getNext())
+            .with(Question::setCategory, Category.OOP)
+            .with(Question::setLevel, Level.JUNIOR)
+            .with(Question::setSmallDescription, "Тест1")
+            .with(Question::setLargeDescription, "Тест1 тест")
             .build(),
-        Question.builder()
-            .id(questionNumService.getNext())
-            .category(Category.OOP)
-            .level(Level.JUNIOR)
-            .smallDescription("Тест2")
-            .largeDescription(
-                "Тест2 тест")
+        GenericBuilder.of(Question::new)
+            .with(Question::setId, questionNumService.getNext())
+            .with(Question::setCategory, Category.OOP)
+            .with(Question::setLevel, Level.JUNIOR)
+            .with(Question::setSmallDescription, "Тест2")
+            .with(Question::setLargeDescription, "Тест2 тест")
             .build());
   }
 
-  public void initSeq(){
+  public void initSeq() {
     questionNumService.init();
   }
 }

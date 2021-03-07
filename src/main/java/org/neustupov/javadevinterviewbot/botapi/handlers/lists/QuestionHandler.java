@@ -32,7 +32,7 @@ public class QuestionHandler implements InputMessageHandler {
   @Override
   public SendMessage handle(Message message) {
     Long chatId = message.getChatId();
-    Optional<Question> questionOptional = questionRepository.findById(message.getText());
+    Optional<Question> questionOptional = questionRepository.findById(Long.parseLong(message.getText()));
     SendMessage sm = null;
     if (questionOptional.isPresent()) {
       sm = SendMessage.builder().chatId(chatId.toString())
