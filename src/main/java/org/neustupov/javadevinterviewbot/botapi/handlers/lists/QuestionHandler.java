@@ -32,7 +32,8 @@ public class QuestionHandler implements InputMessageHandler {
   @Override
   public SendMessage handle(Message message) {
     Long chatId = message.getChatId();
-    Optional<Question> questionOptional = questionRepository.findById(Long.parseLong(message.getText()));
+    Long id = getIdFromMessage(message);
+    Optional<Question> questionOptional = questionRepository.findById(id);
     SendMessage sm = null;
     if (questionOptional.isPresent()) {
       sm = SendMessage.builder().chatId(chatId.toString())
@@ -40,6 +41,10 @@ public class QuestionHandler implements InputMessageHandler {
       sm.setReplyMarkup(buttonMaker.getBackToQuestionsButton());
     }
     return sm;
+  }
+
+  private Long getIdFromMessage(Message message){
+    return Long.parseLong(message.getText().replace("/q", ""));
   }
 
   @Override

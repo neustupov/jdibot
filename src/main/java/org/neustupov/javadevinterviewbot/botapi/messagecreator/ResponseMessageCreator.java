@@ -102,7 +102,7 @@ public class ResponseMessageCreator {
       sb.append("\n");
     }
     qList.forEach(q -> {
-      sb.append("\\").append(q.getId());
+      sb.append("/q").append(q.getId());
       sb.append(" ");
       sb.append(q.getSmallDescription());
       sb.append("\n");
