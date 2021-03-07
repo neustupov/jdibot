@@ -13,8 +13,8 @@ public class ReplyMessageService {
     this.localeMessageService = localeMessageService;
   }
 
-  public SendMessage getReplyMessage(long chat_id, String replyMessage) {
-    return new SendMessage(chat_id, localeMessageService.getMessage(replyMessage));
+  public SendMessage getReplyMessage(Long chat_id, String replyMessage) {
+    return SendMessage.builder().chatId(chat_id.toString()).text(localeMessageService.getMessage(replyMessage)).build();
   }
 
   public String getReplyText(String replyMessage) {
@@ -25,7 +25,7 @@ public class ReplyMessageService {
     return localeMessageService.getMessage(replyMessage, args);
   }
 
-  public SendMessage getReplyMessage(long chat_id, String replyMessage, Object... args) {
-    return new SendMessage(chat_id, localeMessageService.getMessage(replyMessage, args));
+  public SendMessage getReplyMessage(Long chat_id, String replyMessage, Object... args) {
+    return SendMessage.builder().chatId(chat_id.toString()).text(localeMessageService.getMessage(replyMessage, args)).build();
   }
 }

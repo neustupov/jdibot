@@ -60,7 +60,7 @@ public class ResponseMessageCreator {
     return replyToUser;
   }
 
-  public SendMessage getMessage(List<Question> qList, long chatId, int userId, String pagination) {
+  public SendMessage getMessage(List<Question> qList, Long chatId, int userId, String pagination) {
     SendMessage sendMessage = replyMessageService
         .getReplyMessage(chatId, "reply.empty-search-result");
     RangePair range = dataCache.getUserContext(userId).getRange();
@@ -87,7 +87,7 @@ public class ResponseMessageCreator {
       next = paginationService.addNextButton(qList, newRange);
       previous = paginationService.addPreviousButton(newRange);
     }
-    BotState userCurrentBotState = dataCache.getUserCurrentBotState(userId);
+    BotState userCurrentBotState = dataCache.getUserCurrentBotState(chatId.intValue());
     sendMessage
         .setReplyMarkup(buttonMaker.getPaginationButton(previous, next, userCurrentBotState));
 
@@ -102,7 +102,7 @@ public class ResponseMessageCreator {
       sb.append("\n");
     }
     qList.forEach(q -> {
-      sb.append(q.getLink());
+      sb.append("/q").append(q.getId());
       sb.append(" ");
       sb.append(q.getSmallDescription());
       sb.append("\n");

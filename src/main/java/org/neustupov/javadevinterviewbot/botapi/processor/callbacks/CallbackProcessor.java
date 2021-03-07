@@ -1,6 +1,8 @@
 package org.neustupov.javadevinterviewbot.botapi.processor.callbacks;
 
 import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Callbacks.*;
+import static org.neustupov.javadevinterviewbot.botapi.processor.callbacks.CallbackProcessor.Route.NEXT;
+import static org.neustupov.javadevinterviewbot.botapi.processor.callbacks.CallbackProcessor.Route.PREVIOUS;
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -22,6 +24,11 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 public class CallbackProcessor {
 
   private static final String NOT_WORK = "В данный момент не поддерживается";
+
+  interface Route {
+    String NEXT = "next";
+    String PREVIOUS = "previous";
+  }
 
   DataCache dataCache;
   BotStateContext botStateContext;
@@ -57,28 +64,33 @@ public class CallbackProcessor {
         break;
       case JUNIOR_LEVEL_BUTTON:
         dataCache.setUserCurrentBotState(userId, BotState.SHOW_CATEGORY_MENU);
-        dataCache.getUserContext(userId).setLevel(Level.JUNIOR);
+        dataCache.setUserLevel(userId, Level.JUNIOR);
         callbackAnswer = botStateContext.processInputMessage(BotState.SHOW_CATEGORY_MENU, message);
         break;
       case OOP_CATEGORY_BUTTON:
         dataCache.setUserCurrentBotState(userId, BotState.SHOW_CATEGORY);
-        dataCache.getUserContext(userId).setCategory(Category.OOP);
+        dataCache.setCategory(userId, Category.OOP);
         callbackAnswer = botStateContext.processInputMessage(BotState.SHOW_CATEGORY, message);
         break;
       case COLLECTIONS_CATEGORY_BUTTON:
         dataCache.setUserCurrentBotState(userId, BotState.SHOW_CATEGORY);
-        dataCache.getUserContext(userId).setCategory(Category.COLLECTIONS);
+        dataCache.setCategory(userId, Category.COLLECTIONS);
+        callbackAnswer = botStateContext.processInputMessage(BotState.SHOW_CATEGORY, message);
+        break;
+      case PATTERNS_CATEGORY_BUTTON:
+        dataCache.setUserCurrentBotState(userId, BotState.SHOW_CATEGORY);
+        dataCache.setCategory(userId, Category.PATTERNS);
         callbackAnswer = botStateContext.processInputMessage(BotState.SHOW_CATEGORY, message);
         break;
       case SPRING_BUTTON:
         dataCache.setUserCurrentBotState(userId, BotState.SHOW_SPRING_CATEGORY_MENU);
-        dataCache.getUserContext(userId).setCategory(Category.SPRING);
+        dataCache.setCategory(userId, Category.SPRING);
         callbackAnswer = botStateContext.processInputMessage(BotState.SHOW_SPRING_CATEGORY_MENU, message);
         break;
       case BACK_BUTTON:
-        BotState previousBotState = dataCache.getPreviousUserBotState(userId);
+        dataCache.setUserCurrentBotState(userId, BotState.CATEGORY_OR_SEARCH_RESULT);
         dataCache.cleanRange(userId);
-        callbackAnswer = botStateContext.processInputMessage(previousBotState, message);
+        callbackAnswer = botStateContext.processInputMessage(BotState.CATEGORY_OR_SEARCH_RESULT, message);
         break;
       case BACK_TO_START_MENU_BUTTON:
         dataCache.cleanAll(userId);
@@ -99,11 +111,11 @@ public class CallbackProcessor {
         callbackAnswer = botStateContext.processInputMessage(BotState.SHOW_LEVEL_MENU, message);
         break;
       case NEXT_BUTTON:
-        dataCache.getUserContext(userId).setRoute("next");
+        dataCache.setRoute(userId, NEXT);
         callbackAnswer = botStateContext.processInputMessage(BotState.PAGINATION_PAGE, message);
         break;
       case PREVIOUS_BUTTON:
-        dataCache.getUserContext(userId).setRoute("previous");
+        dataCache.setRoute(userId, PREVIOUS);
         callbackAnswer = botStateContext.processInputMessage(BotState.PAGINATION_PAGE, message);
         break;
     }

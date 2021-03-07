@@ -1,29 +1,40 @@
 package org.neustupov.javadevinterviewbot.cache;
 
 import org.neustupov.javadevinterviewbot.botapi.states.BotState;
+import org.neustupov.javadevinterviewbot.botapi.states.Category;
+import org.neustupov.javadevinterviewbot.botapi.states.Level;
+import org.neustupov.javadevinterviewbot.model.RangePair;
 import org.neustupov.javadevinterviewbot.model.UserContext;
 
 public interface DataCache {
 
-  void setUserCurrentBotState(int userId, BotState botState);
+  void setUserCurrentBotState(long userId, BotState botState);
 
-  BotState getUserCurrentBotState(int userId);
+  BotState getUserCurrentBotState(long userId);
 
-  void setUserContext(int userId, UserContext userContext);
+  void setUserContext(UserContext userContext);
 
-  UserContext getUserContext(int userId);
+  UserContext getUserContext(long userId);
 
-  BotState getPreviousUserBotState(int userId);
+  void setSearchField(long userId, String searchString);
 
-  void cleanSearch(int userId);
+  void setUserLevel(long userId, Level level);
 
-  void cleanStates(int userId);
+  void setCategory(long userId, Category category);
 
-  void cleanRange(int userId);
+  void setRoute(long userId, String route);
 
-  void cleanCategory(int userId);
+  void setRange(long userId, RangePair rangePair);
 
-  void cleanLevel(int userId);
+  void cleanSearch(long userId);
 
-  void cleanAll(int userId);
+  void cleanStates(long userId);
+
+  void cleanRange(long userId);
+
+  void cleanCategory(long userId);
+
+  void cleanLevel(long userId);
+
+  void cleanAll(long userId);
 }

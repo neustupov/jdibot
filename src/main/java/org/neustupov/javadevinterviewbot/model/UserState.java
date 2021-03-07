@@ -4,24 +4,19 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.neustupov.javadevinterviewbot.botapi.states.Category;
-import org.neustupov.javadevinterviewbot.botapi.states.Level;
+import org.neustupov.javadevinterviewbot.botapi.states.BotState;
 import org.springframework.data.annotation.Id;
 
 @Data
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserContext {
+public class UserState {
 
   @Id
-  public Long userId;
-  Level level;
-  Category category;
-  String searchField;
-  RangePair range;
-  String route;
+  long userId;
+  BotState botState;
 
-  public UserContext(Long userId) {
+  public UserState(long userId) {
     this.userId = userId;
   }
 }

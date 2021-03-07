@@ -24,7 +24,7 @@ public class PaginationService {
   }
 
   List<Question> getCurrentList(int userId, List<Question> qList, RangePair rangePair) {
-    dataCache.getUserContext(userId).setRange(rangePair);
+    dataCache.setRange(userId, rangePair);
     return qList.stream()
         .skip(rangePair.getFrom())
         .limit(rangePair.getTo() - rangePair.getFrom()).collect(Collectors.toList());

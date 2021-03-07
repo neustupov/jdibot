@@ -12,13 +12,15 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
+/**
+ * Класс формирует кнопки меню
+ */
 @Component
 public class ButtonMaker {
 
   public interface Buttons {
 
     String BACK = "Назад";
-    String NEW_SEARCH = "Новый поиск";
     String BACK_TO_START_MENU = "Вернуться в главное меню";
     String BACK_TO_CATEGORY = "Вернуться к категориям";
     String BACK_TO_LEVEL = "Вернуться к уровню";
@@ -77,7 +79,7 @@ public class ButtonMaker {
     List<InlineKeyboardButton> menuButtons = new ArrayList<>();
     buttonMap.keySet()
         .forEach(key -> menuButtons
-            .add(new InlineKeyboardButton().setText(key).setCallbackData(buttonMap.get(key))));
+            .add(InlineKeyboardButton.builder().text(key).callbackData(buttonMap.get(key)).build()));
     List<List<InlineKeyboardButton>> rows = new ArrayList<>();
     rows.add(menuButtons);
     if (botState.equals(BotState.SHOW_CATEGORY_MENU)) {
@@ -89,7 +91,7 @@ public class ButtonMaker {
     return inlineKeyboardMarkup;
   }
 
-  public InlineKeyboardMarkup getBackButton() {
+  public InlineKeyboardMarkup getBackToQuestionsButton() {
     InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
     List<List<InlineKeyboardButton>> rows = new ArrayList<>();
     rows.add(getSimpleBackButton());
@@ -126,7 +128,7 @@ public class ButtonMaker {
 
   private List<InlineKeyboardButton> getInlineKeyboardButtons(String button,
       String callback) {
-    InlineKeyboardButton backToStart = new InlineKeyboardButton().setText(button);
+    InlineKeyboardButton backToStart = InlineKeyboardButton.builder().text(button).build();
     backToStart.setCallbackData(callback);
     List<InlineKeyboardButton> backToStartButton = new ArrayList<>();
     backToStartButton.add(backToStart);
@@ -139,12 +141,12 @@ public class ButtonMaker {
 
     List<InlineKeyboardButton> paginationButton = new ArrayList<>();
     if (previous) {
-      InlineKeyboardButton buttonPrevious = new InlineKeyboardButton().setText(PREVIOUS);
+      InlineKeyboardButton buttonPrevious = InlineKeyboardButton.builder().text(PREVIOUS).build();
       buttonPrevious.setCallbackData(PREVIOUS_BUTTON);
       paginationButton.add(buttonPrevious);
     }
     if (next) {
-      InlineKeyboardButton buttonNext = new InlineKeyboardButton().setText(NEXT);
+      InlineKeyboardButton buttonNext = InlineKeyboardButton.builder().text(NEXT).build();
       buttonNext.setCallbackData(NEXT_BUTTON);
       paginationButton.add(buttonNext);
     }
