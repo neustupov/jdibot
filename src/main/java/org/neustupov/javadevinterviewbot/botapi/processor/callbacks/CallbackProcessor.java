@@ -77,6 +77,11 @@ public class CallbackProcessor {
         dataCache.setCategory(userId, Category.COLLECTIONS);
         callbackAnswer = botStateContext.processInputMessage(BotState.SHOW_CATEGORY, message);
         break;
+      case PATTERNS_CATEGORY_BUTTON:
+        dataCache.setUserCurrentBotState(userId, BotState.SHOW_CATEGORY);
+        dataCache.setCategory(userId, Category.PATTERNS);
+        callbackAnswer = botStateContext.processInputMessage(BotState.SHOW_CATEGORY, message);
+        break;
       case SPRING_BUTTON:
         dataCache.setUserCurrentBotState(userId, BotState.SHOW_SPRING_CATEGORY_MENU);
         dataCache.setCategory(userId, Category.SPRING);

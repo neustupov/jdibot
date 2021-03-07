@@ -1,5 +1,7 @@
 package org.neustupov.javadevinterviewbot;
 
+import static org.springframework.util.ResourceUtils.CLASSPATH_URL_PREFIX;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import lombok.AccessLevel;
@@ -8,7 +10,6 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.neustupov.javadevinterviewbot.botapi.TelegramFacade;
 import org.springframework.util.ResourceUtils;
-import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramWebhookBot;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
@@ -55,6 +56,10 @@ public class JavaDevInterviewBot extends TelegramWebhookBot {
     return null;
   }
 
+  public void sendPhoto(Long chatId, String imageCaption, File file) {
+    sendPhotoWithCaption(chatId, imageCaption, file);
+  }
+
   /**
    * Отправляет фото в чат - !! Должны быть указаны проперти бота - название, токен и хук !!
    *
@@ -65,19 +70,23 @@ public class JavaDevInterviewBot extends TelegramWebhookBot {
   public void sendPhoto(Long chatId, String imageCaption, String imagePath) {
     File image = null;
     try {
-      image = ResourceUtils.getFile("classpath:" + imagePath);
+      image = ResourceUtils.getFile(CLASSPATH_URL_PREFIX + imagePath);
     } catch (FileNotFoundException e) {
       log.error("Не найден файл по пути: " + imagePath, e);
     }
-    if (image != null) {
+    sendPhotoWithCaption(chatId, imageCaption, image);
+  }
+
+  private void sendPhotoWithCaption(Long chatId, String imageCaption, File file) {
+    if (file != null) {
       SendPhoto sendPhoto = SendPhoto.builder()
-          .photo(new InputFile(image))
+          .photo(new InputFile(file))
           .chatId(chatId.toString())
           .caption(imageCaption).build();
       try {
         execute(sendPhoto);
       } catch (TelegramApiException e) {
-        log.error("Не удалось отправить файл " + image.getName() + " " + e.getMessage(), e);
+        log.error("Не удалось отправить файл " + file.getName() + " " + e.getMessage(), e);
       }
     }
   }
