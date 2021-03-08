@@ -33,6 +33,12 @@ public class ImageUtil {
       } catch (IOException e) {
         log.error(e.getMessage(), e);
       }
+      log.info("File with name: " + imageFile.getName() + " is created");
     return imageFile;
+  }
+
+  public void deleteTempFile(File imageTempFile){
+    FileUtils.deleteQuietly(imageTempFile);
+    log.info("File with name: " + imageTempFile.getName() + " is deleted");
   }
 }
