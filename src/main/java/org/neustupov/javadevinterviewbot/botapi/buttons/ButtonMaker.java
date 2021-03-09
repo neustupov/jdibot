@@ -75,11 +75,11 @@ public class ButtonMaker {
 
   public InlineKeyboardMarkup getInlineMessageButtons(Map<String, String> buttonMap,
       BotState botState) {
-    InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
     List<InlineKeyboardButton> menuButtons = new ArrayList<>();
     buttonMap.keySet()
         .forEach(key -> menuButtons
-            .add(InlineKeyboardButton.builder().text(key).callbackData(buttonMap.get(key)).build()));
+            .add(
+                InlineKeyboardButton.builder().text(key).callbackData(buttonMap.get(key)).build()));
     List<List<InlineKeyboardButton>> rows = new ArrayList<>();
     rows.add(menuButtons);
     if (botState.equals(BotState.SHOW_CATEGORY_MENU)) {
@@ -87,6 +87,7 @@ public class ButtonMaker {
     } else if (botState.equals(BotState.SHOW_LEVEL_MENU)) {
       rows.add(getBackToStart());
     }
+    InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
     inlineKeyboardMarkup.setKeyboard(rows);
     return inlineKeyboardMarkup;
   }
