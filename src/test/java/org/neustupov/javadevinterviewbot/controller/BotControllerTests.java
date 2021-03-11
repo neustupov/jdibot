@@ -30,6 +30,10 @@ class BotControllerTests {
 
   @Autowired
   private MockMvc mockMvc;
+
+  @Autowired
+  private ObjectMapper mapper;
+
   private Update update;
 
   @MockBean
@@ -73,7 +77,6 @@ class BotControllerTests {
 
     Mockito.when(dataCache.getUserCurrentBotState(Mockito.anyLong())).thenReturn(BotState.SHOW_START_MENU);
 
-    ObjectMapper mapper = new ObjectMapper();
     mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
     byte[] updateBytes = mapper.writeValueAsBytes(update);
 

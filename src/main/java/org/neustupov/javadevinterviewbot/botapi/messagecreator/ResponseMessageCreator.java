@@ -10,6 +10,7 @@ import org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker;
 import org.neustupov.javadevinterviewbot.botapi.states.BotState;
 import org.neustupov.javadevinterviewbot.botapi.states.Category;
 import org.neustupov.javadevinterviewbot.cache.DataCache;
+import org.neustupov.javadevinterviewbot.model.GenericBuilder;
 import org.neustupov.javadevinterviewbot.model.Question;
 import org.neustupov.javadevinterviewbot.model.RangePair;
 import org.neustupov.javadevinterviewbot.service.ReplyMessageService;
@@ -71,7 +72,9 @@ public class ResponseMessageCreator {
       List<Question> qListSelected = new ArrayList<>(qList);
       if (qList.size() > maxObjects) {
         if (range == null) {
-          RangePair rangePair = RangePair.builder().from(0).to(maxObjects).build();
+          RangePair rangePair = GenericBuilder.of(RangePair::new)
+              .with(RangePair::setFrom, 0)
+              .with(RangePair::setTo, maxObjects).build();
           qListSelected = paginationService.getCurrentList(userId, qList, rangePair);
         } else {
           qListSelected = paginationService.getCurrentList(userId, qList,

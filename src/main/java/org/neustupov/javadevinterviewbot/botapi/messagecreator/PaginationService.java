@@ -6,6 +6,7 @@ import static org.neustupov.javadevinterviewbot.botapi.handlers.filldata.Paginat
 import java.util.List;
 import java.util.stream.Collectors;
 import org.neustupov.javadevinterviewbot.cache.DataCache;
+import org.neustupov.javadevinterviewbot.model.GenericBuilder;
 import org.neustupov.javadevinterviewbot.model.Question;
 import org.neustupov.javadevinterviewbot.model.RangePair;
 import org.springframework.beans.factory.annotation.Value;
@@ -53,7 +54,9 @@ public class PaginationService {
         to = from + maxObjects;
         break;
     }
-    return RangePair.builder().from(from).to(to).build();
+    return GenericBuilder.of(RangePair::new)
+        .with(RangePair::setFrom, from)
+        .with(RangePair::setTo, to).build();
   }
 
   boolean addNextButton(List<Question> qList, RangePair newRange) {
