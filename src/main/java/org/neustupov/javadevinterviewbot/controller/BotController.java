@@ -16,7 +16,7 @@ public class BotController {
     this.bot = bot;
   }
 
-  @PostMapping(value = "/")
+  @PostMapping(value = "/", produces = "application/json;charset=UTF-8")
   public BotApiMethod<?> onUpdateReceived(@RequestBody Update update){
     return bot.onWebhookUpdateReceived(update);
   }
