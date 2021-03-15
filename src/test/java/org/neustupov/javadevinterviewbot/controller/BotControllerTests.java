@@ -6,7 +6,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Collections;
 import java.util.List;
@@ -55,6 +54,8 @@ class BotControllerTests {
 
   @BeforeEach
   void setup() {
+    mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
     User realUser = new User();
     realUser.setId(1020);
     realUser.setFirstName("Vova");
@@ -97,36 +98,30 @@ class BotControllerTests {
 
   @Test
   void onUpdateReceived() throws Exception {
-    update.setMessage(message);
-
     Mockito.when(dataCache.getUserCurrentBotState(Mockito.anyLong()))
         .thenReturn(BotState.SHOW_START_MENU);
 
-    mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-    byte[] updateBytes = mapper.writeValueAsBytes(update);
+    update.setMessage(message);
 
     this.mockMvc
         .perform(post("/")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(updateBytes))
+            .content(mapper.writeValueAsBytes(update)))
         .andExpect(status().isOk())
         .andExpect(content().contentType("application/json;charset=UTF-8"));
   }
 
   @Test
   void startMenuTest() throws Exception {
-    update.setMessage(message);
-
     Mockito.when(dataCache.getUserCurrentBotState(Mockito.anyLong()))
         .thenReturn(BotState.SHOW_START_MENU);
 
-    mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-    byte[] updateBytes = mapper.writeValueAsBytes(update);
+    update.setMessage(message);
 
     MvcResult mvcResult = this.mockMvc
         .perform(post("/")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(updateBytes))
+            .content(mapper.writeValueAsBytes(update)))
         .andExpect(status().isOk())
         .andExpect(content().contentType("application/json;charset=UTF-8"))
         .andReturn();
@@ -144,19 +139,16 @@ class BotControllerTests {
 
   @Test
   void levelMenuTest() throws Exception {
-    callbackQuery.setData("buttonQuestions");
-    callbackQuerySet();
-
     Mockito.when(dataCache.getUserCurrentBotState(Mockito.anyLong()))
         .thenReturn(BotState.SHOW_START_MENU);
 
-    mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-    byte[] updateBytes = mapper.writeValueAsBytes(update);
+    callbackQuery.setData("buttonQuestions");
+    callbackQuerySet();
 
     MvcResult mvcResult = this.mockMvc
         .perform(post("/")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(updateBytes))
+            .content(mapper.writeValueAsBytes(update)))
         .andExpect(status().isOk())
         .andExpect(content().contentType("application/json;charset=UTF-8"))
         .andReturn();
@@ -174,19 +166,16 @@ class BotControllerTests {
 
   @Test
   void categoryMenuTest() throws Exception{
+    Mockito.when(dataCache.getUserCurrentBotState(Mockito.anyLong()))
+        .thenReturn(BotState.SHOW_LEVEL_MENU);
+
     callbackQuery.setData("buttonJunior");
     callbackQuerySet();
-
-    Mockito.when(dataCache.getUserCurrentBotState(Mockito.anyLong()))
-        .thenReturn(BotState.SHOW_START_MENU);
-
-    mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-    byte[] updateBytes = mapper.writeValueAsBytes(update);
 
     MvcResult mvcResult = this.mockMvc
         .perform(post("/")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(updateBytes))
+            .content(mapper.writeValueAsBytes(update)))
         .andExpect(status().isOk())
         .andExpect(content().contentType("application/json;charset=UTF-8"))
         .andReturn();
@@ -194,13 +183,17 @@ class BotControllerTests {
     SendMessage sendMessage = (SendMessage)TestUtil.convertJSONStringToObject(mvcResult.getResponse().getContentAsString(), SendMessage.class);
 
     List<InlineKeyboardButton> keyboardMarkup = ((InlineKeyboardMarkup) sendMessage.getReplyMarkup()).getKeyboard().get(0);
+    List<InlineKeyboardButton> backButtons = ((InlineKeyboardMarkup) sendMessage.getReplyMarkup()).getKeyboard().get(1);
+
     assertEquals(sendMessage.getText(), "Выбери категорию.");
-    assertEquals(((InlineKeyboardMarkup) sendMessage.getReplyMarkup()).getKeyboard().size(), 1);
+    assertEquals(((InlineKeyboardMarkup) sendMessage.getReplyMarkup()).getKeyboard().size(), 2);
     assertEquals(keyboardMarkup.size(), 4);
     assertEquals(keyboardMarkup.get(0).getText(), "ООП");
     assertEquals(keyboardMarkup.get(1).getText(), "Коллекции");
     assertEquals(keyboardMarkup.get(2).getText(), "Паттерны");
     assertEquals(keyboardMarkup.get(3).getText(), "Spring");
+
+    assertEquals(backButtons.get(0).getText(), "\uD83D\uDD1D   Вернуться в главное меню   \uD83D\uDD1D");
   }
 
   void questionMenuTest() {
