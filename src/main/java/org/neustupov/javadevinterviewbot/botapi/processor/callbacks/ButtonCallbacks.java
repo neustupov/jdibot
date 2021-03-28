@@ -10,6 +10,8 @@ import static org.neustupov.javadevinterviewbot.botapi.processor.callbacks.Butto
 import static org.neustupov.javadevinterviewbot.botapi.processor.callbacks.ButtonCallbacks.Route.PREVIOUS;
 
 import lombok.AccessLevel;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.neustupov.javadevinterviewbot.botapi.BotStateContext;
 import org.neustupov.javadevinterviewbot.botapi.states.BotState;
@@ -19,11 +21,12 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
+@Data
 @Component
+@NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ButtonCallbacks implements Callback{
 
-  private Callback next;
   BotStateContext botStateContext;
 
   interface Route {
