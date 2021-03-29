@@ -2,6 +2,7 @@ package org.neustupov.javadevinterviewbot.botapi.handlers.menu;
 
 import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Buttons.*;
 import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Callbacks.*;
+import static org.neustupov.javadevinterviewbot.botapi.states.BotState.SHOW_LEVEL_MENU;
 
 import java.util.Map;
 import lombok.AccessLevel;
@@ -45,6 +46,6 @@ public class LevelMenuHandler implements InputMessageHandler {
 
   @Override
   public BotState getHandlerName() {
-    return BotState.SHOW_LEVEL_MENU;
+    return SHOW_LEVEL_MENU;
   }
 }

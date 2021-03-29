@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
+import static org.neustupov.javadevinterviewbot.TestMessageData.getMessage;
 import static org.neustupov.javadevinterviewbot.botapi.states.BotState.FILLING_SEARCH;
 import static org.neustupov.javadevinterviewbot.botapi.states.BotState.PAGINATION_PAGE;
 import static org.neustupov.javadevinterviewbot.botapi.states.BotState.SHOW_CATEGORY;
@@ -26,7 +27,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -53,16 +53,7 @@ class PaginationHandlerTest {
   void setUp() {
     when(dataCache.getUserContext(anyLong())).thenReturn(userContext);
 
-    Chat chat = new Chat();
-    chat.setId(869489319L);
-    chat.setType("private");
-    chat.setFirstName("Vova");
-    chat.setLastName("Pupkin");
-
-    message = new Message();
-    message.setMessageId(100500);
-    message.setDate(1615311730);
-    message.setChat(chat);
+    message = getMessage();
 
     List<Question> qListForSearch = Arrays.asList(GenericBuilder.of(Question::new)
             .with(Question::setSmallDescription, "For Search 1")

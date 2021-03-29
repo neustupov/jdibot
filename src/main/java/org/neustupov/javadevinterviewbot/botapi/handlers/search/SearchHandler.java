@@ -1,5 +1,7 @@
 package org.neustupov.javadevinterviewbot.botapi.handlers.search;
 
+import static org.neustupov.javadevinterviewbot.botapi.states.BotState.SHOW_SEARCH;
+
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +37,6 @@ public class SearchHandler implements InputMessageHandler {
 
   @Override
   public BotState getHandlerName() {
-    return BotState.SHOW_SEARCH;
+    return SHOW_SEARCH;
   }
 }
