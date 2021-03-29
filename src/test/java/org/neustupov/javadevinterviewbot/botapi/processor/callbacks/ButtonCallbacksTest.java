@@ -11,6 +11,7 @@ import org.neustupov.javadevinterviewbot.botapi.BotStateContext;
 import org.neustupov.javadevinterviewbot.botapi.states.BotState;
 import org.neustupov.javadevinterviewbot.cache.DataCache;
 import org.neustupov.javadevinterviewbot.model.GenericBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
@@ -22,7 +23,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 @ActiveProfiles("test")
 class ButtonCallbacksTest {
 
-  @Spy
+  @Autowired
   private ButtonCallbacks buttonCallbacks;
 
   @Spy

@@ -23,7 +23,6 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 
 @Data
 @Component
-@NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ButtonCallbacks implements Callback{
 

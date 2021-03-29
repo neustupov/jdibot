@@ -16,7 +16,11 @@ import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.aggregator.AggregateWith;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mockito;
+import org.neustupov.javadevinterviewbot.QuestionAggregator;
 import org.neustupov.javadevinterviewbot.TestUtil;
 import org.neustupov.javadevinterviewbot.botapi.states.Category;
 import org.neustupov.javadevinterviewbot.botapi.states.Level;
@@ -175,16 +179,18 @@ class QuestionControllerTest {
         .andDo(print());
   }
 
-  @Test
-  void invalidQuestionSave() throws Exception {
-    Question invalidQuestion = GenericBuilder.of(Question::new)
-        .with(Question::setLevel, Level.JUNIOR)
-        .build();
-
+  @ParameterizedTest
+  @CsvSource({
+      "OOP, JUNIOR, Not Empty Small Description, ",
+      "OOP, JUNIOR, , Not Empty Large Description",
+      " , JUNIOR, Not Empty Small Description, Not Empty Large Description",
+      "OOP, , Not Empty Small Description, Not Empty Large Description"
+  })
+  void invalidQuestionSave(@AggregateWith(QuestionAggregator.class) Question question) throws Exception {
     this.mockMvc
         .perform(post(API + "/question")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(mapper.writeValueAsBytes(invalidQuestion)))
+            .content(mapper.writeValueAsBytes(question)))
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.errors").isArray())
         .andExpect(jsonPath("$.errors").isNotEmpty())

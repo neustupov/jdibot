@@ -2,6 +2,8 @@ package org.neustupov.javadevinterviewbot.botapi.buttons;
 
 import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Buttons.*;
 import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Callbacks.*;
+import static org.neustupov.javadevinterviewbot.botapi.states.BotState.FILLING_SEARCH;
+import static org.neustupov.javadevinterviewbot.botapi.states.BotState.SHOW_CATEGORY;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -109,6 +111,31 @@ public class ButtonMaker {
     return inlineKeyboardMarkup;
   }
 
+  public InlineKeyboardMarkup getPaginationButton(boolean previous, boolean next, BotState state) {
+    InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+    List<List<InlineKeyboardButton>> rows = new ArrayList<>();
+
+    List<InlineKeyboardButton> paginationButton = new ArrayList<>();
+    if (previous) {
+      InlineKeyboardButton buttonPrevious = InlineKeyboardButton.builder().text(PREVIOUS).build();
+      buttonPrevious.setCallbackData(PREVIOUS_BUTTON);
+      paginationButton.add(buttonPrevious);
+    }
+    if (next) {
+      InlineKeyboardButton buttonNext = InlineKeyboardButton.builder().text(NEXT).build();
+      buttonNext.setCallbackData(NEXT_BUTTON);
+      paginationButton.add(buttonNext);
+    }
+    rows.add(paginationButton);
+    if (state.equals(FILLING_SEARCH)) {
+      rows.add(getBackToStart());
+    } else if (state.equals(SHOW_CATEGORY)) {
+      rows.add(getBackToCategory());
+    }
+    inlineKeyboardMarkup.setKeyboard(rows);
+    return inlineKeyboardMarkup;
+  }
+
   private List<InlineKeyboardButton> getSimpleBackButton() {
     return getInlineKeyboardButtons(Emojis.BACK + " " + BACK, BACK_BUTTON);
   }
@@ -134,30 +161,5 @@ public class ButtonMaker {
     List<InlineKeyboardButton> backToStartButton = new ArrayList<>();
     backToStartButton.add(backToStart);
     return backToStartButton;
-  }
-
-  public InlineKeyboardMarkup getPaginationButton(boolean previous, boolean next, BotState state) {
-    InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
-    List<List<InlineKeyboardButton>> rows = new ArrayList<>();
-
-    List<InlineKeyboardButton> paginationButton = new ArrayList<>();
-    if (previous) {
-      InlineKeyboardButton buttonPrevious = InlineKeyboardButton.builder().text(PREVIOUS).build();
-      buttonPrevious.setCallbackData(PREVIOUS_BUTTON);
-      paginationButton.add(buttonPrevious);
-    }
-    if (next) {
-      InlineKeyboardButton buttonNext = InlineKeyboardButton.builder().text(NEXT).build();
-      buttonNext.setCallbackData(NEXT_BUTTON);
-      paginationButton.add(buttonNext);
-    }
-    rows.add(paginationButton);
-    if (state.equals(BotState.FILLING_SEARCH)) {
-      rows.add(getBackToStart());
-    } else if (state.equals(BotState.SHOW_CATEGORY)) {
-      rows.add(getBackToCategory());
-    }
-    inlineKeyboardMarkup.setKeyboard(rows);
-    return inlineKeyboardMarkup;
   }
 }
