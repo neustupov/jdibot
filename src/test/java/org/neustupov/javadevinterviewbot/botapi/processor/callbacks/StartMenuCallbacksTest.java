@@ -34,6 +34,17 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 @ActiveProfiles("test")
 class StartMenuCallbacksTest {
 
+  public interface Buttons {
+
+    String QUESTIONS_BUTTON = "buttonQuestions";
+    String SEARCH_BUTTON = "buttonSearch";
+    String TESTS_BUTTON = "buttonTest";
+
+    String QUESTIONS_BUTTON_CALLBACK = "buttonQuestionsCallback";
+    String SEARCH_BUTTON_CALLBACK = "buttonSearchCallback";
+    String TESTS_BUTTON_CALLBACK = "buttonTestCallback";
+  }
+
   @Autowired
   private StartMenuCallbacks startMenuCallbacks;
 
@@ -51,16 +62,6 @@ class StartMenuCallbacksTest {
 
   @Mock
   private Message message;
-
-  public interface Buttons {
-    String QUESTIONS_BUTTON = "buttonQuestions";
-    String SEARCH_BUTTON = "buttonSearch";
-    String TESTS_BUTTON = "buttonTest";
-
-    String QUESTIONS_BUTTON_CALLBACK = "buttonQuestionsCallback";
-    String SEARCH_BUTTON_CALLBACK = "buttonSearchCallback";
-    String TESTS_BUTTON_CALLBACK = "buttonTestCallback";
-  }
 
   @BeforeEach
   void setUp() {

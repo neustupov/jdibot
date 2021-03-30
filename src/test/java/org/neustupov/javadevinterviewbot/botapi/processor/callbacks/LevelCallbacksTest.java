@@ -36,6 +36,17 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 @ActiveProfiles("test")
 class LevelCallbacksTest {
 
+  public interface Buttons {
+
+    String JUNIOR_LEVEL_BUTTON = "buttonJunior";
+    String MIDDLE_LEVEL_BUTTON = "buttonMiddle";
+    String SENIOR_LEVEL_BUTTON = "buttonSenior";
+
+    String JUNIOR_LEVEL_BUTTON_CALLBACK = "buttonJuniorCallback";
+    String MIDDLE_LEVEL_BUTTON_CALLBACK = "buttonMiddleCallback";
+    String SENIOR_LEVEL_BUTTON_CALLBACK = "buttonSeniorCallback";
+  }
+
   @Autowired
   private LevelCallbacks levelCallbacks;
 
@@ -53,17 +64,6 @@ class LevelCallbacksTest {
 
   @Mock
   private Message message;
-
-  public interface Buttons {
-
-    String JUNIOR_LEVEL_BUTTON = "buttonJunior";
-    String MIDDLE_LEVEL_BUTTON = "buttonMiddle";
-    String SENIOR_LEVEL_BUTTON = "buttonSenior";
-
-    String JUNIOR_LEVEL_BUTTON_CALLBACK = "buttonJuniorCallback";
-    String MIDDLE_LEVEL_BUTTON_CALLBACK = "buttonMiddleCallback";
-    String SENIOR_LEVEL_BUTTON_CALLBACK = "buttonSeniorCallback";
-  }
 
   @BeforeEach
   void setUp() {

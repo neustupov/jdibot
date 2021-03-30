@@ -30,21 +30,6 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 @ActiveProfiles("test")
 class ButtonCallbacksHandlingTest {
 
-  @Autowired
-  private ButtonCallbacks buttonCallbacks;
-
-  @MockBean
-  private BotStateContext botStateContext;
-
-  @Mock
-  private CallbackQuery callbackQuery;
-
-  @Mock
-  private DataCache dataCache;
-
-  @Mock
-  private Message message;
-
   public interface Buttons {
 
     String BACK_BUTTON = "backButton";
@@ -60,6 +45,21 @@ class ButtonCallbacksHandlingTest {
     String BACK_TO_LEVEL_BUTTON_CALLBACK = "backToLevelButtonCallBack";
     String PAGINATION_BUTTON_CALLBACK = "paginationButtonCallBack";
   }
+
+  @Autowired
+  private ButtonCallbacks buttonCallbacks;
+
+  @MockBean
+  private BotStateContext botStateContext;
+
+  @Mock
+  private CallbackQuery callbackQuery;
+
+  @Mock
+  private DataCache dataCache;
+
+  @Mock
+  private Message message;
 
   @BeforeEach
   void setUp() {
@@ -81,7 +81,8 @@ class ButtonCallbacksHandlingTest {
         .with(SendMessage::setText, PAGINATION_BUTTON_CALLBACK)
         .build();
 
-    when(botStateContext.processInputMessage(eq(BotState.CATEGORY_OR_SEARCH_RESULT), any(Message.class)))
+    when(botStateContext
+        .processInputMessage(eq(BotState.CATEGORY_OR_SEARCH_RESULT), any(Message.class)))
         .thenReturn(smCategoryOrSearchResult);
     when(botStateContext.processInputMessage(eq(BotState.SHOW_START_MENU), any(Message.class)))
         .thenReturn(smShowStartMenu);
@@ -97,9 +98,10 @@ class ButtonCallbacksHandlingTest {
   @MethodSource("provideButtonsForHandleCallback")
   void handleCallback(String callbackData, String buttonText) {
 
-    BotApiMethod<?> botApiMethodCategoryOrSearchResult = buttonCallbacks.handleCallback(callbackQuery, callbackData, dataCache, 100, message);
+    BotApiMethod<?> botApiMethodCategoryOrSearchResult = buttonCallbacks
+        .handleCallback(callbackQuery, callbackData, dataCache, 100, message);
     assertFalse(botApiMethodCategoryOrSearchResult.getMethod().isEmpty());
-    assertEquals(((SendMessage)botApiMethodCategoryOrSearchResult).getText(), buttonText);
+    assertEquals(((SendMessage) botApiMethodCategoryOrSearchResult).getText(), buttonText);
   }
 
   private static Stream<Arguments> provideButtonsForHandleCallback() {

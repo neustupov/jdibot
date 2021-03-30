@@ -18,5 +18,6 @@ public class UserState {
 
   public UserState(long userId) {
     this.userId = userId;
+    botState = BotState.SHOW_START_MENU;
   }
 }

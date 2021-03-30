@@ -35,6 +35,17 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 @ActiveProfiles("test")
 class CategoryCallbacksTest {
 
+  public interface Buttons {
+
+    String OOP_CATEGORY_BUTTON = "buttonOOP";
+    String COLLECTIONS_CATEGORY_BUTTON = "buttonCollections";
+    String PATTERNS_CATEGORY_BUTTON = "buttonPatterns";
+    String SPRING_BUTTON = "buttonSpring";
+
+    String CATEGORY_BUTTON_CALLBACK = "buttonCategoryCallback";
+    String SPRING_BUTTON_CALLBACK = "buttonSpringCallback";
+  }
+
   @Autowired
   private CategoryCallbacks categoryCallbacks;
 
@@ -53,16 +64,6 @@ class CategoryCallbacksTest {
   @Mock
   private Message message;
 
-  public interface Buttons {
-    String OOP_CATEGORY_BUTTON = "buttonOOP";
-    String COLLECTIONS_CATEGORY_BUTTON = "buttonCollections";
-    String PATTERNS_CATEGORY_BUTTON = "buttonPatterns";
-    String SPRING_BUTTON = "buttonSpring";
-
-    String CATEGORY_BUTTON_CALLBACK = "buttonCategoryCallback";
-    String SPRING_BUTTON_CALLBACK = "buttonSpringCallback";
-  }
-
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this);
@@ -76,7 +77,8 @@ class CategoryCallbacksTest {
 
     when(botStateContext.processInputMessage(eq(BotState.SHOW_CATEGORY), any(Message.class)))
         .thenReturn(smCategory);
-    when(botStateContext.processInputMessage(eq(BotState.SHOW_SPRING_CATEGORY_MENU), any(Message.class)))
+    when(botStateContext
+        .processInputMessage(eq(BotState.SHOW_SPRING_CATEGORY_MENU), any(Message.class)))
         .thenReturn(smSpring);
 
     Optional<UserContext> userContextOptional = Optional
@@ -88,9 +90,10 @@ class CategoryCallbacksTest {
   @ParameterizedTest
   @MethodSource("provideButtonsForHandleCallback")
   void handleCallback(String callbackData, String buttonText, Category category) {
-    BotApiMethod<?> botApiMethodCategoryOrSearchResult = categoryCallbacks.handleCallback(callbackQuery, callbackData, dataCache, 100, message);
+    BotApiMethod<?> botApiMethodCategoryOrSearchResult = categoryCallbacks
+        .handleCallback(callbackQuery, callbackData, dataCache, 100, message);
     assertFalse(botApiMethodCategoryOrSearchResult.getMethod().isEmpty());
-    assertEquals(((SendMessage)botApiMethodCategoryOrSearchResult).getText(), buttonText);
+    assertEquals(((SendMessage) botApiMethodCategoryOrSearchResult).getText(), buttonText);
     assertEquals(dataCache.getUserContext(100).getCategory(), category);
   }
 

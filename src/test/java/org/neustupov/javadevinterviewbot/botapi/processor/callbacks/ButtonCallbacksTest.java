@@ -59,12 +59,12 @@ class ButtonCallbacksTest {
         .handleCallback(null, backButton, dataCache, 100500, message);
     assertFalse(backButtonResponse.getMethod().isEmpty());
     assertEquals(backButtonResponse.getMethod(), "sendmessage");
-    assertEquals(((SendMessage)backButtonResponse).getText(), "Is category search result");
+    assertEquals(((SendMessage) backButtonResponse).getText(), "Is category search result");
 
     String backToStartMenuButton = "backToStartMenuButton";
     BotApiMethod<?> backToStartMenuButtonResponse = buttonCallbacks
         .handleCallback(null, backToStartMenuButton, dataCache, 100500, message);
     assertEquals(backButtonResponse.getMethod(), "sendmessage");
-    assertEquals(((SendMessage)backToStartMenuButtonResponse).getText(), "Is show start menu");
+    assertEquals(((SendMessage) backToStartMenuButtonResponse).getText(), "Is show start menu");
   }
 }

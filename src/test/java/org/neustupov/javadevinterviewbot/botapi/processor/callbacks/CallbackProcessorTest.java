@@ -44,7 +44,8 @@ class CallbackProcessorTest {
         .with(SendMessage::setText, "handle callback")
         .build();
 
-    when(botStateContext.processInputMessage(any(BotState.class), any(Message.class))).thenReturn(sendMessage);
+    when(botStateContext.processInputMessage(any(BotState.class), any(Message.class)))
+        .thenReturn(sendMessage);
 
     User from = GenericBuilder.of(User::new)
         .with(User::setId, 100)
@@ -60,6 +61,6 @@ class CallbackProcessorTest {
   void processCallbackQuery() {
     BotApiMethod<?> botResponse = callbackProcessor.processCallbackQuery(callbackQuery);
     assertFalse(botResponse.getMethod().isEmpty());
-    assertEquals(((SendMessage)botResponse).getText(), "handle callback");
+    assertEquals(((SendMessage) botResponse).getText(), "handle callback");
   }
 }
