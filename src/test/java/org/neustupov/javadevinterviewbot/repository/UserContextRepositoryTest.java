@@ -18,7 +18,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @DataMongoTest
-@ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
 class UserContextRepositoryTest {
 

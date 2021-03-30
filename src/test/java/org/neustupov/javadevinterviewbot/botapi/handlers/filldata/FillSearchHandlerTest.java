@@ -3,7 +3,7 @@ package org.neustupov.javadevinterviewbot.botapi.handlers.filldata;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
-import static org.neustupov.javadevinterviewbot.TestMessageData.getMessage;
+import static org.neustupov.javadevinterviewbot.TestData.getMessage;
 import static org.neustupov.javadevinterviewbot.botapi.states.BotState.FILLING_SEARCH;
 
 import org.junit.jupiter.api.BeforeEach;

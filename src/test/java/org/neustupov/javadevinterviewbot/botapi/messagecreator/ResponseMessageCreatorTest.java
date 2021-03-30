@@ -3,7 +3,7 @@ package org.neustupov.javadevinterviewbot.botapi.messagecreator;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
-import static org.neustupov.javadevinterviewbot.TestMessageData.getListOfQuestion;
+import static org.neustupov.javadevinterviewbot.TestData.getListOfQuestion;
 import static org.neustupov.javadevinterviewbot.botapi.messagecreator.ResponseMessageCreatorTest.Buttons.*;
 import static org.neustupov.javadevinterviewbot.botapi.states.BotState.FILLING_SEARCH;
 import static org.neustupov.javadevinterviewbot.botapi.states.BotState.SHOW_LEVEL_MENU;
@@ -118,7 +118,7 @@ class ResponseMessageCreatorTest {
     SendMessage sendMessage = messageCreator.getMessage(qList, 100L, 200, "next");
 
     assertFalse(sendMessage.getText().isEmpty());
-    assertEquals(sendMessage.getText(), "Категория - ООП\n\n/q0 Test 1\n");
+    assertEquals(sendMessage.getText(), "Категория - ООП\n\n/q700 Test 1\n");
     List<List<InlineKeyboardButton>> keyboard = ((InlineKeyboardMarkup) sendMessage
         .getReplyMarkup()).getKeyboard();
 

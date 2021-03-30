@@ -132,6 +132,18 @@ class QuestionControllerTest {
   }
 
   @Test
+  void createQuestion() throws Exception{
+    question.setId(5L);
+    this.mockMvc
+        .perform(post(API + "/question")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(mapper.writeValueAsBytes(question)))
+        .andExpect(status().isCreated())
+        .andExpect(header().exists("location"))
+        .andDo(print());
+  }
+
+  @Test
   void createQuestions() throws Exception {
 
     MvcResult mvcResult = this.mockMvc

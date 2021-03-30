@@ -3,7 +3,7 @@ package org.neustupov.javadevinterviewbot.botapi;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
-import static org.neustupov.javadevinterviewbot.TestMessageData.getMessage;
+import static org.neustupov.javadevinterviewbot.TestData.getMessage;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

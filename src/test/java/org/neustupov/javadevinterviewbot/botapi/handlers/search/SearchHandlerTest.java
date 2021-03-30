@@ -1,7 +1,7 @@
 package org.neustupov.javadevinterviewbot.botapi.handlers.search;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.neustupov.javadevinterviewbot.TestMessageData.getMessage;
+import static org.neustupov.javadevinterviewbot.TestData.getMessage;
 import static org.neustupov.javadevinterviewbot.botapi.states.BotState.SHOW_SEARCH;
 
 import java.util.List;

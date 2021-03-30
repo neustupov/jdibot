@@ -3,16 +3,15 @@ package org.neustupov.javadevinterviewbot.botapi;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
-import static org.neustupov.javadevinterviewbot.TestMessageData.getCallbackQuery;
-import static org.neustupov.javadevinterviewbot.TestMessageData.getMessage;
-import static org.neustupov.javadevinterviewbot.TestMessageData.getUpdate;
-import static org.neustupov.javadevinterviewbot.TestMessageData.getUser;
+import static org.neustupov.javadevinterviewbot.TestData.getCallbackQuery;
+import static org.neustupov.javadevinterviewbot.TestData.getMessage;
+import static org.neustupov.javadevinterviewbot.TestData.getUpdate;
+import static org.neustupov.javadevinterviewbot.TestData.getUser;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.neustupov.javadevinterviewbot.botapi.states.BotState;
 import org.neustupov.javadevinterviewbot.cache.UserDataCache;
-import org.neustupov.javadevinterviewbot.model.GenericBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -22,7 +21,6 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.User;
 
 @SpringBootTest
 @ActiveProfiles("test")

@@ -5,7 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
-import static org.neustupov.javadevinterviewbot.TestMessageData.getMessage;
+import static org.neustupov.javadevinterviewbot.TestData.getMessage;
 import static org.neustupov.javadevinterviewbot.botapi.states.BotState.FILLING_SEARCH;
 import static org.neustupov.javadevinterviewbot.botapi.states.BotState.PAGINATION_PAGE;
 import static org.neustupov.javadevinterviewbot.botapi.states.BotState.SHOW_CATEGORY;

@@ -10,10 +10,11 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 public interface QuestionRepositoryMongo extends MongoRepository<Question, Long> {
 
   List<Question> getAllByCategoryAndLevel(Category category, Level level);
-  default List<Question> search(String searchString){
-      return findAll()
-          .stream()
-          .filter(q -> q.getSmallDescription().toLowerCase().contains(searchString.toLowerCase()))
-          .collect(Collectors.toList());
+
+  default List<Question> search(String searchString) {
+    return findAll()
+        .stream()
+        .filter(q -> q.getSmallDescription().toLowerCase().contains(searchString.toLowerCase()))
+        .collect(Collectors.toList());
   }
 }
