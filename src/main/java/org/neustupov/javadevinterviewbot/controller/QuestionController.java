@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -68,6 +69,17 @@ public class QuestionController {
     return ResponseEntity.created(location).build();
   }
 
+  @RequestMapping(value = "/questions", method = {RequestMethod.POST, RequestMethod.PUT})
+  public ResponseEntity<?> createQuestions(@Valid @RequestBody List<Question> question,
+      Errors errors) {
+    if (errors.hasErrors()) {
+      return ResponseEntity.badRequest()
+          .body(QuestionValidationErrorBuilder.fromBindingsErrors(errors));
+    }
+    List<Long> questionIds = question.stream().map(q -> questionService.save(q).getId()).collect(Collectors.toList());
+    return ResponseEntity.ok(questionIds);
+  }
+
   @PostMapping(value = "/question/{id}/image")
   public ResponseEntity<?> addImageToQuestion(@PathVariable Long id,
       @RequestParam("image") MultipartFile multipartFile) throws IOException {
@@ -83,7 +95,8 @@ public class QuestionController {
 
   @DeleteMapping("/question/{id}")
   public ResponseEntity<Question> deleteQuestion(@PathVariable String id) {
-    questionService.delete(GenericBuilder.of(Question::new).with(Question::setId,Long.parseLong(id)).build());
+    questionService
+        .delete(GenericBuilder.of(Question::new).with(Question::setId, Long.parseLong(id)).build());
     return ResponseEntity.noContent().build();
   }
 

@@ -1,5 +1,7 @@
 package org.neustupov.javadevinterviewbot.botapi.handlers.filldata;
 
+import static org.neustupov.javadevinterviewbot.botapi.states.BotState.FILLING_SEARCH;
+
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -19,16 +21,15 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class FillSearchHandler implements InputMessageHandler {
 
-  //TODO сообщения должен готовить ResponseMessageCreator вынести все туда
   DataCache dataCache;
-  QuestionRepositoryMongo categoryRepositoryInMemory;
+  QuestionRepositoryMongo questionRepositoryMongo;
   ResponseMessageCreator responseMessageCreator;
 
   public FillSearchHandler(DataCache dataCache,
-      QuestionRepositoryMongo categoryRepositoryInMemory,
+      QuestionRepositoryMongo questionRepositoryMongo,
       ResponseMessageCreator responseMessageCreator) {
     this.dataCache = dataCache;
-    this.categoryRepositoryInMemory = categoryRepositoryInMemory;
+    this.questionRepositoryMongo = questionRepositoryMongo;
     this.responseMessageCreator = responseMessageCreator;
   }
 
@@ -36,7 +37,7 @@ public class FillSearchHandler implements InputMessageHandler {
   public SendMessage handle(Message message) {
     int userId = message.getFrom().getId();
     long chatId = message.getChatId();
-    List<Question> qList = categoryRepositoryInMemory.search(getSearchText(chatId, userId, message));
+    List<Question> qList = questionRepositoryMongo.search(getSearchText(chatId, userId, message));
     return responseMessageCreator.getMessage(qList, chatId, userId, null);
   }
 
@@ -59,6 +60,6 @@ public class FillSearchHandler implements InputMessageHandler {
 
   @Override
   public BotState getHandlerName() {
-    return BotState.FILLING_SEARCH;
+    return FILLING_SEARCH;
   }
 }

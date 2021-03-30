@@ -1,6 +1,9 @@
 package org.neustupov.javadevinterviewbot.botapi.handlers.filldata;
 
+import static org.neustupov.javadevinterviewbot.botapi.handlers.filldata.PaginationHandler.MenuPoint.CATEGORY;
+import static org.neustupov.javadevinterviewbot.botapi.handlers.filldata.PaginationHandler.MenuPoint.SEARCH;
 import static org.neustupov.javadevinterviewbot.botapi.handlers.filldata.PaginationHandler.Pagination.NEXT;
+import static org.neustupov.javadevinterviewbot.botapi.handlers.filldata.PaginationHandler.Pagination.PREVIOUS;
 import static org.neustupov.javadevinterviewbot.botapi.states.BotState.PAGINATION_PAGE;
 
 import java.util.List;
@@ -12,6 +15,7 @@ import org.neustupov.javadevinterviewbot.botapi.messagecreator.ResponseMessageCr
 import org.neustupov.javadevinterviewbot.botapi.states.BotState;
 import org.neustupov.javadevinterviewbot.cache.DataCache;
 import org.neustupov.javadevinterviewbot.model.Question;
+import org.neustupov.javadevinterviewbot.model.UserContext;
 import org.neustupov.javadevinterviewbot.repository.QuestionRepositoryMongo;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -25,6 +29,12 @@ public class PaginationHandler implements InputMessageHandler {
 
     String PREVIOUS = "previous";
     String NEXT = "next";
+  }
+
+  public interface MenuPoint {
+
+    String CATEGORY = "category";
+    String SEARCH = "search";
   }
 
   DataCache dataCache;
@@ -45,11 +55,11 @@ public class PaginationHandler implements InputMessageHandler {
     String searchStringFromUserCache = dataCache.getUserContext(chatId.intValue()).getSearchField();
     List<Question> qList = null;
     String categoryOrSearch = getCategoryOrSearch(chatId.intValue());
-    if (Objects.equals(categoryOrSearch, "category")) {
+    if (Objects.equals(categoryOrSearch, CATEGORY)) {
       qList = questionRepository
           .getAllByCategoryAndLevel(dataCache.getUserContext(chatId.intValue()).getCategory(),
               dataCache.getUserContext(chatId.intValue()).getLevel());
-    } else if (Objects.equals(categoryOrSearch, "search")) {
+    } else if (Objects.equals(categoryOrSearch, SEARCH)) {
       qList = questionRepository.search(searchStringFromUserCache);
     }
     String pagination = getPagination(chatId.intValue());
@@ -63,19 +73,15 @@ public class PaginationHandler implements InputMessageHandler {
 
   private String getPagination(int userId) {
     String route = dataCache.getUserContext(userId).getRoute();
-    if (route.equals("next")) {
-      return NEXT;
-    } else if (route.equals("previous")) {
-      return "previous";
-    }
-    return null;
+    return route.equals(NEXT) || route.equals(PREVIOUS) ? route : null;
   }
 
   private String getCategoryOrSearch(int userId) {
-    if (dataCache.getUserContext(userId).getCategory() != null) {
-      return "category";
-    } else if (dataCache.getUserContext(userId).getSearchField() != null) {
-      return "search";
+    UserContext userContext = dataCache.getUserContext(userId);
+    if (userContext.getCategory() != null) {
+      return CATEGORY;
+    } else if (userContext.getSearchField() != null) {
+      return SEARCH;
     }
     return null;
   }

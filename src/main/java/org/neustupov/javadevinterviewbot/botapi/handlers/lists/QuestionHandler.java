@@ -1,5 +1,7 @@
 package org.neustupov.javadevinterviewbot.botapi.handlers.lists;
 
+import static org.neustupov.javadevinterviewbot.botapi.states.BotState.SHOW_QUESTION;
+
 import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -49,6 +51,6 @@ public class QuestionHandler implements InputMessageHandler {
 
   @Override
   public BotState getHandlerName() {
-    return BotState.SHOW_QUESTION;
+    return SHOW_QUESTION;
   }
 }

@@ -37,7 +37,13 @@ public class TelegramFacade {
       log.info("New CallbackQuery from User:{}, userId:{}, with data:{}",
           callbackQuery.getFrom().getFirstName() + " " + callbackQuery.getFrom().getLastName(),
           callbackQuery.getFrom().getId(), callbackQuery.getData());
-      return callbackProcessor.processCallbackQuery(callbackQuery);
+      BotApiMethod<?> botResponse = null;
+      try {
+        botResponse = callbackProcessor.processCallbackQuery(callbackQuery);
+      } catch (UnsupportedOperationException e) {
+        log.error(e.getMessage(), e);
+      }
+      return botResponse;
     }
 
     if (message != null && message.hasText()) {

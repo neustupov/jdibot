@@ -3,6 +3,7 @@ package org.neustupov.javadevinterviewbot.botapi.processor.messages;
 import static org.neustupov.javadevinterviewbot.botapi.processor.messages.MessageProcessor.Commands.QUESTION;
 import static org.neustupov.javadevinterviewbot.botapi.processor.messages.MessageProcessor.Commands.START;
 
+import java.io.File;
 import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -33,6 +34,7 @@ public class MessageProcessor {
   ImageUtil imageUtil;
 
   interface Commands {
+
     String START = "/start";
     String QUESTION = "/q";
   }
@@ -77,8 +79,12 @@ public class MessageProcessor {
     return botStateContext.processInputMessage(botState, message);
   }
 
-  private void processImage(String inputMsg, long chatId){
+  private void processImage(String inputMsg, long chatId) {
     Optional<Binary> imageData = imageUtil.getImageData(inputMsg);
-    imageData.ifPresent(binary -> bot.sendPhoto(chatId, "", imageUtil.getPhotoFile(binary)));
+    imageData.ifPresent(binary -> {
+      File imageTempFile = imageUtil.getPhotoFile(binary);
+      bot.sendPhoto(chatId, "", imageTempFile);
+      imageUtil.deleteTempFile(imageTempFile);
+    });
   }
 }

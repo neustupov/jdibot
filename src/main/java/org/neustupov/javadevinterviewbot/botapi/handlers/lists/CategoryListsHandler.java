@@ -1,5 +1,7 @@
 package org.neustupov.javadevinterviewbot.botapi.handlers.lists;
 
+import static org.neustupov.javadevinterviewbot.botapi.states.BotState.SHOW_CATEGORY;
+
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -20,7 +22,6 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CategoryListsHandler implements InputMessageHandler {
 
-  //TODO сообщения должен готовить ResponseMessageCreator вынести все туда
   DataCache dataCache;
   QuestionRepositoryMongo questionRepository;
   ResponseMessageCreator responseMessageCreator;
@@ -44,6 +45,6 @@ public class CategoryListsHandler implements InputMessageHandler {
 
   @Override
   public BotState getHandlerName() {
-    return BotState.SHOW_CATEGORY;
+    return SHOW_CATEGORY;
   }
 }
