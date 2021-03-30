@@ -49,7 +49,7 @@ class LevelMenuHandlerTest {
   @Test
   void handle() {
     SendMessage sendMessage = levelMenuHandler.handle(message);
-    assertTrue(!sendMessage.getText().isEmpty());
+    assertFalse(sendMessage.getText().isEmpty());
     assertEquals(sendMessage.getText(), "Выбери уровень.");
     List<List<InlineKeyboardButton>> keyboard = ((InlineKeyboardMarkup) sendMessage
         .getReplyMarkup()).getKeyboard();

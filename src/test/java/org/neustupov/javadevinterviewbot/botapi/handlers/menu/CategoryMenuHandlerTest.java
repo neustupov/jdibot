@@ -51,7 +51,7 @@ class CategoryMenuHandlerTest {
   @Test
   void handle() {
     SendMessage sendMessage = categoryMenuHandler.handle(message);
-    assertTrue(!sendMessage.getText().isEmpty());
+    assertFalse(sendMessage.getText().isEmpty());
     assertEquals(sendMessage.getText(), "Выбери категорию.");
     List<List<InlineKeyboardButton>> keyboard = ((InlineKeyboardMarkup) sendMessage
         .getReplyMarkup()).getKeyboard();

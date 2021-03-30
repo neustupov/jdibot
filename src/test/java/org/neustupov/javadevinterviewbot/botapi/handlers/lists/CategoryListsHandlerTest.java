@@ -76,7 +76,7 @@ class CategoryListsHandlerTest {
   @Test
   void handle() {
     SendMessage sendMessage = categoryListsHandler.handle(message);
-    assertTrue(!sendMessage.getText().isEmpty());
+    assertFalse(sendMessage.getText().isEmpty());
     assertEquals(sendMessage.getText(), "/q0 For Category 1\n");
 
     List<List<InlineKeyboardButton>> keyboard = ((InlineKeyboardMarkup) sendMessage

@@ -1,5 +1,9 @@
 package org.neustupov.javadevinterviewbot;
 
+import java.util.Arrays;
+import java.util.List;
+import org.neustupov.javadevinterviewbot.model.GenericBuilder;
+import org.neustupov.javadevinterviewbot.model.Question;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
@@ -18,6 +22,15 @@ public class TestMessageData {
     message.setChat(chat);
 
     return message;
+  }
+
+  public static List<Question> getListOfQuestion() {
+    return Arrays.asList(GenericBuilder.of(Question::new)
+            .with(Question::setSmallDescription, "Test 1")
+            .build(),
+        GenericBuilder.of(Question::new)
+            .with(Question::setSmallDescription, "Test 2")
+            .build());
   }
 
 }

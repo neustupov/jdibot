@@ -5,6 +5,7 @@ import static org.neustupov.javadevinterviewbot.botapi.handlers.filldata.Paginat
 
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.NoArgsConstructor;
 import org.neustupov.javadevinterviewbot.cache.DataCache;
 import org.neustupov.javadevinterviewbot.model.GenericBuilder;
 import org.neustupov.javadevinterviewbot.model.Question;
@@ -13,19 +14,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
+@NoArgsConstructor
 public class PaginationService {
 
   @Value("${app.search.pagination.max}")
   private Integer maxObjects;
 
-  private DataCache dataCache;
-
-  public PaginationService(DataCache dataCache) {
-    this.dataCache = dataCache;
-  }
-
-  List<Question> getCurrentList(int userId, List<Question> qList, RangePair rangePair) {
-    dataCache.setRange(userId, rangePair);
+  List<Question> getCurrentList(List<Question> qList, RangePair rangePair) {
     return qList.stream()
         .skip(rangePair.getFrom())
         .limit(rangePair.getTo() - rangePair.getFrom()).collect(Collectors.toList());

@@ -49,7 +49,7 @@ class SpringCategoryMenuHandlerTest {
   @Test
   void handle() {
     SendMessage sendMessage = springCategoryMenuHandler.handle(message);
-    assertTrue(!sendMessage.getText().isEmpty());
+    assertFalse(sendMessage.getText().isEmpty());
     assertEquals(sendMessage.getText(), "Выбери категорию.");
     List<List<InlineKeyboardButton>> keyboard = ((InlineKeyboardMarkup) sendMessage
         .getReplyMarkup()).getKeyboard();

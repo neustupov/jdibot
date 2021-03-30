@@ -86,7 +86,7 @@ class FillSearchHandlerTest {
   void handleFromBot() {
     message.setFrom(botUser);
     SendMessage sendMessage = fillSearchHandler.handle(message);
-    assertTrue(!sendMessage.getText().isEmpty());
+    assertFalse(sendMessage.getText().isEmpty());
     assertEquals(sendMessage.getText(), "/q2 From bot\n");
   }
 
@@ -95,7 +95,7 @@ class FillSearchHandlerTest {
     message.setFrom(realUser);
     message.setText("From user");
     SendMessage sendMessage = fillSearchHandler.handle(message);
-    assertTrue(!sendMessage.getText().isEmpty());
+    assertFalse(sendMessage.getText().isEmpty());
     assertEquals(sendMessage.getText(), "/q1 From user\n");
   }
 

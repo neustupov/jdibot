@@ -53,10 +53,10 @@ public class ResponseMessageCreator {
     return replyToUser;
   }
 
-  public SendMessage getSimpleMessageWithButtons(Long chatId, String message,
+  public SendMessage getSimpleMessageWithButtons(Long chatId, String replyMessage,
       Map<String, String> buttonNames) {
     BotState botState = dataCache.getUserCurrentBotState(chatId.intValue());
-    SendMessage replyToUser = replyMessageService.getReplyMessage(chatId, message);
+    SendMessage replyToUser = replyMessageService.getReplyMessage(chatId, replyMessage);
     replyToUser.setReplyMarkup(buttonMaker.getInlineMessageButtons(buttonNames, botState));
     return replyToUser;
   }
@@ -71,14 +71,17 @@ public class ResponseMessageCreator {
     } else {
       List<Question> qListSelected = new ArrayList<>(qList);
       if (qList.size() > maxObjects) {
+        RangePair rangePair;
         if (range == null) {
-          RangePair rangePair = GenericBuilder.of(RangePair::new)
+          rangePair = GenericBuilder.of(RangePair::new)
               .with(RangePair::setFrom, 0)
               .with(RangePair::setTo, maxObjects).build();
-          qListSelected = paginationService.getCurrentList(userId, qList, rangePair);
+          dataCache.setRange(userId, rangePair);
+          qListSelected = paginationService.getCurrentList(qList, rangePair);
         } else {
-          qListSelected = paginationService.getCurrentList(userId, qList,
-              paginationService.getNewRange(qList.size(), range, pagination));
+          rangePair =  paginationService.getNewRange(qList.size(), range, pagination);
+          dataCache.setRange(userId, rangePair);
+          qListSelected = paginationService.getCurrentList(qList, rangePair);
         }
       }
       sendMessage.setText(parseQuestions(category, qListSelected));
@@ -97,6 +100,16 @@ public class ResponseMessageCreator {
     return sendMessage;
   }
 
+  public Map<String, String> getStringMap(String first, String firstCallback,
+      String second, String secondCallback, String third,
+      String thirdCallback) {
+    Map<String, String> buttonMap = new LinkedHashMap<>();
+    buttonMap.put(first, firstCallback);
+    buttonMap.put(second, secondCallback);
+    buttonMap.put(third, thirdCallback);
+    return buttonMap;
+  }
+
   private String parseQuestions(Category category, List<Question> qList) {
     StringBuffer sb = new StringBuffer();
     if (category != null) {
@@ -111,15 +124,5 @@ public class ResponseMessageCreator {
       sb.append("\n");
     });
     return sb.toString();
-  }
-
-  public Map<String, String> getStringMap(String first, String firstCallback,
-      String second, String secondCallback, String third,
-      String thirdCallback) {
-    Map<String, String> buttonMap = new LinkedHashMap<>();
-    buttonMap.put(first, firstCallback);
-    buttonMap.put(second, secondCallback);
-    buttonMap.put(third, thirdCallback);
-    return buttonMap;
   }
 }

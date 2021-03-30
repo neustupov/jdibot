@@ -90,7 +90,7 @@ class PaginationHandlerTest {
     when(userContext.getCategory()).thenReturn(OOP);
 
     SendMessage sendMessage = paginationHandler.handle(message);
-    assertTrue(!sendMessage.getText().isEmpty());
+    assertFalse(sendMessage.getText().isEmpty());
     assertEquals(sendMessage.getText(), "Категория - ООП\n\n/q0 For Category 1\n");
 
     List<List<InlineKeyboardButton>> keyboard = ((InlineKeyboardMarkup) sendMessage
@@ -112,7 +112,7 @@ class PaginationHandlerTest {
     when(userContext.getSearchField()).thenReturn("SearchField");
 
     SendMessage sendMessage = paginationHandler.handle(message);
-    assertTrue(!sendMessage.getText().isEmpty());
+    assertFalse(sendMessage.getText().isEmpty());
     assertEquals(sendMessage.getText(), "/q0 For Search 1\n");
 
     List<List<InlineKeyboardButton>> keyboard = ((InlineKeyboardMarkup) sendMessage

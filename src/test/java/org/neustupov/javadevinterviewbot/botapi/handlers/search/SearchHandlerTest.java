@@ -33,7 +33,7 @@ class SearchHandlerTest {
   @Test
   void handle() {
     SendMessage sendMessage = searchHandler.handle(message);
-    assertTrue(!sendMessage.getText().isEmpty());
+    assertFalse(sendMessage.getText().isEmpty());
     assertEquals(sendMessage.getText(), "Введите фразу для поиска.");
     List<List<InlineKeyboardButton>> keyboard = ((InlineKeyboardMarkup) sendMessage
         .getReplyMarkup()).getKeyboard();
