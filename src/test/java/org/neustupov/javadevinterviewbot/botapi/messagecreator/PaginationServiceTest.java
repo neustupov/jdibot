@@ -3,7 +3,6 @@ package org.neustupov.javadevinterviewbot.botapi.messagecreator;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.neustupov.javadevinterviewbot.TestMessageData.getListOfQuestion;
 
-import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
