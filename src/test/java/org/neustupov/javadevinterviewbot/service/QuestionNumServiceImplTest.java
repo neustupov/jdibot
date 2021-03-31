@@ -7,7 +7,6 @@ import java.util.Collections;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.neustupov.javadevinterviewbot.model.GenericBuilder;
 import org.neustupov.javadevinterviewbot.model.QuestionNum;
 import org.neustupov.javadevinterviewbot.repository.QuestionNumRepository;
 import org.springframework.beans.factory.annotation.Autowired;

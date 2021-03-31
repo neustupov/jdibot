@@ -11,4 +11,5 @@ public interface QuestionService {
   List<Question> findAll();
   Optional<Question> findById(Long id);
   void delete(Question question);
+  void deleteAll();
 }

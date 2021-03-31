@@ -50,4 +50,9 @@ public class QuestionServiceImpl implements QuestionService {
   public void delete(Question question) {
     repository.delete(question);
   }
+
+  @Override
+  public void deleteAll() {
+    repository.deleteAll();
+  }
 }

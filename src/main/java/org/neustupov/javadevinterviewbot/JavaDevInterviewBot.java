@@ -86,7 +86,7 @@ public class JavaDevInterviewBot extends TelegramWebhookBot {
       try {
         execute(sendPhoto);
       } catch (TelegramApiException e) {
-        log.error("Не удалось отправить файл " + file.getName() + " " + e.getMessage(), e);
+        log.error(e.getMessage(), e);
       }
     }
   }

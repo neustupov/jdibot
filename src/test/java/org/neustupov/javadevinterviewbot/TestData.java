@@ -2,6 +2,7 @@ package org.neustupov.javadevinterviewbot;
 
 import java.util.Arrays;
 import java.util.List;
+import org.bson.types.Binary;
 import org.neustupov.javadevinterviewbot.botapi.states.Category;
 import org.neustupov.javadevinterviewbot.botapi.states.Level;
 import org.neustupov.javadevinterviewbot.model.GenericBuilder;
@@ -65,4 +66,18 @@ public class TestData {
             .build());
   }
 
+  public static Question getQuestion() {
+    return GenericBuilder.of(Question::new)
+        .with(Question::setLevel, Level.JUNIOR)
+        .with(Question::setCategory, Category.COLLECTIONS)
+        .with(Question::setSmallDescription, "Test 3")
+        .build();
+  }
+
+  public static Question getQuestionWithIdAndImage() {
+    Question question = getQuestion();
+    question.setId(999L);
+    question.setImage(new Binary(new byte[]{4,5,6,7,8,9,0}));
+    return question;
+  }
 }
