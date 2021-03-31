@@ -5,18 +5,18 @@ import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.neustupov.javadevinterviewbot.model.Question;
-import org.neustupov.javadevinterviewbot.repository.QuestionRepositoryMongo;
+import org.neustupov.javadevinterviewbot.repository.QuestionRepository;
 import org.springframework.stereotype.Service;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class QuestionServiceImpl implements QuestionService {
 
-  QuestionRepositoryMongo repository;
+  QuestionRepository repository;
   QuestionNumService service;
 
   public QuestionServiceImpl(
-      QuestionRepositoryMongo repository,
+      QuestionRepository repository,
       QuestionNumService service) {
     this.repository = repository;
     this.service = service;

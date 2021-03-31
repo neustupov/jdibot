@@ -11,7 +11,7 @@ import org.neustupov.javadevinterviewbot.botapi.messagecreator.ResponseMessageCr
 import org.neustupov.javadevinterviewbot.botapi.states.BotState;
 import org.neustupov.javadevinterviewbot.cache.DataCache;
 import org.neustupov.javadevinterviewbot.model.Question;
-import org.neustupov.javadevinterviewbot.repository.QuestionRepositoryMongo;
+import org.neustupov.javadevinterviewbot.repository.QuestionRepository;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -22,14 +22,14 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 public class FillSearchHandler implements InputMessageHandler {
 
   DataCache dataCache;
-  QuestionRepositoryMongo questionRepositoryMongo;
+  QuestionRepository questionRepository;
   ResponseMessageCreator responseMessageCreator;
 
   public FillSearchHandler(DataCache dataCache,
-      QuestionRepositoryMongo questionRepositoryMongo,
+      QuestionRepository questionRepository,
       ResponseMessageCreator responseMessageCreator) {
     this.dataCache = dataCache;
-    this.questionRepositoryMongo = questionRepositoryMongo;
+    this.questionRepository = questionRepository;
     this.responseMessageCreator = responseMessageCreator;
   }
 
@@ -37,7 +37,7 @@ public class FillSearchHandler implements InputMessageHandler {
   public SendMessage handle(Message message) {
     int userId = message.getFrom().getId();
     long chatId = message.getChatId();
-    List<Question> qList = questionRepositoryMongo.search(getSearchText(chatId, userId, message));
+    List<Question> qList = questionRepository.search(getSearchText(chatId, userId, message));
     return responseMessageCreator.getMessage(qList, chatId, userId, null);
   }
 

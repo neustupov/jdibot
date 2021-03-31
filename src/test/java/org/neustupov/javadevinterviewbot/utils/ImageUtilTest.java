@@ -14,7 +14,7 @@ import org.bson.types.Binary;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.neustupov.javadevinterviewbot.model.Question;
-import org.neustupov.javadevinterviewbot.repository.QuestionRepositoryMongo;
+import org.neustupov.javadevinterviewbot.repository.QuestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -28,7 +28,7 @@ class ImageUtilTest {
   private ImageUtil imageUtil;
 
   @MockBean
-  private QuestionRepositoryMongo repository;
+  private QuestionRepository repository;
 
   private Question question;
 

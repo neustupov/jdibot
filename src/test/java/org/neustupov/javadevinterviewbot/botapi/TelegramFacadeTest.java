@@ -12,6 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.neustupov.javadevinterviewbot.botapi.states.BotState;
 import org.neustupov.javadevinterviewbot.cache.UserDataCache;
+import org.neustupov.javadevinterviewbot.model.BotResponseData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -49,16 +50,16 @@ class TelegramFacadeTest {
   @Test
   void handleUpdate() {
     update.setCallbackQuery(callbackQuery);
-    BotApiMethod<?> callbackHandle = telegramFacade.handleUpdate(update);
-    assertFalse(callbackHandle.getMethod().isEmpty());
-    assertEquals(((SendMessage) callbackHandle).getText(), "Выбери категорию.");
+    BotResponseData callbackHandle = telegramFacade.handleUpdate(update);
+    assertFalse(callbackHandle.getBotApiMethod().getMethod().isEmpty());
+    assertEquals(((SendMessage) callbackHandle.getBotApiMethod()).getText(), "Выбери категорию.");
 
     update.setCallbackQuery(null);
     message.setText("/start");
     message.setFrom(getUser());
     update.setMessage(message);
-    BotApiMethod<?> messageHandle = telegramFacade.handleUpdate(update);
-    assertFalse(messageHandle.getMethod().isEmpty());
-    assertEquals(((SendMessage) messageHandle).getText(), "С чего начнем?");
+    BotResponseData messageHandle = telegramFacade.handleUpdate(update);
+    assertFalse(messageHandle.getBotApiMethod().getMethod().isEmpty());
+    assertEquals(((SendMessage) messageHandle.getBotApiMethod()).getText(), "С чего начнем?");
   }
 }

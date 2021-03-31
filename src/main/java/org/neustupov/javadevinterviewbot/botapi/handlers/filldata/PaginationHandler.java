@@ -16,7 +16,7 @@ import org.neustupov.javadevinterviewbot.botapi.states.BotState;
 import org.neustupov.javadevinterviewbot.cache.DataCache;
 import org.neustupov.javadevinterviewbot.model.Question;
 import org.neustupov.javadevinterviewbot.model.UserContext;
-import org.neustupov.javadevinterviewbot.repository.QuestionRepositoryMongo;
+import org.neustupov.javadevinterviewbot.repository.QuestionRepository;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -38,11 +38,11 @@ public class PaginationHandler implements InputMessageHandler {
   }
 
   DataCache dataCache;
-  QuestionRepositoryMongo questionRepository;
+  QuestionRepository questionRepository;
   ResponseMessageCreator responseMessageCreator;
 
   public PaginationHandler(DataCache dataCache,
-      QuestionRepositoryMongo questionRepository,
+      QuestionRepository questionRepository,
       ResponseMessageCreator responseMessageCreator) {
     this.dataCache = dataCache;
     this.questionRepository = questionRepository;

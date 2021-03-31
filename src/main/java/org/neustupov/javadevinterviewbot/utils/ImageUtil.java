@@ -8,16 +8,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.bson.types.Binary;
 import org.neustupov.javadevinterviewbot.model.Question;
-import org.neustupov.javadevinterviewbot.repository.QuestionRepositoryMongo;
+import org.neustupov.javadevinterviewbot.repository.QuestionRepository;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
 public class ImageUtil {
 
-  private QuestionRepositoryMongo repository;
+  private QuestionRepository repository;
 
-  public ImageUtil(QuestionRepositoryMongo repository) {
+  public ImageUtil(QuestionRepository repository) {
     this.repository = repository;
   }
 

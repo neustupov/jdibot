@@ -7,7 +7,7 @@ import org.neustupov.javadevinterviewbot.botapi.states.Level;
 import org.neustupov.javadevinterviewbot.model.Question;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-public interface QuestionRepositoryMongo extends MongoRepository<Question, Long> {
+public interface QuestionRepository extends MongoRepository<Question, Long> {
 
   List<Question> getAllByCategoryAndLevel(Category category, Level level);
 

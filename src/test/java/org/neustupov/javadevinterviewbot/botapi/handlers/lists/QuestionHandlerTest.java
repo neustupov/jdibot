@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.neustupov.javadevinterviewbot.botapi.states.BotState;
 import org.neustupov.javadevinterviewbot.model.GenericBuilder;
 import org.neustupov.javadevinterviewbot.model.Question;
-import org.neustupov.javadevinterviewbot.repository.QuestionRepositoryMongo;
+import org.neustupov.javadevinterviewbot.repository.QuestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -31,7 +31,7 @@ class QuestionHandlerTest {
   private QuestionHandler questionHandler;
 
   @MockBean
-  private QuestionRepositoryMongo questionRepository;
+  private QuestionRepository questionRepository;
 
   private Message message;
 

@@ -21,7 +21,7 @@ import org.neustupov.javadevinterviewbot.model.GenericBuilder;
 import org.neustupov.javadevinterviewbot.model.Question;
 import org.neustupov.javadevinterviewbot.model.RangePair;
 import org.neustupov.javadevinterviewbot.model.UserContext;
-import org.neustupov.javadevinterviewbot.repository.QuestionRepositoryMongo;
+import org.neustupov.javadevinterviewbot.repository.QuestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -42,7 +42,7 @@ class PaginationHandlerTest {
   private UserDataCache dataCache;
 
   @MockBean
-  private QuestionRepositoryMongo questionRepository;
+  private QuestionRepository questionRepository;
 
   @MockBean
   private UserContext userContext;

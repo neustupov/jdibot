@@ -9,10 +9,14 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.neustupov.javadevinterviewbot.botapi.TelegramFacade;
+import org.neustupov.javadevinterviewbot.model.BotResponseData;
+import org.neustupov.javadevinterviewbot.model.MessageIdKeeper;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.util.ResourceUtils;
 import org.telegram.telegrambots.bots.TelegramWebhookBot;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -51,7 +55,13 @@ public class JavaDevInterviewBot extends TelegramWebhookBot {
   public BotApiMethod<?> onWebhookUpdateReceived(Update update) {
     if ((update.getMessage() != null && update.getMessage().hasText()) || update
         .hasCallbackQuery()) {
-      return telegramFacade.handleUpdate(update);
+      BotResponseData botResponseData = telegramFacade.handleUpdate(update);
+      MessageIdKeeper messageIdKeeper = botResponseData.getMessageIdKeeper();
+      Integer previousMessageId = messageIdKeeper.getPreviousMessageId();
+      if (previousMessageId != null){
+        deletePreviousMessage(messageIdKeeper.getChatId(), previousMessageId);
+      }
+      return botResponseData.getBotApiMethod();
     }
     return null;
   }
@@ -88,6 +98,17 @@ public class JavaDevInterviewBot extends TelegramWebhookBot {
       } catch (TelegramApiException e) {
         log.error(e.getMessage(), e);
       }
+    }
+  }
+
+  private void deletePreviousMessage(Long chatId, Integer previousMessageId) {
+    DeleteMessage deleteMessage = new DeleteMessage();
+    deleteMessage.setChatId(chatId.toString());
+    deleteMessage.setMessageId(previousMessageId);
+    try {
+      execute(deleteMessage);
+    } catch (TelegramApiException e) {
+      log.error(e.getMessage(), e);
     }
   }
 }

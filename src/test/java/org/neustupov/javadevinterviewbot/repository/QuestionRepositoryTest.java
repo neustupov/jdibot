@@ -16,13 +16,13 @@ import org.springframework.test.context.ActiveProfiles;
 
 @DataMongoTest
 @ActiveProfiles("test")
-class QuestionRepositoryMongoTest {
+class QuestionRepositoryTest {
 
   @Autowired
   private MongoTemplate mongoTemplate;
 
   @Autowired
-  private QuestionRepositoryMongo questionRepositoryMongo;
+  private QuestionRepository questionRepository;
 
   @BeforeEach
   void setUp() {
@@ -32,18 +32,19 @@ class QuestionRepositoryMongoTest {
 
   @Test
   void getAllByCategoryAndLevel() {
-    List<Question> resultList = questionRepositoryMongo.getAllByCategoryAndLevel(Category.COLLECTIONS, Level.JUNIOR);
+    List<Question> resultList = questionRepository
+        .getAllByCategoryAndLevel(Category.COLLECTIONS, Level.JUNIOR);
     assertEquals(resultList.size(), 1);
     assertEquals(resultList.get(0).getSmallDescription(), "Test 2");
   }
 
   @Test
   void search() {
-    List<Question> searchList = questionRepositoryMongo.search("1");
+    List<Question> searchList = questionRepository.search("1");
     assertEquals(searchList.size(), 1);
     assertEquals(searchList.get(0).getSmallDescription(), "Test 1");
 
-    List<Question> resultList = questionRepositoryMongo.search("Test");
+    List<Question> resultList = questionRepository.search("Test");
     assertEquals(resultList.size(), 2);
   }
 }

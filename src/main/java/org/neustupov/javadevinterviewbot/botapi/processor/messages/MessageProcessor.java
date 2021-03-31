@@ -27,7 +27,6 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class MessageProcessor {
 
-  @Lazy
   JavaDevInterviewBot bot;
   DataCache dataCache;
   BotStateContext botStateContext;
@@ -44,7 +43,7 @@ public class MessageProcessor {
   }
 
   public MessageProcessor(DataCache dataCache,
-      BotStateContext botStateContext, JavaDevInterviewBot bot,
+      BotStateContext botStateContext, @Lazy JavaDevInterviewBot bot,
       ReplyMessageService replyMessageService,
       ImageUtil imageUtil) {
     this.dataCache = dataCache;
