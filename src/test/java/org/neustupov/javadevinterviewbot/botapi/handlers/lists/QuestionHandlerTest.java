@@ -58,7 +58,7 @@ class QuestionHandlerTest {
 
     List<InlineKeyboardButton> buttons = keyboard.get(0);
     assertEquals(buttons.size(), 1);
-    assertEquals(buttons.get(0).getText(), "\uD83D\uDD19 Назад");
+    assertEquals(buttons.get(0).getText(), "⬆ Назад");
   }
 
   @Test

@@ -1,6 +1,6 @@
 package org.neustupov.javadevinterviewbot.botapi.processor.callbacks;
 
-import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Callbacks.JUNIOR_LEVEL_BUTTON;
+import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Callbacks.*;
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -34,6 +34,9 @@ public class LevelCallbacks implements Callback {
         dataCache.setUserCurrentBotState(userId, BotState.SHOW_CATEGORY_MENU);
         dataCache.setUserLevel(userId, Level.JUNIOR);
         return botStateContext.processInputMessage(BotState.SHOW_CATEGORY_MENU, message);
+      case MIDDLE_LEVEL_BUTTON:
+      case SENIOR_LEVEL_BUTTON:
+          return sendAnswerCallbackQuery(NOT_WORK, true, callbackQuery);
     }
 
     return next.handleCallback(callbackQuery, callbackData, dataCache, userId, message);

@@ -98,11 +98,11 @@ class PaginationHandlerTest {
 
     List<InlineKeyboardButton> paginationButtons = keyboard.get(0);
     assertEquals(paginationButtons.size(), 1);
-    assertEquals(paginationButtons.get(0).getText(), "->");
+    assertEquals(paginationButtons.get(0).getText(), "Сюда ➡");
 
     List<InlineKeyboardButton> backButtons = keyboard.get(1);
     assertEquals(backButtons.size(), 1);
-    assertEquals(backButtons.get(0).getText(),"Вернуться к категориям");
+    assertEquals(backButtons.get(0).getText(),"⬆   Вернуться к категориям   ⬆");
   }
 
   @Test
@@ -120,12 +120,12 @@ class PaginationHandlerTest {
 
     List<InlineKeyboardButton> paginationButtons = keyboard.get(0);
     assertEquals(paginationButtons.size(), 1);
-    assertEquals(paginationButtons.get(0).getText(), "->");
+    assertEquals(paginationButtons.get(0).getText(), "Сюда ➡");
 
     List<InlineKeyboardButton> backButtons = keyboard.get(1);
     assertEquals(backButtons.size(), 1);
     assertEquals(backButtons.get(0).getText(),
-        "\uD83D\uDD1D   Вернуться в главное меню   \uD83D\uDD1D");
+        "⬆   Вернуться в главное меню   ⬆");
   }
 
   @Test

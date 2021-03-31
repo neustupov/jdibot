@@ -20,8 +20,6 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class StartMenuCallbacks implements Callback {
 
-  static final String NOT_WORK = "В данный момент не поддерживается";
-
   Callback next;
   BotStateContext botStateContext;
 
@@ -48,14 +46,5 @@ public class StartMenuCallbacks implements Callback {
     }
 
     return next.handleCallback(callbackQuery, callbackData, dataCache, userId, message);
-  }
-
-  private AnswerCallbackQuery sendAnswerCallbackQuery(String text, boolean alert,
-      CallbackQuery callbackQuery) {
-    AnswerCallbackQuery answerCallbackQuery = new AnswerCallbackQuery();
-    answerCallbackQuery.setCallbackQueryId(callbackQuery.getId());
-    answerCallbackQuery.setShowAlert(alert);
-    answerCallbackQuery.setText(text);
-    return answerCallbackQuery;
   }
 }

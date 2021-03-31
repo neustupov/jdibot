@@ -231,7 +231,7 @@ class BotControllerTests {
     assertEquals(keyboardMarkup.get(3).getText(), "Spring");
 
     assertEquals(backButtons.get(0).getText(),
-        "\uD83D\uDD1D   Вернуться в главное меню   \uD83D\uDD1D");
+        "⬆   Вернуться в главное меню   ⬆");
   }
 
   @Test

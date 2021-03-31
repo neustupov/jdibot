@@ -40,7 +40,7 @@ class SearchHandlerTest {
 
     List<InlineKeyboardButton> buttons = keyboard.get(0);
     assertEquals(buttons.size(), 1);
-    assertEquals(buttons.get(0).getText(), "\uD83D\uDD1D   Вернуться в главное меню   \uD83D\uDD1D");
+    assertEquals(buttons.get(0).getText(), "⬆   Вернуться в главное меню   ⬆");
   }
 
   @Test

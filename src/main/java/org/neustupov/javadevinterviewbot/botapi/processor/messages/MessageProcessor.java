@@ -16,6 +16,7 @@ import org.neustupov.javadevinterviewbot.cache.DataCache;
 import org.neustupov.javadevinterviewbot.service.ReplyMessageService;
 import org.neustupov.javadevinterviewbot.utils.Emojis;
 import org.neustupov.javadevinterviewbot.utils.ImageUtil;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -26,12 +27,15 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class MessageProcessor {
 
-  DataCache dataCache;
-  BotStateContext botStateContext;
   @Lazy
   JavaDevInterviewBot bot;
+  DataCache dataCache;
+  BotStateContext botStateContext;
   ReplyMessageService replyMessageService;
   ImageUtil imageUtil;
+
+  @Value("${app.images.start.url}")
+  private String startImagePath;
 
   interface Commands {
 
@@ -62,7 +66,7 @@ public class MessageProcessor {
         dataCache.cleanAll(userId);
         dataCache.setUserCurrentBotState(userId, botState);
         bot.sendPhoto(chatId, replyMessageService.getReplyText("reply.pictureText", Emojis.WAVE),
-            "static/images/bot-pic.jpg");
+            startImagePath);
         break;
       default:
         botState = dataCache.getUserCurrentBotState(userId);

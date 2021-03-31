@@ -40,7 +40,7 @@ class ButtonMakerTest {
     assertFalse(inlineKeyboardMarkup.getKeyboard().isEmpty());
     assertFalse(inlineKeyboardMarkup.getKeyboard().get(0).isEmpty());
     assertFalse(inlineKeyboardMarkup.getKeyboard().get(0).get(0).getText().isEmpty());
-    assertEquals(inlineKeyboardMarkup.getKeyboard().get(0).get(0).getText(), "\uD83D\uDD19 Назад");
+    assertEquals(inlineKeyboardMarkup.getKeyboard().get(0).get(0).getText(), "⬆ Назад");
   }
 
   @Test
@@ -49,7 +49,7 @@ class ButtonMakerTest {
     assertFalse(inlineKeyboardMarkup.getKeyboard().isEmpty());
     assertFalse(inlineKeyboardMarkup.getKeyboard().get(0).isEmpty());
     assertFalse(inlineKeyboardMarkup.getKeyboard().get(0).get(0).getText().isEmpty());
-    assertEquals(inlineKeyboardMarkup.getKeyboard().get(0).get(0).getText(), "\uD83D\uDD1D   Вернуться в главное меню   \uD83D\uDD1D");
+    assertEquals(inlineKeyboardMarkup.getKeyboard().get(0).get(0).getText(), "⬆   Вернуться в главное меню   ⬆");
   }
 
   @Test
@@ -58,10 +58,10 @@ class ButtonMakerTest {
     assertFalse(inlineKeyboardMarkup.getKeyboard().isEmpty());
     assertFalse(inlineKeyboardMarkup.getKeyboard().get(0).isEmpty());
     assertEquals(inlineKeyboardMarkup.getKeyboard().get(0).size(), 2);
-    assertEquals(inlineKeyboardMarkup.getKeyboard().get(0).get(0).getText(), "<-");
-    assertEquals(inlineKeyboardMarkup.getKeyboard().get(0).get(1).getText(), "->");
+    assertEquals(inlineKeyboardMarkup.getKeyboard().get(0).get(0).getText(), "⬅ Туда");
+    assertEquals(inlineKeyboardMarkup.getKeyboard().get(0).get(1).getText(), "Сюда ➡");
     assertEquals(inlineKeyboardMarkup.getKeyboard().get(1).size(), 1);
-    assertEquals(inlineKeyboardMarkup.getKeyboard().get(1).get(0).getText(), "\uD83D\uDD1D   Вернуться в главное меню   \uD83D\uDD1D");
+    assertEquals(inlineKeyboardMarkup.getKeyboard().get(1).get(0).getText(), "⬆   Вернуться в главное меню   ⬆");
   }
 
   private Map<String, String> getButtonNames() {

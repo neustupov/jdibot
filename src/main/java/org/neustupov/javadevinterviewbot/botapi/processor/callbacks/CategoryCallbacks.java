@@ -1,9 +1,6 @@
 package org.neustupov.javadevinterviewbot.botapi.processor.callbacks;
 
-import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Callbacks.COLLECTIONS_CATEGORY_BUTTON;
-import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Callbacks.OOP_CATEGORY_BUTTON;
-import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Callbacks.PATTERNS_CATEGORY_BUTTON;
-import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Callbacks.SPRING_BUTTON;
+import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Callbacks.*;
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -50,6 +47,10 @@ public class CategoryCallbacks implements Callback {
         dataCache.setCategory(userId, Category.SPRING);
         return botStateContext
             .processInputMessage(BotState.SHOW_SPRING_CATEGORY_MENU, message);
+      case SPRING_PART_1_BUTTON:
+      case SPRING_PART_2_BUTTON:
+      case SPRING_PART_3_BUTTON:
+        return sendAnswerCallbackQuery(NOT_WORK, true, callbackQuery);
     }
 
     return next.handleCallback(callbackQuery, callbackData, dataCache, userId, message);

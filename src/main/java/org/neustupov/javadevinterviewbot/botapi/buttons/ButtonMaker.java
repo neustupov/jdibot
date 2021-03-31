@@ -43,8 +43,8 @@ public class ButtonMaker {
     String SEARCH = "Поиск";
     String TESTS = "Тестирование";
 
-    String PREVIOUS = "<-";
-    String NEXT = "->";
+    String PREVIOUS = "Туда";
+    String NEXT = "Сюда";
   }
 
   public interface Callbacks {
@@ -117,12 +117,12 @@ public class ButtonMaker {
 
     List<InlineKeyboardButton> paginationButton = new ArrayList<>();
     if (previous) {
-      InlineKeyboardButton buttonPrevious = InlineKeyboardButton.builder().text(PREVIOUS).build();
+      InlineKeyboardButton buttonPrevious = InlineKeyboardButton.builder().text(Emojis.PREVIOUS + " " + PREVIOUS).build();
       buttonPrevious.setCallbackData(PREVIOUS_BUTTON);
       paginationButton.add(buttonPrevious);
     }
     if (next) {
-      InlineKeyboardButton buttonNext = InlineKeyboardButton.builder().text(NEXT).build();
+      InlineKeyboardButton buttonNext = InlineKeyboardButton.builder().text(NEXT + " " + Emojis.NEXT).build();
       buttonNext.setCallbackData(NEXT_BUTTON);
       paginationButton.add(buttonNext);
     }
@@ -137,11 +137,11 @@ public class ButtonMaker {
   }
 
   private List<InlineKeyboardButton> getSimpleBackButton() {
-    return getInlineKeyboardButtons(Emojis.BACK + " " + BACK, BACK_BUTTON);
+    return getInlineKeyboardButtons(Emojis.TOP + " " + BACK, BACK_BUTTON);
   }
 
   private List<InlineKeyboardButton> getBackToLevel() {
-    return getInlineKeyboardButtons(Emojis.BACK + "   " + BACK_TO_LEVEL + "   " + Emojis.BACK,
+    return getInlineKeyboardButtons(Emojis.TOP + "   " + BACK_TO_LEVEL + "   " + Emojis.TOP,
         BACK_TO_LEVEL_BUTTON);
   }
 
@@ -151,7 +151,8 @@ public class ButtonMaker {
   }
 
   private List<InlineKeyboardButton> getBackToCategory() {
-    return getInlineKeyboardButtons(BACK_TO_CATEGORY, BACK_TO_CATEGORY_BUTTON);
+    return getInlineKeyboardButtons(Emojis.TOP + "   " + BACK_TO_CATEGORY + "   " + Emojis.TOP,
+        BACK_TO_CATEGORY_BUTTON);
   }
 
   private List<InlineKeyboardButton> getInlineKeyboardButtons(String button,
