@@ -14,6 +14,7 @@ public class MessageIdKeeper {
   @Id
   Long chatId;
 
+  boolean needDelete;
   Integer previousMessageId;
-  Integer currentMessageId;
+  Integer imageMessageId;
 }

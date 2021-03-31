@@ -91,7 +91,7 @@ class MessageProcessorTest {
   @MethodSource("provideButtonsForHandleMessage")
   void handleInputMessage(String text, String callback, BotState state) {
     message.setText(text);
-    SendMessage sendMessage = messageProcessor.handleInputMessage(message);
+    SendMessage sendMessage = messageProcessor.handleInputMessage(message, null);
     assertFalse(sendMessage.getText().isEmpty());
     assertEquals(sendMessage.getText(), callback);
     assertEquals(dataCache.getUserCurrentBotState(100), state);

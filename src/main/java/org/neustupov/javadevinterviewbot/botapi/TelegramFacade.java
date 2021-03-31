@@ -9,7 +9,6 @@ import org.neustupov.javadevinterviewbot.model.BotResponseData;
 import org.neustupov.javadevinterviewbot.model.GenericBuilder;
 import org.neustupov.javadevinterviewbot.model.MessageIdKeeper;
 import org.neustupov.javadevinterviewbot.service.MessageIdKeeperService;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -43,7 +42,6 @@ public class TelegramFacade {
       long chatId = callbackQuery.getMessage().getChatId();
       MessageIdKeeper messageIdKeeper = messageIdKeeperService.getKeeperByChatId(chatId);
       int messageId = callbackQuery.getMessage().getMessageId();
-      messageIdKeeper.setCurrentMessageId(messageId);
 
       log.info("New CallbackQuery from User:{}, userId:{}, with data:{}",
           callbackQuery.getFrom().getFirstName() + " " + callbackQuery.getFrom().getLastName(),
@@ -57,6 +55,7 @@ public class TelegramFacade {
 
       if (botResponse != null){
         messageIdKeeper.setPreviousMessageId(messageId);
+        messageIdKeeper.setNeedDelete(true);
         messageIdKeeperService.save(messageIdKeeper);
       }
 
@@ -72,12 +71,11 @@ public class TelegramFacade {
       long chatId = message.getChatId();
       MessageIdKeeper messageIdKeeper = messageIdKeeperService.getKeeperByChatId(chatId);
       int messageId = message.getMessageId();
-      messageIdKeeper.setCurrentMessageId(messageId);
 
       log.info("New message from User:{}, chatId:{}, with text: {}",
           message.getFrom().getFirstName() + " " + message.getFrom().getLastName(),
           message.getChatId(), message.getText());
-      SendMessage replyMessage = messageProcessor.handleInputMessage(message);
+      SendMessage replyMessage = messageProcessor.handleInputMessage(message, messageIdKeeper);
 
       if (replyMessage != null){
         messageIdKeeper.setPreviousMessageId(messageId);
