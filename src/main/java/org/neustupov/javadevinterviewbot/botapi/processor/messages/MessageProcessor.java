@@ -15,10 +15,12 @@ import org.neustupov.javadevinterviewbot.botapi.states.BotState;
 import org.neustupov.javadevinterviewbot.cache.DataCache;
 import org.neustupov.javadevinterviewbot.model.MessageIdKeeper;
 import org.neustupov.javadevinterviewbot.utils.ImageUtil;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 @Slf4j
 @Component
@@ -37,7 +39,7 @@ public class MessageProcessor {
   }
 
   public MessageProcessor(DataCache dataCache,
-      BotStateContext botStateContext, @Lazy JavaDevInterviewBot bot,
+      BotStateContext botStateContext, JavaDevInterviewBot bot,
       ImageUtil imageUtil) {
     this.dataCache = dataCache;
     this.botStateContext = botStateContext;
@@ -56,6 +58,7 @@ public class MessageProcessor {
         botState = BotState.SHOW_START_MENU;
         dataCache.cleanAll(userId);
         dataCache.setUserCurrentBotState(userId, botState);
+        botStateContext.processInputMessage(botState, message);
         break;
       default:
         botState = dataCache.getUserCurrentBotState(userId);
@@ -66,14 +69,20 @@ public class MessageProcessor {
       botState = BotState.SHOW_QUESTION;
       dataCache.setUserCurrentBotState(userId, botState);
       Message responseImageMessage = processImage(inputMsg, chatId);
-      if (messageIdKeeper != null && responseImageMessage != null) {
-        messageIdKeeper.setImageMessageId(responseImageMessage.getMessageId());
-        messageIdKeeper.setNeedDelete(false);
-      }
+
+      setIdsInKeeper(messageIdKeeper, responseImageMessage);
+
       return botStateContext.processInputMessage(botState, message);
     }
 
     return botStateContext.processInputMessage(botState, message);
+  }
+
+  private void setIdsInKeeper(MessageIdKeeper messageIdKeeper, Message responseImageMessage) {
+    if (messageIdKeeper != null && responseImageMessage != null) {
+      messageIdKeeper.setImageMessageId(responseImageMessage.getMessageId());
+      messageIdKeeper.setNeedDeleteImage(false);
+    }
   }
 
   private Message processImage(String inputMsg, long chatId) {
@@ -81,8 +90,25 @@ public class MessageProcessor {
     Message message = null;
     if (imageData.isPresent()) {
       File imageTempFile = imageUtil.getPhotoFile(imageData.get());
-      message = bot.sendPhoto(chatId, "", imageTempFile);
+      message = sendPhoto(chatId, imageTempFile);
       imageUtil.deleteTempFile(imageTempFile);
+    }
+    return message;
+  }
+
+  private Message sendPhoto(Long chatId, File file) {
+    Message message = null;
+    if (file != null) {
+      SendPhoto sendPhoto = SendPhoto.builder()
+          .photo(new InputFile(file))
+          .chatId(chatId.toString())
+          .caption("")
+          .build();
+      try {
+        message = bot.execute(sendPhoto);
+      } catch (TelegramApiException e) {
+        log.error(e.getMessage(), e);
+      }
     }
     return message;
   }

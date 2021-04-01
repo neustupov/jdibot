@@ -1,6 +1,5 @@
 package org.neustupov.javadevinterviewbot;
 
-import java.io.File;
 import lombok.AccessLevel;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
@@ -10,10 +9,7 @@ import org.neustupov.javadevinterviewbot.model.BotResponseData;
 import org.neustupov.javadevinterviewbot.model.MessageIdKeeper;
 import org.telegram.telegrambots.bots.TelegramWebhookBot;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
-import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
-import org.telegram.telegrambots.meta.api.objects.InputFile;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
@@ -53,38 +49,18 @@ public class JavaDevInterviewBot extends TelegramWebhookBot {
         .hasCallbackQuery()) {
       BotResponseData botResponseData = telegramFacade.handleUpdate(update);
       MessageIdKeeper messageIdKeeper = botResponseData.getMessageIdKeeper();
-      deletePreviousMessage(messageIdKeeper);
+      deletePreviousMessages(messageIdKeeper);
       return botResponseData.getBotApiMethod();
     }
     return null;
   }
 
-  public Message sendPhoto(Long chatId, String imageCaption, File file) {
-    return sendPhotoWithCaption(chatId, imageCaption, file);
-  }
+  //TODO Тут можно все упростить, при необходимости удаляя предыдущее сообщение как текущее-1
+  private void deletePreviousMessages(MessageIdKeeper messageIdKeeper) {
+    Long chatId = messageIdKeeper.getChatId();
 
-  private Message sendPhotoWithCaption(Long chatId, String imageCaption, File file) {
-    Message message = null;
-    if (file != null) {
-      SendPhoto sendPhoto = SendPhoto.builder()
-          .photo(new InputFile(file))
-          .chatId(chatId.toString())
-          .caption(imageCaption).build();
-      try {
-        message = execute(sendPhoto);
-      } catch (TelegramApiException e) {
-        log.error(e.getMessage(), e);
-      }
-    }
-    return message;
-  }
-
-  private void deletePreviousMessage(MessageIdKeeper messageIdKeeper) {
     Integer previousMessageId = messageIdKeeper.getPreviousMessageId();
-    Integer imageMessageId = messageIdKeeper.getImageMessageId();
-
-    if (previousMessageId != null && messageIdKeeper.isNeedDelete()) {
-      Long chatId = messageIdKeeper.getChatId();
+    if (previousMessageId != null && messageIdKeeper.isNeedDeletePrevious()) {
 
       DeleteMessage deleteMessage = new DeleteMessage();
       deleteMessage.setChatId(chatId.toString());
@@ -95,16 +71,40 @@ public class JavaDevInterviewBot extends TelegramWebhookBot {
         log.error(e.getMessage(), e);
       }
 
-      if (imageMessageId != null) {
-        DeleteMessage deleteImage = new DeleteMessage();
-        deleteImage.setChatId(chatId.toString());
-        deleteImage.setMessageId(imageMessageId);
-        try {
-          execute(deleteImage);
-        } catch (TelegramApiException e) {
-          log.error(e.getMessage(), e);
-        }
-      }
+      messageIdKeeper.setNeedDeletePrevious(false);
+      messageIdKeeper.setPreviousMessageId(null);
     }
+
+    Integer previousPreviousMessageId = messageIdKeeper.getPreviousPreviousMessageId();
+    if (previousPreviousMessageId != null && messageIdKeeper.isNeedDeletePreviousPrevious()) {
+
+      DeleteMessage deleteMessage = new DeleteMessage();
+      deleteMessage.setChatId(chatId.toString());
+      deleteMessage.setMessageId(previousPreviousMessageId + 1);
+      try {
+        execute(deleteMessage);
+      } catch (TelegramApiException e) {
+        log.error(e.getMessage(), e);
+      }
+
+      messageIdKeeper.setNeedDeletePreviousPrevious(false);
+      messageIdKeeper.setPreviousPreviousMessageId(null);
+    }
+
+    Integer imageMessageId = messageIdKeeper.getImageMessageId();
+    if (imageMessageId != null && messageIdKeeper.isNeedDeleteImage()) {
+      DeleteMessage deleteImage = new DeleteMessage();
+      deleteImage.setChatId(chatId.toString());
+      deleteImage.setMessageId(imageMessageId);
+      try {
+        execute(deleteImage);
+      } catch (TelegramApiException e) {
+        log.error(e.getMessage(), e);
+      }
+
+      messageIdKeeper.setImageMessageId(null);
+    }
+
+    telegramFacade.saveMessageIdKeeper(messageIdKeeper);
   }
 }

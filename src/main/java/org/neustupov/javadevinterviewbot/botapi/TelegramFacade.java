@@ -9,6 +9,7 @@ import org.neustupov.javadevinterviewbot.model.BotResponseData;
 import org.neustupov.javadevinterviewbot.model.GenericBuilder;
 import org.neustupov.javadevinterviewbot.model.MessageIdKeeper;
 import org.neustupov.javadevinterviewbot.service.MessageIdKeeperService;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -27,7 +28,7 @@ public class TelegramFacade {
 
   public TelegramFacade(
       CallbackProcessor callbackProcessor,
-      MessageProcessor messageProcessor,
+      @Lazy MessageProcessor messageProcessor,
       MessageIdKeeperService messageIdKeeperService) {
     this.callbackProcessor = callbackProcessor;
     this.messageProcessor = messageProcessor;
@@ -36,6 +37,7 @@ public class TelegramFacade {
 
   public BotResponseData handleUpdate(Update update) {
     Message message = update.getMessage();
+    BotResponseData botResponseData = null;
 
     if (update.hasCallbackQuery()) {
       CallbackQuery callbackQuery = update.getCallbackQuery();
@@ -43,9 +45,10 @@ public class TelegramFacade {
       MessageIdKeeper messageIdKeeper = messageIdKeeperService.getKeeperByChatId(chatId);
       int messageId = callbackQuery.getMessage().getMessageId();
 
-      log.info("New CallbackQuery from User:{}, userId:{}, with data:{}",
+      log.info("New CallbackQuery from User:{}, userId:{}, with messageId:{} and data:{}",
           callbackQuery.getFrom().getFirstName() + " " + callbackQuery.getFrom().getLastName(),
-          callbackQuery.getFrom().getId(), callbackQuery.getData());
+          callbackQuery.getFrom().getId(), messageId, callbackQuery.getData());
+
       BotApiMethod<?> botResponse = null;
       try {
         botResponse = callbackProcessor.processCallbackQuery(callbackQuery);
@@ -53,32 +56,37 @@ public class TelegramFacade {
         log.error(e.getMessage(), e);
       }
 
-      if (botResponse != null){
+      if (botResponse != null) {
         messageIdKeeper.setPreviousMessageId(messageId);
-        messageIdKeeper.setNeedDelete(true);
+        messageIdKeeper.setNeedDeletePrevious(true);
+        messageIdKeeper.setPreviousPreviousMessageId(messageId);
+        messageIdKeeper.setNeedDeletePreviousPrevious(false);
+        messageIdKeeper.setNeedDeleteImage(true);
         messageIdKeeperService.save(messageIdKeeper);
       }
 
-      return GenericBuilder.of(BotResponseData::new)
+      botResponseData = GenericBuilder.of(BotResponseData::new)
           .with(BotResponseData::setBotApiMethod, botResponse)
           .with(BotResponseData::setMessageIdKeeper, messageIdKeeper)
           .build();
     }
 
-    BotResponseData botResponseData = null;
-
     if (message != null && message.hasText()) {
       long chatId = message.getChatId();
       MessageIdKeeper messageIdKeeper = messageIdKeeperService.getKeeperByChatId(chatId);
-      int messageId = message.getMessageId();
+      messageIdKeeper.setPreviousMessageId(message.getMessageId());
 
-      log.info("New message from User:{}, chatId:{}, with text: {}",
+      log.info("New message from User:{}, chatId:{}, messageId:{} with text: {}",
           message.getFrom().getFirstName() + " " + message.getFrom().getLastName(),
-          message.getChatId(), message.getText());
+          chatId,
+          message.getMessageId(),
+          message.getText());
+
       SendMessage replyMessage = messageProcessor.handleInputMessage(message, messageIdKeeper);
 
-      if (replyMessage != null){
-        messageIdKeeper.setPreviousMessageId(messageId);
+      if (replyMessage != null) {
+        messageIdKeeper.setNeedDeletePrevious(true);
+        messageIdKeeper.setNeedDeletePreviousPrevious(true);
         messageIdKeeperService.save(messageIdKeeper);
       }
 
@@ -90,4 +98,16 @@ public class TelegramFacade {
 
     return botResponseData;
   }
+
+  public void saveMessageIdKeeper(MessageIdKeeper messageIdKeeper) {
+    messageIdKeeperService.save(messageIdKeeper);
+  }
+
+  /*public void cleanImageMessageId(long chatId){
+    messageIdKeeperService.cleanImageId(chatId);
+  }
+
+  public void cleanMessageIdsList(long chatId){
+    messageIdKeeperService.cleanMessageIdsList(chatId);
+  }*/
 }
