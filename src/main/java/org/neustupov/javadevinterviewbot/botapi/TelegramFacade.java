@@ -42,7 +42,6 @@ public class TelegramFacade {
     if (update.hasCallbackQuery()) {
       CallbackQuery callbackQuery = update.getCallbackQuery();
       long chatId = callbackQuery.getMessage().getChatId();
-      MessageIdKeeper messageIdKeeper = messageIdKeeperService.getKeeperByChatId(chatId);
       int messageId = callbackQuery.getMessage().getMessageId();
 
       log.info("New CallbackQuery from User:{}, userId:{}, with messageId:{} and data:{}",
