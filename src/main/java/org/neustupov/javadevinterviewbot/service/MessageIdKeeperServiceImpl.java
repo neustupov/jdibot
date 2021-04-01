@@ -1,6 +1,5 @@
 package org.neustupov.javadevinterviewbot.service;
 
-import java.util.ArrayList;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.neustupov.javadevinterviewbot.model.GenericBuilder;
@@ -44,22 +43,33 @@ public class MessageIdKeeperServiceImpl implements MessageIdKeeperService {
   }
 
   @Override
-  public void cleanImageId(long chatId) {
+  public MessageIdKeeper updateMessageIdKeeper(long chatId, Boolean needDeletePrevious,
+      Integer previousMessageId, Boolean needDeletePreviousPrevious,
+      Integer previousPreviousMessageId, Boolean needDeleteImage, Integer imageMessageId) {
     Optional<MessageIdKeeper> messageIdKeeperOptional = messageIdKeeperRepository.findById(chatId);
+    MessageIdKeeper messageIdKeeper = null;
     if (messageIdKeeperOptional.isPresent()) {
-      MessageIdKeeper messageIdKeeper = messageIdKeeperOptional.get();
-      messageIdKeeper.setImageMessageId(null);
-      messageIdKeeperRepository.save(messageIdKeeper);
+      messageIdKeeper = messageIdKeeperOptional.get();
+      if (needDeletePrevious != null) {
+        messageIdKeeper.setNeedDeletePrevious(needDeletePrevious);
+      }
+      if (previousMessageId != null) {
+        messageIdKeeper.setPreviousMessageId(previousMessageId);
+      }
+      if (needDeletePreviousPrevious != null) {
+        messageIdKeeper.setNeedDeletePreviousPrevious(needDeletePreviousPrevious);
+      }
+      if (previousPreviousMessageId != null) {
+        messageIdKeeper.setPreviousPreviousMessageId(previousPreviousMessageId);
+      }
+      if (needDeleteImage != null) {
+        messageIdKeeper.setNeedDeleteImage(needDeleteImage);
+      }
+      if (imageMessageId != null) {
+        messageIdKeeper.setImageMessageId(imageMessageId);
+      }
+      save(messageIdKeeper);
     }
+    return messageIdKeeper;
   }
-
-  /*@Override
-  public void cleanMessageIdsList(long chatId) {
-    Optional<MessageIdKeeper> messageIdKeeperOptional = messageIdKeeperRepository.findById(chatId);
-    if (messageIdKeeperOptional.isPresent()) {
-      MessageIdKeeper messageIdKeeper = messageIdKeeperOptional.get();
-      messageIdKeeper.setPreviousMessageIdsList(new ArrayList<>());
-      messageIdKeeperRepository.save(messageIdKeeper);
-    }
-  }*/
 }

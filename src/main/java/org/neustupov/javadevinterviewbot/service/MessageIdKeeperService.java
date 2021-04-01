@@ -5,7 +5,10 @@ import org.neustupov.javadevinterviewbot.model.MessageIdKeeper;
 public interface MessageIdKeeperService {
 
   MessageIdKeeper getKeeperByChatId(long chatId);
+
   void save(MessageIdKeeper messageIdKeeper);
-  void cleanImageId(long chatId);
-  /*void cleanMessageIdsList(long chatId);*/
+
+  MessageIdKeeper updateMessageIdKeeper(long chatId, Boolean needDeletePrevious, Integer previousMessageId,
+      Boolean needDeletePreviousPrevious, Integer previousPreviousMessageId,
+      Boolean needDeleteImage, Integer imageMessageId);
 }

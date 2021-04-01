@@ -11,6 +11,7 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BotResponseData {
 
+  Integer messageId;
   BotApiMethod<?> botApiMethod;
   MessageIdKeeper messageIdKeeper;
 }

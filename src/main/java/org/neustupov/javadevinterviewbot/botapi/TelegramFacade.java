@@ -57,17 +57,20 @@ public class TelegramFacade {
       }
 
       if (botResponse != null) {
-        messageIdKeeper.setPreviousMessageId(messageId);
-        messageIdKeeper.setNeedDeletePrevious(true);
-        messageIdKeeper.setPreviousPreviousMessageId(messageId);
-        messageIdKeeper.setNeedDeletePreviousPrevious(false);
-        messageIdKeeper.setNeedDeleteImage(true);
-        messageIdKeeperService.save(messageIdKeeper);
+        messageIdKeeperService.updateMessageIdKeeper(chatId,
+            null,
+            null,
+            false,
+            messageId,
+            true,
+            null);
       }
 
       botResponseData = GenericBuilder.of(BotResponseData::new)
+          .with(BotResponseData::setMessageId, messageId)
           .with(BotResponseData::setBotApiMethod, botResponse)
-          .with(BotResponseData::setMessageIdKeeper, messageIdKeeper)
+          .with(BotResponseData::setMessageIdKeeper,
+              messageIdKeeperService.getKeeperByChatId(chatId))
           .build();
     }
 
@@ -86,11 +89,16 @@ public class TelegramFacade {
 
       if (replyMessage != null) {
         messageIdKeeper.setNeedDeletePrevious(true);
+        if (messageIdKeeper.getPreviousMessageId() != null
+            && messageIdKeeper.getPreviousPreviousMessageId() == null) {
+          messageIdKeeper.setPreviousPreviousMessageId(messageIdKeeper.getPreviousMessageId() - 1);
+        }
         messageIdKeeper.setNeedDeletePreviousPrevious(true);
         messageIdKeeperService.save(messageIdKeeper);
       }
 
       botResponseData = GenericBuilder.of(BotResponseData::new)
+          .with(BotResponseData::setMessageId, message.getMessageId())
           .with(BotResponseData::setBotApiMethod, replyMessage)
           .with(BotResponseData::setMessageIdKeeper, messageIdKeeper)
           .build();
@@ -102,12 +110,4 @@ public class TelegramFacade {
   public void saveMessageIdKeeper(MessageIdKeeper messageIdKeeper) {
     messageIdKeeperService.save(messageIdKeeper);
   }
-
-  /*public void cleanImageMessageId(long chatId){
-    messageIdKeeperService.cleanImageId(chatId);
-  }
-
-  public void cleanMessageIdsList(long chatId){
-    messageIdKeeperService.cleanMessageIdsList(chatId);
-  }*/
 }
