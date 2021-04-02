@@ -63,8 +63,7 @@ public class JavaDevInterviewBot extends TelegramWebhookBot {
 
       MessageIdKeeper messageIdKeeper = botResponseData.getMessageIdKeeper();
       if (update.hasCallbackQuery()) {
-        Message message = update.getCallbackQuery().getMessage();
-        User user = message.getFrom();
+        User user = update.getCallbackQuery().getMessage().getFrom();
         if (user != null && user.getIsBot()) {
           updateMessage(botResponseData);
         }
@@ -78,18 +77,14 @@ public class JavaDevInterviewBot extends TelegramWebhookBot {
   }
 
   private void updateMessage(BotResponseData botResponseData) {
-    BotApiMethod<?> method = botResponseData.getBotApiMethod();
-    SendMessage sendMessage = (SendMessage) method;
-    EditMessageText editMessageText = null;
+    SendMessage sendMessage = (SendMessage) botResponseData.getBotApiMethod();
     if (sendMessage != null) {
-      editMessageText = EditMessageText.builder()
+      EditMessageText editMessageText = EditMessageText.builder()
           .chatId(sendMessage.getChatId())
           .messageId(botResponseData.getMessageId())
           .text(sendMessage.getText())
           .replyMarkup((InlineKeyboardMarkup) sendMessage.getReplyMarkup())
           .build();
-    }
-    if (editMessageText != null) {
       try {
         execute(editMessageText);
       } catch (TelegramApiException e) {
