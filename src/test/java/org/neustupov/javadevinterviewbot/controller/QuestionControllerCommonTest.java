@@ -1,7 +1,11 @@
 package org.neustupov.javadevinterviewbot.controller;
 
+import static org.mockito.ArgumentMatchers.any;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Collections;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mockito;
 import org.neustupov.javadevinterviewbot.botapi.states.Category;
@@ -72,5 +76,9 @@ class QuestionControllerCommonTest {
         .with(Question::setSmallDescription, "SmallDescriptionTwo")
         .with(Question::setLargeDescription, "LargeDescriptionTwo")
         .build();
+
+    Mockito.when(questionService.findAll()).thenReturn(Collections.singletonList(question));
+    Mockito.when(questionService.findById(any(Long.class))).thenReturn(Optional.of(question));
+    Mockito.when(questionService.save(any(Question.class))).thenReturn(q1).thenReturn(q2);
   }
 }

@@ -3,27 +3,18 @@ package org.neustupov.javadevinterviewbot.controller;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.*;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.aggregator.AggregateWith;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.mockito.Mockito;
 import org.neustupov.javadevinterviewbot.QuestionAggregator;
 import org.neustupov.javadevinterviewbot.TestUtil;
-import org.neustupov.javadevinterviewbot.botapi.states.Category;
-import org.neustupov.javadevinterviewbot.botapi.states.Level;
-import org.neustupov.javadevinterviewbot.model.GenericBuilder;
 import org.neustupov.javadevinterviewbot.model.Question;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
@@ -32,43 +23,6 @@ import org.springframework.test.web.servlet.MvcResult;
 
 @WithMockUser
 class QuestionControllerTest extends QuestionControllerCommonTest{
-
-  @BeforeEach
-  void setUp() {
-    mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-
-    Mockito.when(questionNumService.getNext())
-        .thenReturn(1L)
-        .thenReturn(2L);
-
-    question = GenericBuilder.of(Question::new)
-        .with(Question::setId, questionNumService.getNext())
-        .with(Question::setCategory, Category.OOP)
-        .with(Question::setLevel, Level.JUNIOR)
-        .with(Question::setSmallDescription, "Тест2")
-        .with(Question::setLargeDescription, "Тест2 тест")
-        .build();
-
-    q1 = GenericBuilder.of(Question::new)
-        .with(Question::setId, 100L)
-        .with(Question::setCategory, Category.OOP)
-        .with(Question::setLevel, Level.JUNIOR)
-        .with(Question::setSmallDescription, "SmallDescriptionOne")
-        .with(Question::setLargeDescription, "LargeDescriptionOne")
-        .build();
-
-    q2 = GenericBuilder.of(Question::new)
-        .with(Question::setId, 200L)
-        .with(Question::setCategory, Category.COLLECTIONS)
-        .with(Question::setLevel, Level.MIDDLE)
-        .with(Question::setSmallDescription, "SmallDescriptionTwo")
-        .with(Question::setLargeDescription, "LargeDescriptionTwo")
-        .build();
-
-    Mockito.when(questionService.findAll()).thenReturn(Collections.singletonList(question));
-    Mockito.when(questionService.findById(any(Long.class))).thenReturn(Optional.of(question));
-    Mockito.when(questionService.save(any(Question.class))).thenReturn(q1).thenReturn(q2);
-  }
 
   @Test
   void init() throws Exception {
