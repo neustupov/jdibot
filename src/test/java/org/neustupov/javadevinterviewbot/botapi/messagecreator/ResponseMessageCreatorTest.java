@@ -118,7 +118,7 @@ class ResponseMessageCreatorTest {
     SendMessage sendMessage = messageCreator.getMessage(qList, 100L, 200, "next");
 
     assertFalse(sendMessage.getText().isEmpty());
-    assertEquals(sendMessage.getText(), "Категория - ООП\n\n/q700 Test 1\n");
+    assertEquals(sendMessage.getText(), "Категория - ООП\n\n/q700 Test 1\n\n");
     List<List<InlineKeyboardButton>> keyboard = ((InlineKeyboardMarkup) sendMessage
         .getReplyMarkup()).getKeyboard();
 

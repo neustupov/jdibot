@@ -13,7 +13,6 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
-import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
@@ -54,15 +53,17 @@ public class JavaDevInterviewBot extends TelegramWebhookBot {
   public BotApiMethod<?> onWebhookUpdateReceived(Update update) {
     if ((update.getMessage() != null && update.getMessage().hasText()) || update
         .hasCallbackQuery()) {
+
       BotResponseData botResponseData = telegramFacade.handleUpdate(update);
       BotApiMethod<?> method = botResponseData.getBotApiMethod();
-      MessageIdKeeper messageIdKeeper = botResponseData.getMessageIdKeeper();
 
       if (method instanceof AnswerCallbackQuery) {
         return method;
-      } else if (update.hasCallbackQuery()) {
-        CallbackQuery callbackQuery = update.getCallbackQuery();
-        Message message = callbackQuery.getMessage();
+      }
+
+      MessageIdKeeper messageIdKeeper = botResponseData.getMessageIdKeeper();
+      if (update.hasCallbackQuery()) {
+        Message message = update.getCallbackQuery().getMessage();
         User user = message.getFrom();
         if (user != null && user.getIsBot()) {
           updateMessage(botResponseData);
@@ -70,7 +71,7 @@ public class JavaDevInterviewBot extends TelegramWebhookBot {
         deleteImage(messageIdKeeper);
       } else {
         deletePreviousMessages(messageIdKeeper);
-        return botResponseData.getBotApiMethod();
+        return method;
       }
     }
     return null;
