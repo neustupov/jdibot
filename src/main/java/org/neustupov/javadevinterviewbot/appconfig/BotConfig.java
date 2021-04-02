@@ -20,7 +20,7 @@ import org.springframework.context.support.ReloadableResourceBundleMessageSource
 @Configuration
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @ConfigurationProperties(prefix = "telegrambot")
-public class BootConfig {
+public class BotConfig {
 
   String webHookPath;
   String botUserName;

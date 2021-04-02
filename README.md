@@ -4,6 +4,7 @@ Used:
 
 - Spring Boot 2.4.2
   - Spring Web
+  - Spring Security
   - Spring Data MongoDB
 
 - Telegram API - org.telegram.telegrambots 5.0.1.1

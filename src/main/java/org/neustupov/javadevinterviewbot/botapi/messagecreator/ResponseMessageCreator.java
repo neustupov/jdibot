@@ -22,7 +22,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ResponseMessageCreator {
 
-  @Value("${app.search.pagination.max}")
+  @Value("${app.pagination}")
   private Integer maxObjects;
 
   ReplyMessageService replyMessageService;
@@ -121,6 +121,7 @@ public class ResponseMessageCreator {
       sb.append("/q").append(q.getId());
       sb.append(" ");
       sb.append(q.getSmallDescription());
+      sb.append("\n");
       sb.append("\n");
     });
     return sb.toString();
