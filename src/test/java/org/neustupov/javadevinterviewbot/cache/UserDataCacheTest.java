@@ -38,10 +38,7 @@ class UserDataCacheTest {
 
   @BeforeEach
   void setUp() {
-    rangePair = GenericBuilder.of(RangePair::new)
-        .with(RangePair::setFrom, 0)
-        .with(RangePair::setTo, 1)
-        .build();
+    rangePair = RangePair.builder().from(0).to(1).build();
 
     Optional<UserState> userState = Optional.of(GenericBuilder.of(UserState::new)
         .with(UserState::setUserId, 100L)

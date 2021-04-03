@@ -73,10 +73,7 @@ class PaginationHandlerTest {
     when(questionRepository.getAllByCategoryAndLevel(any(), any()))
         .thenReturn(qListForCategory);
 
-    RangePair rangePair = GenericBuilder.of(RangePair::new)
-        .with(RangePair::setFrom, 0)
-        .with(RangePair::setTo, 1)
-        .build();
+    RangePair rangePair = RangePair.builder().from(0).to(1).build();
 
     when(userContext.getRoute()).thenReturn("next");
     when(userContext.getRange())

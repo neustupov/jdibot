@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.neustupov.javadevinterviewbot.TestData.getListOfQuestion;
+import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Callbacks.BACK_TO_START_MENU_BUTTON;
 import static org.neustupov.javadevinterviewbot.botapi.messagecreator.ResponseMessageCreatorTest.Buttons.*;
 import static org.neustupov.javadevinterviewbot.botapi.states.BotState.FILLING_SEARCH;
 import static org.neustupov.javadevinterviewbot.botapi.states.BotState.SHOW_LEVEL_MENU;
@@ -16,7 +17,6 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.neustupov.javadevinterviewbot.cache.UserDataCache;
-import org.neustupov.javadevinterviewbot.model.GenericBuilder;
 import org.neustupov.javadevinterviewbot.model.Question;
 import org.neustupov.javadevinterviewbot.model.RangePair;
 import org.neustupov.javadevinterviewbot.model.UserContext;
@@ -62,13 +62,13 @@ class ResponseMessageCreatorTest {
   @Test
   void getSimplyMessage() {
     SendMessage sendMessageStart = messageCreator
-        .getSimplyMessage(100L, "reply.menu", SHOW_START_MENU, false);
+        .getSimplyMessage(100L, "reply.menu", SHOW_START_MENU, "");
 
     assertFalse(sendMessageStart.getText().isEmpty());
     assertEquals(sendMessageStart.getText(), "С чего начнем?");
 
     SendMessage sendMessageLevel = messageCreator
-        .getSimplyMessage(100L, "reply.level", SHOW_LEVEL_MENU, true);
+        .getSimplyMessage(100L, "reply.level", SHOW_LEVEL_MENU, BACK_TO_START_MENU_BUTTON);
 
     assertTrue(!sendMessageLevel.getText().isEmpty());
     assertEquals(sendMessageLevel.getText(), "Выбери уровень.");
@@ -106,10 +106,7 @@ class ResponseMessageCreatorTest {
   void getMessage() {
     when(dataCache.getUserCurrentBotState(anyLong())).thenReturn(FILLING_SEARCH);
 
-    RangePair rangePair = GenericBuilder.of(RangePair::new)
-        .with(RangePair::setFrom, 0)
-        .with(RangePair::setTo, 1)
-        .build();
+    RangePair rangePair = RangePair.builder().from(0).to(1).build();
 
     when(dataCache.getUserContext(anyLong())).thenReturn(userContext);
     when(userContext.getRange()).thenReturn(null).thenReturn(rangePair);

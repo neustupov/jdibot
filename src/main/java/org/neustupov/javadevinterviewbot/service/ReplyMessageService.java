@@ -17,6 +17,10 @@ public class ReplyMessageService {
     return SendMessage.builder().chatId(chat_id.toString()).text(localeMessageService.getMessage(replyMessage)).build();
   }
 
+  public SendMessage getReplyMessageForQuestion(Long chat_id, String replyMessage){
+    return SendMessage.builder().chatId(chat_id.toString()).text(replyMessage).build();
+  }
+
   public String getReplyText(String replyMessage) {
     return localeMessageService.getMessage(replyMessage);
   }

@@ -36,7 +36,7 @@ class ButtonMakerTest {
 
   @Test
   void getBackToQuestionsButton() {
-    InlineKeyboardMarkup inlineKeyboardMarkup = buttonMaker.getBackToQuestionsButton();
+    InlineKeyboardMarkup inlineKeyboardMarkup = buttonMaker.getBackButton();
     assertFalse(inlineKeyboardMarkup.getKeyboard().isEmpty());
     assertFalse(inlineKeyboardMarkup.getKeyboard().get(0).isEmpty());
     assertFalse(inlineKeyboardMarkup.getKeyboard().get(0).get(0).getText().isEmpty());

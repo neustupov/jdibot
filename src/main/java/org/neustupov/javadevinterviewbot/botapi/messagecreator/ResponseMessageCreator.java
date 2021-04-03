@@ -1,5 +1,8 @@
 package org.neustupov.javadevinterviewbot.botapi.messagecreator;
 
+import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Callbacks.BACK_BUTTON;
+import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Callbacks.BACK_TO_START_MENU_BUTTON;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -10,7 +13,6 @@ import org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker;
 import org.neustupov.javadevinterviewbot.botapi.states.BotState;
 import org.neustupov.javadevinterviewbot.botapi.states.Category;
 import org.neustupov.javadevinterviewbot.cache.DataCache;
-import org.neustupov.javadevinterviewbot.model.GenericBuilder;
 import org.neustupov.javadevinterviewbot.model.Question;
 import org.neustupov.javadevinterviewbot.model.RangePair;
 import org.neustupov.javadevinterviewbot.service.ReplyMessageService;
@@ -44,11 +46,19 @@ public class ResponseMessageCreator {
   }
 
   public SendMessage getSimplyMessage(long chatId, String replyMessage, BotState state,
-      boolean backToStartMenuButton) {
+      String backButton) {
     dataCache.setUserCurrentBotState((int) chatId, state);
-    SendMessage replyToUser = replyMessageService.getReplyMessage(chatId, replyMessage);
-    if (backToStartMenuButton) {
-      replyToUser.setReplyMarkup(buttonMaker.getBackToStartMenuButton());
+    SendMessage replyToUser;
+    if (state.equals(BotState.SHOW_QUESTION)){
+      replyToUser = replyMessageService.getReplyMessageForQuestion(chatId, replyMessage);
+    } else {
+      replyToUser = replyMessageService.getReplyMessage(chatId, replyMessage);
+    }
+    switch (backButton){
+      case BACK_TO_START_MENU_BUTTON: replyToUser.setReplyMarkup(buttonMaker.getBackToStartMenuButton());
+      break;
+      case BACK_BUTTON: replyToUser.setReplyMarkup(buttonMaker.getBackButton());
+      break;
     }
     return replyToUser;
   }
@@ -73,9 +83,7 @@ public class ResponseMessageCreator {
       if (qList.size() > maxObjects) {
         RangePair rangePair;
         if (range == null) {
-          rangePair = GenericBuilder.of(RangePair::new)
-              .with(RangePair::setFrom, 0)
-              .with(RangePair::setTo, maxObjects).build();
+          rangePair = RangePair.builder().from(0).to(maxObjects).build();
           dataCache.setRange(userId, rangePair);
           qListSelected = paginationService.getCurrentList(qList, rangePair);
         } else {

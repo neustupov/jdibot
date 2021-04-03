@@ -110,7 +110,7 @@ public class ButtonMaker {
    *
    * @return Блок клавиатуры
    */
-  public InlineKeyboardMarkup getBackToQuestionsButton() {
+  public InlineKeyboardMarkup getBackButton() {
     return InlineKeyboardMarkup.builder()
         .keyboard(Collections.singletonList(getSimpleBackButton()))
         .build();
