@@ -3,13 +3,18 @@ package org.neustupov.javadevinterviewbot.botapi.messagecreator;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
+import static org.neustupov.javadevinterviewbot.TestData.Buttons.QUESTIONS;
+import static org.neustupov.javadevinterviewbot.TestData.Buttons.QUESTIONS_BUTTON;
+import static org.neustupov.javadevinterviewbot.TestData.Buttons.SEARCH;
+import static org.neustupov.javadevinterviewbot.TestData.Buttons.SEARCH_BUTTON;
+import static org.neustupov.javadevinterviewbot.TestData.Buttons.TESTS;
+import static org.neustupov.javadevinterviewbot.TestData.Buttons.TESTS_BUTTON;
 import static org.neustupov.javadevinterviewbot.TestData.getListOfQuestion;
-import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Callbacks.BACK_TO_START_MENU_BUTTON;
-import static org.neustupov.javadevinterviewbot.botapi.messagecreator.ResponseMessageCreatorTest.Buttons.*;
-import static org.neustupov.javadevinterviewbot.botapi.states.BotState.FILLING_SEARCH;
-import static org.neustupov.javadevinterviewbot.botapi.states.BotState.SHOW_LEVEL_MENU;
-import static org.neustupov.javadevinterviewbot.botapi.states.BotState.SHOW_START_MENU;
-import static org.neustupov.javadevinterviewbot.botapi.states.Category.OOP;
+import static org.neustupov.javadevinterviewbot.model.BotState.FILLING_SEARCH;
+import static org.neustupov.javadevinterviewbot.model.BotState.SHOW_LEVEL_MENU;
+import static org.neustupov.javadevinterviewbot.model.BotState.SHOW_START_MENU;
+import static org.neustupov.javadevinterviewbot.model.buttons.ButtonCallbacks.BACK_TO_START_MENU_BUTTON;
+import static org.neustupov.javadevinterviewbot.model.menu.Category.OOP;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -43,17 +48,6 @@ class ResponseMessageCreatorTest {
 
   private List<Question> qList;
 
-  public interface Buttons {
-
-    String QUESTIONS = "Вопросы";
-    String SEARCH = "Поиск";
-    String TESTS = "Тестирование";
-
-    String QUESTIONS_BUTTON = "buttonQuestions";
-    String SEARCH_BUTTON = "buttonSearch";
-    String TESTS_BUTTON = "buttonTest";
-  }
-
   @BeforeEach
   void setUp() {
     qList = getListOfQuestion();
@@ -62,7 +56,7 @@ class ResponseMessageCreatorTest {
   @Test
   void getSimplyMessage() {
     SendMessage sendMessageStart = messageCreator
-        .getSimplyMessage(100L, "reply.menu", SHOW_START_MENU, "");
+        .getSimplyMessage(100L, "reply.menu", SHOW_START_MENU, null);
 
     assertFalse(sendMessageStart.getText().isEmpty());
     assertEquals(sendMessageStart.getText(), "С чего начнем?");

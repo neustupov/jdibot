@@ -3,14 +3,14 @@ package org.neustupov.javadevinterviewbot.botapi.handlers.common;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.neustupov.javadevinterviewbot.botapi.states.BotState.CATEGORY_OR_SEARCH_RESULT;
+import static org.neustupov.javadevinterviewbot.model.BotState.CATEGORY_OR_SEARCH_RESULT;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.neustupov.javadevinterviewbot.botapi.handlers.filldata.FillSearchHandler;
 import org.neustupov.javadevinterviewbot.botapi.handlers.lists.CategoryListsHandler;
-import org.neustupov.javadevinterviewbot.botapi.states.BotState;
-import org.neustupov.javadevinterviewbot.botapi.states.Category;
+import org.neustupov.javadevinterviewbot.model.BotState;
+import org.neustupov.javadevinterviewbot.model.menu.Category;
 import org.neustupov.javadevinterviewbot.cache.UserDataCache;
 import org.neustupov.javadevinterviewbot.model.GenericBuilder;
 import org.neustupov.javadevinterviewbot.model.UserContext;

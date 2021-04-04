@@ -5,8 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
-import static org.neustupov.javadevinterviewbot.botapi.processor.callbacks.LevelCallbacksTest.Buttons.JUNIOR_LEVEL_BUTTON;
-import static org.neustupov.javadevinterviewbot.botapi.processor.callbacks.LevelCallbacksTest.Buttons.JUNIOR_LEVEL_BUTTON_CALLBACK;
+import static org.neustupov.javadevinterviewbot.TestData.Buttons.*;
 
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -17,8 +16,9 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.neustupov.javadevinterviewbot.botapi.BotStateContext;
-import org.neustupov.javadevinterviewbot.botapi.states.BotState;
-import org.neustupov.javadevinterviewbot.botapi.states.Level;
+import org.neustupov.javadevinterviewbot.model.BotState;
+import org.neustupov.javadevinterviewbot.model.buttons.ButtonCallbacks;
+import org.neustupov.javadevinterviewbot.model.menu.Level;
 import org.neustupov.javadevinterviewbot.cache.UserDataCache;
 import org.neustupov.javadevinterviewbot.model.GenericBuilder;
 import org.neustupov.javadevinterviewbot.model.UserContext;
@@ -34,18 +34,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 
 @SpringBootTest
 @ActiveProfiles("test")
-class LevelCallbacksTest {
-
-  public interface Buttons {
-
-    String JUNIOR_LEVEL_BUTTON = "buttonJunior";
-    String MIDDLE_LEVEL_BUTTON = "buttonMiddle";
-    String SENIOR_LEVEL_BUTTON = "buttonSenior";
-
-    String JUNIOR_LEVEL_BUTTON_CALLBACK = "buttonJuniorCallback";
-    String MIDDLE_LEVEL_BUTTON_CALLBACK = "buttonMiddleCallback";
-    String SENIOR_LEVEL_BUTTON_CALLBACK = "buttonSeniorCallback";
-  }
+public class LevelButtonCallbacksTest {
 
   @Autowired
   private LevelCallbacks levelCallbacks;
@@ -84,7 +73,7 @@ class LevelCallbacksTest {
 
   @ParameterizedTest
   @MethodSource("provideButtonsForHandleCallback")
-  void handleCallback(String callbackData, String buttonText, Level level) {
+  void handleCallback(ButtonCallbacks callbackData, String buttonText, Level level) {
     BotApiMethod<?> botApiMethodCategoryOrSearchResult = levelCallbacks
         .handleCallback(callbackQuery, callbackData, dataCache, 100, message);
     assertFalse(botApiMethodCategoryOrSearchResult.getMethod().isEmpty());
@@ -94,7 +83,7 @@ class LevelCallbacksTest {
 
   private static Stream<Arguments> provideButtonsForHandleCallback() {
     return Stream.of(
-        Arguments.of(JUNIOR_LEVEL_BUTTON, JUNIOR_LEVEL_BUTTON_CALLBACK, Level.JUNIOR)
+        Arguments.of(ButtonCallbacks.JUNIOR_LEVEL_BUTTON, JUNIOR_LEVEL_BUTTON_CALLBACK, Level.JUNIOR)
     );
   }
 }

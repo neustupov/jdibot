@@ -5,7 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
-import static org.neustupov.javadevinterviewbot.botapi.processor.callbacks.CategoryCallbacksTest.Buttons.*;
+import static org.neustupov.javadevinterviewbot.botapi.processor.callbacks.StartMenuButtonCallbacksTest.Buttons.*;
 
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -16,11 +16,11 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.neustupov.javadevinterviewbot.botapi.BotStateContext;
-import org.neustupov.javadevinterviewbot.botapi.states.BotState;
-import org.neustupov.javadevinterviewbot.botapi.states.Category;
+import org.neustupov.javadevinterviewbot.model.BotState;
 import org.neustupov.javadevinterviewbot.cache.UserDataCache;
 import org.neustupov.javadevinterviewbot.model.GenericBuilder;
 import org.neustupov.javadevinterviewbot.model.UserContext;
+import org.neustupov.javadevinterviewbot.model.buttons.ButtonCallbacks;
 import org.neustupov.javadevinterviewbot.repository.UserContextRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,21 +33,21 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 
 @SpringBootTest
 @ActiveProfiles("test")
-class CategoryCallbacksTest {
+public class StartMenuButtonCallbacksTest {
 
   public interface Buttons {
 
-    String OOP_CATEGORY_BUTTON = "buttonOOP";
-    String COLLECTIONS_CATEGORY_BUTTON = "buttonCollections";
-    String PATTERNS_CATEGORY_BUTTON = "buttonPatterns";
-    String SPRING_BUTTON = "buttonSpring";
+    String QUESTIONS_BUTTON = "buttonQuestions";
+    String SEARCH_BUTTON = "buttonSearch";
+    String TESTS_BUTTON = "buttonTest";
 
-    String CATEGORY_BUTTON_CALLBACK = "buttonCategoryCallback";
-    String SPRING_BUTTON_CALLBACK = "buttonSpringCallback";
+    String QUESTIONS_BUTTON_CALLBACK = "buttonQuestionsCallback";
+    String SEARCH_BUTTON_CALLBACK = "buttonSearchCallback";
+    String TESTS_BUTTON_CALLBACK = "buttonTestCallback";
   }
 
   @Autowired
-  private CategoryCallbacks categoryCallbacks;
+  private StartMenuCallbacks startMenuCallbacks;
 
   @Autowired
   private UserDataCache dataCache;
@@ -68,18 +68,17 @@ class CategoryCallbacksTest {
   void setUp() {
     MockitoAnnotations.openMocks(this);
 
-    SendMessage smCategory = GenericBuilder.of(SendMessage::new)
-        .with(SendMessage::setText, CATEGORY_BUTTON_CALLBACK)
+    SendMessage smQuestions = GenericBuilder.of(SendMessage::new)
+        .with(SendMessage::setText, QUESTIONS_BUTTON_CALLBACK)
         .build();
-    SendMessage smSpring = GenericBuilder.of(SendMessage::new)
-        .with(SendMessage::setText, SPRING_BUTTON_CALLBACK)
+    SendMessage smSearch = GenericBuilder.of(SendMessage::new)
+        .with(SendMessage::setText, SEARCH_BUTTON_CALLBACK)
         .build();
 
-    when(botStateContext.processInputMessage(eq(BotState.SHOW_CATEGORY), any(Message.class)))
-        .thenReturn(smCategory);
-    when(botStateContext
-        .processInputMessage(eq(BotState.SHOW_SPRING_CATEGORY_MENU), any(Message.class)))
-        .thenReturn(smSpring);
+    when(botStateContext.processInputMessage(eq(BotState.SHOW_LEVEL_MENU), any(Message.class)))
+        .thenReturn(smQuestions);
+    when(botStateContext.processInputMessage(eq(BotState.SHOW_SEARCH), any(Message.class)))
+        .thenReturn(smSearch);
 
     Optional<UserContext> userContextOptional = Optional
         .of(GenericBuilder.of(UserContext::new).build());
@@ -89,20 +88,17 @@ class CategoryCallbacksTest {
 
   @ParameterizedTest
   @MethodSource("provideButtonsForHandleCallback")
-  void handleCallback(String callbackData, String buttonText, Category category) {
-    BotApiMethod<?> botApiMethodCategoryOrSearchResult = categoryCallbacks
+  void handleCallback(ButtonCallbacks callbackData, String buttonText) {
+    BotApiMethod<?> botApiMethodCategoryOrSearchResult = startMenuCallbacks
         .handleCallback(callbackQuery, callbackData, dataCache, 100, message);
     assertFalse(botApiMethodCategoryOrSearchResult.getMethod().isEmpty());
     assertEquals(((SendMessage) botApiMethodCategoryOrSearchResult).getText(), buttonText);
-    assertEquals(dataCache.getUserContext(100).getCategory(), category);
   }
 
   private static Stream<Arguments> provideButtonsForHandleCallback() {
     return Stream.of(
-        Arguments.of(OOP_CATEGORY_BUTTON, CATEGORY_BUTTON_CALLBACK, Category.OOP),
-        Arguments.of(COLLECTIONS_CATEGORY_BUTTON, CATEGORY_BUTTON_CALLBACK, Category.COLLECTIONS),
-        Arguments.of(PATTERNS_CATEGORY_BUTTON, CATEGORY_BUTTON_CALLBACK, Category.PATTERNS),
-        Arguments.of(SPRING_BUTTON, SPRING_BUTTON_CALLBACK, Category.SPRING)
+        Arguments.of(ButtonCallbacks.QUESTIONS_BUTTON, QUESTIONS_BUTTON_CALLBACK),
+        Arguments.of(ButtonCallbacks.SEARCH_BUTTON, SEARCH_BUTTON_CALLBACK)
     );
   }
 }

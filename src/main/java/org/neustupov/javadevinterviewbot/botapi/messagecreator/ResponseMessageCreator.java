@@ -1,8 +1,5 @@
 package org.neustupov.javadevinterviewbot.botapi.messagecreator;
 
-import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Callbacks.BACK_BUTTON;
-import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Callbacks.BACK_TO_START_MENU_BUTTON;
-
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -10,8 +7,10 @@ import java.util.Map;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker;
-import org.neustupov.javadevinterviewbot.botapi.states.BotState;
-import org.neustupov.javadevinterviewbot.botapi.states.Category;
+import org.neustupov.javadevinterviewbot.model.BotState;
+import org.neustupov.javadevinterviewbot.model.UserContext;
+import org.neustupov.javadevinterviewbot.model.buttons.ButtonCallbacks;
+import org.neustupov.javadevinterviewbot.model.menu.Category;
 import org.neustupov.javadevinterviewbot.cache.DataCache;
 import org.neustupov.javadevinterviewbot.model.Question;
 import org.neustupov.javadevinterviewbot.model.RangePair;
@@ -20,20 +19,38 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
+/**
+ * Создает сообщения, добавляет кнопки пагинации и возврата
+ */
 @Component
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ResponseMessageCreator {
 
+  /**
+   * Количество вопросов в сообщении
+   */
   @Value("${app.pagination}")
   private Integer maxObjects;
 
+  /**
+   * Сервис ответов
+   */
   ReplyMessageService replyMessageService;
-  ButtonMaker buttonMaker;
-  DataCache dataCache;
-  PaginationService paginationService;
 
-  //TODO тут либо делаем методы под каждый хендлер, либо разносим все по стратегиям - сначала собираем сообщения
-  //потом цепляем кнопки
+  /**
+   * Класс, создающий кнопки
+   */
+  ButtonMaker buttonMaker;
+
+  /**
+   * Кеш данных пользователя
+   */
+  DataCache dataCache;
+
+  /**
+   * Сервис пагинации
+   */
+  PaginationService paginationService;
 
   public ResponseMessageCreator(
       ReplyMessageService replyMessageService,
@@ -45,24 +62,45 @@ public class ResponseMessageCreator {
     this.paginationService = paginationService;
   }
 
+  /**
+   * Создает сообщение с кнопками возврата
+   *
+   * @param chatId chatId
+   * @param replyMessage Текст сообщения
+   * @param state Состояние
+   * @param backButton Кнопка возврата
+   * @return SendMessage
+   */
   public SendMessage getSimplyMessage(long chatId, String replyMessage, BotState state,
-      String backButton) {
+      ButtonCallbacks backButton) {
     dataCache.setUserCurrentBotState((int) chatId, state);
     SendMessage replyToUser;
-    if (state.equals(BotState.SHOW_QUESTION)){
+    if (state.equals(BotState.SHOW_QUESTION)) {
       replyToUser = replyMessageService.getReplyMessageForQuestion(chatId, replyMessage);
     } else {
       replyToUser = replyMessageService.getReplyMessage(chatId, replyMessage);
     }
-    switch (backButton){
-      case BACK_TO_START_MENU_BUTTON: replyToUser.setReplyMarkup(buttonMaker.getBackToStartMenuButton());
-      break;
-      case BACK_BUTTON: replyToUser.setReplyMarkup(buttonMaker.getBackButton());
-      break;
+    if (backButton != null) {
+      switch (backButton) {
+        case BACK_TO_START_MENU_BUTTON:
+          replyToUser.setReplyMarkup(buttonMaker.getBackToStartMenuButton());
+          break;
+        case BACK_BUTTON:
+          replyToUser.setReplyMarkup(buttonMaker.getBackButton());
+          break;
+      }
     }
     return replyToUser;
   }
 
+  /**
+   * Создает сообщение с кнопками
+   *
+   * @param chatId chatId
+   * @param replyMessage Текст сообщения
+   * @param buttonNames Мапа с названиями кнопок\колбеками
+   * @return SendMessage
+   */
   public SendMessage getSimpleMessageWithButtons(Long chatId, String replyMessage,
       Map<String, String> buttonNames) {
     BotState botState = dataCache.getUserCurrentBotState(chatId.intValue());
@@ -71,30 +109,39 @@ public class ResponseMessageCreator {
     return replyToUser;
   }
 
+  /**
+   * Создает сообщение с кнопками пагинации
+   *
+   * @param qList Список вопросов
+   * @param chatId chatId
+   * @param userId userId
+   * @param pagination Направление смещения
+   * @return SendMessage
+   */
   public SendMessage getMessage(List<Question> qList, Long chatId, int userId, String pagination) {
     SendMessage sendMessage = replyMessageService
         .getReplyMessage(chatId, "reply.empty-search-result");
-    RangePair range = dataCache.getUserContext(userId).getRange();
-    Category category = dataCache.getUserContext(userId).getCategory();
+    UserContext userContext = dataCache.getUserContext(userId);
     if (qList == null || qList.isEmpty()) {
       dataCache.setUserCurrentBotState(userId, BotState.FILLING_SEARCH);
     } else {
       List<Question> qListSelected = new ArrayList<>(qList);
       if (qList.size() > maxObjects) {
         RangePair rangePair;
+        RangePair range = userContext.getRange();
         if (range == null) {
           rangePair = RangePair.builder().from(0).to(maxObjects).build();
           dataCache.setRange(userId, rangePair);
           qListSelected = paginationService.getCurrentList(qList, rangePair);
         } else {
-          rangePair =  paginationService.getNewRange(qList.size(), range, pagination);
+          rangePair = paginationService.getNewRange(qList.size(), range, pagination);
           dataCache.setRange(userId, rangePair);
           qListSelected = paginationService.getCurrentList(qList, rangePair);
         }
       }
-      sendMessage.setText(parseQuestions(category, qListSelected));
+      sendMessage.setText(parseQuestions(userContext.getCategory(), qListSelected));
     }
-    RangePair newRange = dataCache.getUserContext(userId).getRange();
+    RangePair newRange = userContext.getRange();
     boolean next = false;
     boolean previous = false;
     if (newRange != null) {
@@ -108,6 +155,17 @@ public class ResponseMessageCreator {
     return sendMessage;
   }
 
+  /**
+   * Собирает мапу для кнопок
+   *
+   * @param first Название первой кнопки
+   * @param firstCallback Колбек первой кнопки
+   * @param second Название второй кнопки
+   * @param secondCallback Колбек второй кнопки
+   * @param third Название третьей кнопки
+   * @param thirdCallback Колбек третьей кнопки
+   * @return Мапа названий\колбеков кнопок
+   */
   public Map<String, String> getStringMap(String first, String firstCallback,
       String second, String secondCallback, String third,
       String thirdCallback) {
@@ -118,6 +176,13 @@ public class ResponseMessageCreator {
     return buttonMap;
   }
 
+  /**
+   * Формирует строку для вывода вопросов в сообщении
+   *
+   * @param category Категория вопросов
+   * @param qList Список вопросов
+   * @return String
+   */
   private String parseQuestions(Category category, List<Question> qList) {
     StringBuffer sb = new StringBuffer();
     if (category != null) {

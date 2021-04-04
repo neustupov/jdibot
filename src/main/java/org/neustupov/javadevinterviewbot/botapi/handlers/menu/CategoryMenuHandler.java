@@ -1,7 +1,7 @@
 package org.neustupov.javadevinterviewbot.botapi.handlers.menu;
 
-import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Buttons.*;
-import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Callbacks.*;
+import static org.neustupov.javadevinterviewbot.model.buttons.ButtonCallbacks.*;
+import static org.neustupov.javadevinterviewbot.model.buttons.ButtonNames.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,7 +9,7 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.neustupov.javadevinterviewbot.botapi.handlers.InputMessageHandler;
 import org.neustupov.javadevinterviewbot.botapi.messagecreator.ResponseMessageCreator;
-import org.neustupov.javadevinterviewbot.botapi.states.BotState;
+import org.neustupov.javadevinterviewbot.model.BotState;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -60,10 +60,10 @@ public class CategoryMenuHandler implements InputMessageHandler {
    */
   private Map<String, String> getButtonNames() {
     Map<String, String> resultMap = new HashMap<>();
-    resultMap.put(OOP, OOP_CATEGORY_BUTTON);
-    resultMap.put(COLLECTIONS, COLLECTIONS_CATEGORY_BUTTON);
-    resultMap.put(PATTERNS, PATTERNS_CATEGORY_BUTTON);
-    resultMap.put(SPRING, SPRING_BUTTON);
+    resultMap.put(OOP.toString(), OOP_CATEGORY_BUTTON.toString());
+    resultMap.put(COLLECTIONS.toString(), COLLECTIONS_CATEGORY_BUTTON.toString());
+    resultMap.put(PATTERNS.toString(), PATTERNS_CATEGORY_BUTTON.toString());
+    resultMap.put(SPRING.toString(), SPRING_BUTTON.toString());
     return resultMap;
   }
 

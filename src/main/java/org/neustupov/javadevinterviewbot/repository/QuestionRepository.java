@@ -2,8 +2,8 @@ package org.neustupov.javadevinterviewbot.repository;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import org.neustupov.javadevinterviewbot.botapi.states.Category;
-import org.neustupov.javadevinterviewbot.botapi.states.Level;
+import org.neustupov.javadevinterviewbot.model.menu.Category;
+import org.neustupov.javadevinterviewbot.model.menu.Level;
 import org.neustupov.javadevinterviewbot.model.Question;
 import org.springframework.data.mongodb.repository.MongoRepository;
 

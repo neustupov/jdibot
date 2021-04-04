@@ -1,4 +1,4 @@
-package org.neustupov.javadevinterviewbot.botapi.states;
+package org.neustupov.javadevinterviewbot.model.menu;
 
 import lombok.AllArgsConstructor;
 

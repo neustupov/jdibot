@@ -2,12 +2,11 @@ package org.neustupov.javadevinterviewbot.botapi.handlers.common;
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
 import org.neustupov.javadevinterviewbot.botapi.handlers.InputMessageHandler;
 import org.neustupov.javadevinterviewbot.botapi.handlers.filldata.FillSearchHandler;
 import org.neustupov.javadevinterviewbot.botapi.handlers.lists.CategoryListsHandler;
-import org.neustupov.javadevinterviewbot.botapi.states.BotState;
-import org.neustupov.javadevinterviewbot.botapi.states.Category;
+import org.neustupov.javadevinterviewbot.model.BotState;
+import org.neustupov.javadevinterviewbot.model.menu.Category;
 import org.neustupov.javadevinterviewbot.cache.UserDataCache;
 import org.neustupov.javadevinterviewbot.model.UserContext;
 import org.springframework.stereotype.Component;
@@ -17,7 +16,6 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 /**
  * Хендлер выбора действия для кнопки возврата
  */
-@Slf4j
 @Component
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CategoryOrSearchResultHandler implements InputMessageHandler {

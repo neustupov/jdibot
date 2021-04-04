@@ -1,17 +1,12 @@
 package org.neustupov.javadevinterviewbot.botapi.processor.callbacks;
 
-import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Callbacks.NEW_SEARCH_BUTTON;
-import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Callbacks.QUESTIONS_BUTTON;
-import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Callbacks.SEARCH_BUTTON;
-import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Callbacks.TESTS_BUTTON;
-
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.neustupov.javadevinterviewbot.botapi.BotStateContext;
-import org.neustupov.javadevinterviewbot.botapi.states.BotState;
+import org.neustupov.javadevinterviewbot.model.BotState;
 import org.neustupov.javadevinterviewbot.cache.DataCache;
+import org.neustupov.javadevinterviewbot.model.buttons.ButtonCallbacks;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -30,7 +25,7 @@ public class StartMenuCallbacks implements Callback {
   }
 
   @Override
-  public BotApiMethod<?> handleCallback(CallbackQuery callbackQuery, String callbackData,
+  public BotApiMethod<?> handleCallback(CallbackQuery callbackQuery, ButtonCallbacks callbackData,
       DataCache dataCache, int userId, Message message) {
     switch (callbackData) {
       case QUESTIONS_BUTTON:

@@ -3,8 +3,8 @@ package org.neustupov.javadevinterviewbot;
 import java.util.Arrays;
 import java.util.List;
 import org.bson.types.Binary;
-import org.neustupov.javadevinterviewbot.botapi.states.Category;
-import org.neustupov.javadevinterviewbot.botapi.states.Level;
+import org.neustupov.javadevinterviewbot.model.menu.Category;
+import org.neustupov.javadevinterviewbot.model.menu.Level;
 import org.neustupov.javadevinterviewbot.model.GenericBuilder;
 import org.neustupov.javadevinterviewbot.model.Question;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
@@ -14,6 +14,45 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 
 public class TestData {
+
+  public interface Buttons {
+    String SPRING_PART_1 = "Spring part 1";
+    String SPRING_PART_2 = "Spring part 2";
+    String SPRING_PART_3 = "Spring part 3";
+
+    String OOP = "ООП";
+    String COLLECTIONS = "Коллекции";
+    String PATTERNS = "Паттерны";
+    String SPRING = "Spring";
+
+    String JUNIOR = "Junior";
+    String MIDDLE = "Middle";
+    String SENIOR = "Senior";
+
+    String QUESTIONS = "Вопросы";
+    String SEARCH = "Поиск";
+    String TESTS = "Тестирование";
+
+    String QUESTIONS_BUTTON = "buttonQuestions";
+    String SEARCH_BUTTON = "buttonSearch";
+    String TESTS_BUTTON = "buttonTest";
+
+    String CATEGORY_BUTTON_CALLBACK = "buttonCategoryCallback";
+    String SPRING_BUTTON_CALLBACK = "buttonSpringCallback";
+
+    String OOP_CATEGORY_BUTTON = "buttonOOP";
+    String COLLECTIONS_CATEGORY_BUTTON = "buttonCollections";
+    String PATTERNS_CATEGORY_BUTTON = "buttonPatterns";
+    String SPRING_BUTTON = "buttonSpring";
+
+    String JUNIOR_LEVEL_BUTTON = "buttonJunior";
+    String MIDDLE_LEVEL_BUTTON = "buttonMiddle";
+    String SENIOR_LEVEL_BUTTON = "buttonSenior";
+
+    String JUNIOR_LEVEL_BUTTON_CALLBACK = "buttonJuniorCallback";
+    String MIDDLE_LEVEL_BUTTON_CALLBACK = "buttonMiddleCallback";
+    String SENIOR_LEVEL_BUTTON_CALLBACK = "buttonSeniorCallback";
+  }
 
   public static Update getUpdate() {
     return GenericBuilder.of(Update::new)

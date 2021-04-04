@@ -1,12 +1,12 @@
 package org.neustupov.javadevinterviewbot.botapi.handlers.search;
 
-import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Callbacks.BACK_TO_START_MENU_BUTTON;
+import static org.neustupov.javadevinterviewbot.model.buttons.ButtonCallbacks.BACK_TO_START_MENU_BUTTON;
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.neustupov.javadevinterviewbot.botapi.handlers.InputMessageHandler;
 import org.neustupov.javadevinterviewbot.botapi.messagecreator.ResponseMessageCreator;
-import org.neustupov.javadevinterviewbot.botapi.states.BotState;
+import org.neustupov.javadevinterviewbot.model.BotState;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -47,7 +47,8 @@ public class SearchHandler implements InputMessageHandler {
    */
   private SendMessage processUsersInput(Message message) {
     return responseMessageCreator
-        .getSimplyMessage(message.getChatId(), "reply.search", BotState.FILLING_SEARCH, BACK_TO_START_MENU_BUTTON);
+        .getSimplyMessage(message.getChatId(), "reply.search", BotState.FILLING_SEARCH,
+            BACK_TO_START_MENU_BUTTON);
   }
 
   /**

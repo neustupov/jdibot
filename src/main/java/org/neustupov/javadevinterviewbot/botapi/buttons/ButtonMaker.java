@@ -1,13 +1,13 @@
 package org.neustupov.javadevinterviewbot.botapi.buttons;
 
-import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Buttons.*;
-import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Callbacks.*;
+import static org.neustupov.javadevinterviewbot.model.buttons.ButtonCallbacks.*;
+import static org.neustupov.javadevinterviewbot.model.buttons.ButtonNames.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import org.neustupov.javadevinterviewbot.botapi.states.BotState;
+import org.neustupov.javadevinterviewbot.model.BotState;
 import org.neustupov.javadevinterviewbot.utils.Emojis;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -18,67 +18,6 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
  */
 @Component
 public class ButtonMaker {
-
-  /**
-   * Интерфейс, содержащий названия кнопок
-   */
-  public interface Buttons {
-
-    String BACK = "Назад";
-    String BACK_TO_START_MENU = "Вернуться в главное меню";
-    String BACK_TO_CATEGORY = "Вернуться к категориям";
-    String BACK_TO_LEVEL = "Вернуться к уровню";
-
-    String OOP = "ООП";
-    String COLLECTIONS = "Коллекции";
-    String PATTERNS = "Паттерны";
-    String SPRING = "Spring";
-    String SPRING_PART_1 = "Spring part 1";
-    String SPRING_PART_2 = "Spring part 2";
-    String SPRING_PART_3 = "Spring part 3";
-
-    String JUNIOR = "Junior";
-    String MIDDLE = "Middle";
-    String SENIOR = "Senior";
-
-    String QUESTIONS = "Вопросы";
-    String SEARCH = "Поиск";
-    String TESTS = "Тестирование";
-
-    String PREVIOUS = "Туда";
-    String NEXT = "Сюда";
-  }
-
-  /**
-   * Интерфейс, содержащий колбеки кнопок
-   */
-  public interface Callbacks {
-
-    String BACK_BUTTON = "backButton";
-    String NEW_SEARCH_BUTTON = "newSearchButton";
-    String BACK_TO_START_MENU_BUTTON = "backToStartMenuButton";
-    String BACK_TO_CATEGORY_BUTTON = "backToCategoryButton";
-    String BACK_TO_LEVEL_BUTTON = "backToLevelButton";
-
-    String OOP_CATEGORY_BUTTON = "buttonOOP";
-    String COLLECTIONS_CATEGORY_BUTTON = "buttonCollections";
-    String PATTERNS_CATEGORY_BUTTON = "buttonPatterns";
-    String SPRING_BUTTON = "buttonSpring";
-    String SPRING_PART_1_BUTTON = "buttonSpring_1";
-    String SPRING_PART_2_BUTTON = "buttonSpring_2";
-    String SPRING_PART_3_BUTTON = "buttonSpring_3";
-
-    String JUNIOR_LEVEL_BUTTON = "buttonJunior";
-    String MIDDLE_LEVEL_BUTTON = "buttonMiddle";
-    String SENIOR_LEVEL_BUTTON = "buttonSenior";
-
-    String QUESTIONS_BUTTON = "buttonQuestions";
-    String SEARCH_BUTTON = "buttonSearch";
-    String TESTS_BUTTON = "buttonTest";
-
-    String PREVIOUS_BUTTON = "<-Button";
-    String NEXT_BUTTON = "->Button";
-  }
 
   /**
    * Формирует блок клавиатуры сообщения из мапы названий\кобеков кнопок и, в зависимости от
@@ -137,14 +76,14 @@ public class ButtonMaker {
     if (previous) {
       InlineKeyboardButton buttonPrevious = InlineKeyboardButton.builder()
           .text(Emojis.PREVIOUS + " " + PREVIOUS)
-          .callbackData(PREVIOUS_BUTTON)
+          .callbackData(PREVIOUS_BUTTON.toString())
           .build();
       paginationButton.add(buttonPrevious);
     }
     if (next) {
       InlineKeyboardButton buttonNext = InlineKeyboardButton.builder()
           .text(NEXT + " " + Emojis.NEXT)
-          .callbackData(NEXT_BUTTON)
+          .callbackData(NEXT_BUTTON.toString())
           .build();
       paginationButton.add(buttonNext);
     }
@@ -167,7 +106,7 @@ public class ButtonMaker {
    * @return Список кнопок
    */
   private List<InlineKeyboardButton> getSimpleBackButton() {
-    return getInlineKeyboardButtons(Emojis.TOP + " " + BACK, BACK_BUTTON);
+    return getInlineKeyboardButtons(Emojis.TOP + " " + BACK, BACK_BUTTON.toString());
   }
 
   /**
@@ -177,7 +116,7 @@ public class ButtonMaker {
    */
   private List<InlineKeyboardButton> getBackToLevel() {
     return getInlineKeyboardButtons(Emojis.TOP + "   " + BACK_TO_LEVEL + "   " + Emojis.TOP,
-        BACK_TO_LEVEL_BUTTON);
+        BACK_TO_LEVEL_BUTTON.toString());
   }
 
   /**
@@ -187,7 +126,7 @@ public class ButtonMaker {
    */
   private List<InlineKeyboardButton> getBackToStart() {
     return getInlineKeyboardButtons(Emojis.TOP + "   " + BACK_TO_START_MENU + "   " + Emojis.TOP,
-        BACK_TO_START_MENU_BUTTON);
+        BACK_TO_START_MENU_BUTTON.toString());
   }
 
   /**
@@ -197,7 +136,7 @@ public class ButtonMaker {
    */
   private List<InlineKeyboardButton> getBackToCategory() {
     return getInlineKeyboardButtons(Emojis.TOP + "   " + BACK_TO_CATEGORY + "   " + Emojis.TOP,
-        BACK_TO_CATEGORY_BUTTON);
+        BACK_TO_CATEGORY_BUTTON.toString());
   }
 
   /**

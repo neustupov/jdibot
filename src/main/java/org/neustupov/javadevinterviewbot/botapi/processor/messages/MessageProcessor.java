@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.bson.types.Binary;
 import org.neustupov.javadevinterviewbot.JavaDevInterviewBot;
 import org.neustupov.javadevinterviewbot.botapi.BotStateContext;
-import org.neustupov.javadevinterviewbot.botapi.states.BotState;
+import org.neustupov.javadevinterviewbot.model.BotState;
 import org.neustupov.javadevinterviewbot.cache.DataCache;
 import org.neustupov.javadevinterviewbot.model.MessageIdKeeper;
 import org.neustupov.javadevinterviewbot.utils.ImageUtil;

@@ -1,12 +1,11 @@
 package org.neustupov.javadevinterviewbot.botapi.processor.callbacks;
 
-import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Callbacks.*;
-
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.neustupov.javadevinterviewbot.botapi.BotStateContext;
-import org.neustupov.javadevinterviewbot.botapi.states.BotState;
-import org.neustupov.javadevinterviewbot.botapi.states.Level;
+import org.neustupov.javadevinterviewbot.model.BotState;
+import org.neustupov.javadevinterviewbot.model.buttons.ButtonCallbacks;
+import org.neustupov.javadevinterviewbot.model.menu.Level;
 import org.neustupov.javadevinterviewbot.cache.DataCache;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
@@ -27,7 +26,7 @@ public class LevelCallbacks implements Callback {
   }
 
   @Override
-  public BotApiMethod<?> handleCallback(CallbackQuery callbackQuery, String callbackData,
+  public BotApiMethod<?> handleCallback(CallbackQuery callbackQuery, ButtonCallbacks callbackData,
       DataCache dataCache, int userId, Message message) {
     switch (callbackData) {
       case JUNIOR_LEVEL_BUTTON:

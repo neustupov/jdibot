@@ -4,8 +4,8 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.neustupov.javadevinterviewbot.botapi.states.Category;
-import org.neustupov.javadevinterviewbot.botapi.states.Level;
+import org.neustupov.javadevinterviewbot.model.menu.Category;
+import org.neustupov.javadevinterviewbot.model.menu.Level;
 import org.springframework.data.annotation.Id;
 
 @Data

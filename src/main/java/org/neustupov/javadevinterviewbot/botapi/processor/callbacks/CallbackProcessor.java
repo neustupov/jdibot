@@ -2,14 +2,13 @@ package org.neustupov.javadevinterviewbot.botapi.processor.callbacks;
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
 import org.neustupov.javadevinterviewbot.cache.DataCache;
+import org.neustupov.javadevinterviewbot.model.buttons.ButtonCallbacks;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
-@Slf4j
 @Component
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CallbackProcessor {
@@ -27,7 +26,7 @@ public class CallbackProcessor {
     final int userId = callbackQuery.getFrom().getId();
     final Message message = callbackQuery.getMessage();
 
-    String callbackData = callbackQuery.getData();
+    ButtonCallbacks callbackData = ButtonCallbacks.valueOfName(callbackQuery.getData());
 
     BotApiMethod<?> botResponse = callback
         .handleCallback(callbackQuery, callbackData, dataCache, userId, message);

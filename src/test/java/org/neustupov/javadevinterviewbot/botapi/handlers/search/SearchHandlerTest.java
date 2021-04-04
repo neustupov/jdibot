@@ -2,12 +2,12 @@ package org.neustupov.javadevinterviewbot.botapi.handlers.search;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.neustupov.javadevinterviewbot.TestData.getMessage;
-import static org.neustupov.javadevinterviewbot.botapi.states.BotState.SHOW_SEARCH;
+import static org.neustupov.javadevinterviewbot.model.BotState.SHOW_SEARCH;
 
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.neustupov.javadevinterviewbot.botapi.states.BotState;
+import org.neustupov.javadevinterviewbot.model.BotState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;

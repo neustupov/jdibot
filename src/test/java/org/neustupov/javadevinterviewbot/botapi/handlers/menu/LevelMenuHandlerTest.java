@@ -3,14 +3,14 @@ package org.neustupov.javadevinterviewbot.botapi.handlers.menu;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
+import static org.neustupov.javadevinterviewbot.TestData.Buttons.*;
 import static org.neustupov.javadevinterviewbot.TestData.getMessage;
-import static org.neustupov.javadevinterviewbot.botapi.handlers.menu.LevelMenuHandlerTest.Buttons.*;
-import static org.neustupov.javadevinterviewbot.botapi.states.BotState.SHOW_LEVEL_MENU;
+import static org.neustupov.javadevinterviewbot.model.BotState.SHOW_LEVEL_MENU;
 
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.neustupov.javadevinterviewbot.botapi.states.BotState;
+import org.neustupov.javadevinterviewbot.model.BotState;
 import org.neustupov.javadevinterviewbot.cache.UserDataCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -32,12 +32,6 @@ class LevelMenuHandlerTest {
   private UserDataCache dataCache;
 
   private Message message;
-
-  public interface Buttons {
-    String JUNIOR = "Junior";
-    String MIDDLE = "Middle";
-    String SENIOR = "Senior";
-  }
 
   @BeforeEach
   void setUp() {

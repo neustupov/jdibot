@@ -1,8 +1,8 @@
 package org.neustupov.javadevinterviewbot.cache;
 
-import org.neustupov.javadevinterviewbot.botapi.states.BotState;
-import org.neustupov.javadevinterviewbot.botapi.states.Category;
-import org.neustupov.javadevinterviewbot.botapi.states.Level;
+import org.neustupov.javadevinterviewbot.model.BotState;
+import org.neustupov.javadevinterviewbot.model.menu.Category;
+import org.neustupov.javadevinterviewbot.model.menu.Level;
 import org.neustupov.javadevinterviewbot.model.RangePair;
 import org.neustupov.javadevinterviewbot.model.UserContext;
 

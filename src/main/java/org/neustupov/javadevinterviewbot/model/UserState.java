@@ -4,7 +4,6 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.neustupov.javadevinterviewbot.botapi.states.BotState;
 import org.springframework.data.annotation.Id;
 
 @Data

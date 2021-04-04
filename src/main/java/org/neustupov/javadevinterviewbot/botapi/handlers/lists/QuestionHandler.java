@@ -1,13 +1,13 @@
 package org.neustupov.javadevinterviewbot.botapi.handlers.lists;
 
-import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Callbacks.BACK_BUTTON;
+import static org.neustupov.javadevinterviewbot.model.buttons.ButtonCallbacks.BACK_BUTTON;
 
 import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.neustupov.javadevinterviewbot.botapi.handlers.InputMessageHandler;
 import org.neustupov.javadevinterviewbot.botapi.messagecreator.ResponseMessageCreator;
-import org.neustupov.javadevinterviewbot.botapi.states.BotState;
+import org.neustupov.javadevinterviewbot.model.BotState;
 import org.neustupov.javadevinterviewbot.model.Question;
 import org.neustupov.javadevinterviewbot.repository.QuestionRepository;
 import org.springframework.stereotype.Component;
