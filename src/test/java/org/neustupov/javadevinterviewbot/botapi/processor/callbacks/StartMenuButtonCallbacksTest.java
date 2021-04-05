@@ -15,9 +15,9 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 import org.neustupov.javadevinterviewbot.botapi.BotStateContext;
 import org.neustupov.javadevinterviewbot.model.BotState;
-import org.neustupov.javadevinterviewbot.cache.UserDataCache;
 import org.neustupov.javadevinterviewbot.model.GenericBuilder;
 import org.neustupov.javadevinterviewbot.model.UserContext;
 import org.neustupov.javadevinterviewbot.model.buttons.ButtonCallbacks;
@@ -49,16 +49,13 @@ public class StartMenuButtonCallbacksTest {
   @Autowired
   private StartMenuCallbacks startMenuCallbacks;
 
-  @Autowired
-  private UserDataCache dataCache;
-
   @MockBean
   private BotStateContext botStateContext;
 
   @MockBean
   private UserContextRepository contextRepository;
 
-  @Mock
+  @Spy
   private CallbackQuery callbackQuery;
 
   @Mock
@@ -89,8 +86,9 @@ public class StartMenuButtonCallbacksTest {
   @ParameterizedTest
   @MethodSource("provideButtonsForHandleCallback")
   void handleCallback(ButtonCallbacks callbackData, String buttonText) {
+    callbackQuery.setData(callbackData.toString());
     BotApiMethod<?> botApiMethodCategoryOrSearchResult = startMenuCallbacks
-        .handleCallback(callbackQuery, callbackData, dataCache, 100, message);
+        .handleCallback(callbackQuery, 100, message);
     assertFalse(botApiMethodCategoryOrSearchResult.getMethod().isEmpty());
     assertEquals(((SendMessage) botApiMethodCategoryOrSearchResult).getText(), buttonText);
   }

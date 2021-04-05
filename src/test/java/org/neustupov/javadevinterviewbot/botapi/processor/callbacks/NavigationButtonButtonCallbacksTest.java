@@ -9,7 +9,6 @@ import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.neustupov.javadevinterviewbot.botapi.BotStateContext;
 import org.neustupov.javadevinterviewbot.model.BotState;
-import org.neustupov.javadevinterviewbot.cache.DataCache;
 import org.neustupov.javadevinterviewbot.model.GenericBuilder;
 import org.neustupov.javadevinterviewbot.model.buttons.ButtonCallbacks;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +17,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
 @SpringBootTest
@@ -28,7 +28,7 @@ class NavigationButtonButtonCallbacksTest {
   private NavigationButtonCallbacks navigationButtonCallbacks;
 
   @Spy
-  private DataCache dataCache;
+  private CallbackQuery callbackQuery;
   private Message message;
 
   @MockBean
@@ -54,15 +54,16 @@ class NavigationButtonButtonCallbacksTest {
 
   @Test
   void handleCallback() {
-
+    callbackQuery.setData(ButtonCallbacks.BACK_BUTTON.toString());
     BotApiMethod<?> backButtonResponse = navigationButtonCallbacks
-        .handleCallback(null, ButtonCallbacks.BACK_BUTTON, dataCache, 100500, message);
+        .handleCallback(callbackQuery, 100500, message);
     assertFalse(backButtonResponse.getMethod().isEmpty());
     assertEquals(backButtonResponse.getMethod(), "sendmessage");
     assertEquals(((SendMessage) backButtonResponse).getText(), "Is category search result");
 
+    callbackQuery.setData(ButtonCallbacks.BACK_TO_START_MENU_BUTTON.toString());
     BotApiMethod<?> backToStartMenuButtonResponse = navigationButtonCallbacks
-        .handleCallback(null, ButtonCallbacks.BACK_TO_START_MENU_BUTTON, dataCache, 100500, message);
+        .handleCallback(callbackQuery, 100500, message);
     assertEquals(backButtonResponse.getMethod(), "sendmessage");
     assertEquals(((SendMessage) backToStartMenuButtonResponse).getText(), "Is show start menu");
   }

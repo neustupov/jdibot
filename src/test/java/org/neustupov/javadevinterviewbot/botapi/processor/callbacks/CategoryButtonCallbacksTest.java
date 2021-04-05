@@ -15,6 +15,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 import org.neustupov.javadevinterviewbot.botapi.BotStateContext;
 import org.neustupov.javadevinterviewbot.model.BotState;
 import org.neustupov.javadevinterviewbot.model.buttons.ButtonCallbacks;
@@ -48,7 +49,7 @@ class CategoryButtonCallbacksTest {
   @MockBean
   private UserContextRepository contextRepository;
 
-  @Mock
+  @Spy
   private CallbackQuery callbackQuery;
 
   @Mock
@@ -80,8 +81,9 @@ class CategoryButtonCallbacksTest {
   @ParameterizedTest
   @MethodSource("provideButtonsForHandleCallback")
   void handleCallback(ButtonCallbacks callbackData, String buttonText, Category category) {
+    callbackQuery.setData(callbackData.toString());
     BotApiMethod<?> botApiMethodCategoryOrSearchResult = categoryCallbacks
-        .handleCallback(callbackQuery, callbackData, dataCache, 100, message);
+        .handleCallback(callbackQuery, 100, message);
     assertFalse(botApiMethodCategoryOrSearchResult.getMethod().isEmpty());
     assertEquals(((SendMessage) botApiMethodCategoryOrSearchResult).getText(), buttonText);
     assertEquals(dataCache.getUserContext(100).getCategory(), category);

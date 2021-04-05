@@ -9,32 +9,52 @@ import lombok.experimental.FieldDefaults;
 import org.neustupov.javadevinterviewbot.botapi.BotStateContext;
 import org.neustupov.javadevinterviewbot.model.BotState;
 import org.neustupov.javadevinterviewbot.cache.DataCache;
-import org.neustupov.javadevinterviewbot.model.buttons.ButtonCallbacks;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
+/**
+ * Обрабатывает колбеки кнопок навигации
+ */
 @Data
 @Component
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class NavigationButtonCallbacks implements Callback{
+public class NavigationButtonCallbacks implements Callback {
 
+  /**
+   * Контекст бота
+   */
   BotStateContext botStateContext;
 
+  /**
+   * Кеш данных пользователя
+   */
+  DataCache dataCache;
+
   interface Route {
+
     String NEXT = "next";
     String PREVIOUS = "previous";
   }
 
-  public NavigationButtonCallbacks(BotStateContext botStateContext) {
+  public NavigationButtonCallbacks(
+      BotStateContext botStateContext, DataCache dataCache) {
     this.botStateContext = botStateContext;
+    this.dataCache = dataCache;
   }
 
+  /**
+   * Обрабатывает колбек
+   *
+   * @param callbackQuery Колбек
+   * @param userId userId
+   * @param message Сообщение
+   * @return Ответ приложения
+   */
   @Override
-  public BotApiMethod<?> handleCallback(CallbackQuery callbackQuery, ButtonCallbacks callbackData,
-      DataCache dataCache, int userId, Message message) {
-    switch (callbackData) {
+  public BotApiMethod<?> handleCallback(CallbackQuery callbackQuery, int userId, Message message) {
+    switch (getCallbackData(callbackQuery)) {
       case BACK_BUTTON:
         dataCache.setUserCurrentBotState(userId, BotState.CATEGORY_OR_SEARCH_RESULT);
         dataCache.cleanRange(userId);

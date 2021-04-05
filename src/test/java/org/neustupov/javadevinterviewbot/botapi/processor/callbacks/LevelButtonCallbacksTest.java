@@ -15,6 +15,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 import org.neustupov.javadevinterviewbot.botapi.BotStateContext;
 import org.neustupov.javadevinterviewbot.model.BotState;
 import org.neustupov.javadevinterviewbot.model.buttons.ButtonCallbacks;
@@ -34,7 +35,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 
 @SpringBootTest
 @ActiveProfiles("test")
-public class LevelButtonCallbacksTest {
+class LevelButtonCallbacksTest {
 
   @Autowired
   private LevelCallbacks levelCallbacks;
@@ -48,7 +49,7 @@ public class LevelButtonCallbacksTest {
   @MockBean
   private UserContextRepository contextRepository;
 
-  @Mock
+  @Spy
   private CallbackQuery callbackQuery;
 
   @Mock
@@ -74,8 +75,9 @@ public class LevelButtonCallbacksTest {
   @ParameterizedTest
   @MethodSource("provideButtonsForHandleCallback")
   void handleCallback(ButtonCallbacks callbackData, String buttonText, Level level) {
+    callbackQuery.setData(callbackData.toString());
     BotApiMethod<?> botApiMethodCategoryOrSearchResult = levelCallbacks
-        .handleCallback(callbackQuery, callbackData, dataCache, 100, message);
+        .handleCallback(callbackQuery, 100, message);
     assertFalse(botApiMethodCategoryOrSearchResult.getMethod().isEmpty());
     assertEquals(((SendMessage) botApiMethodCategoryOrSearchResult).getText(), buttonText);
     assertEquals(dataCache.getUserContext(100).getLevel(), level);

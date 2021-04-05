@@ -13,9 +13,9 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 import org.neustupov.javadevinterviewbot.botapi.BotStateContext;
 import org.neustupov.javadevinterviewbot.model.BotState;
-import org.neustupov.javadevinterviewbot.cache.DataCache;
 import org.neustupov.javadevinterviewbot.model.GenericBuilder;
 import org.neustupov.javadevinterviewbot.model.buttons.ButtonCallbacks;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,14 +32,6 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 class NavigationButtonButtonCallbacksHandlingTest {
 
   public interface Buttons {
-
-    String BACK_BUTTON = "backButton";
-    String BACK_TO_START_MENU_BUTTON = "backToStartMenuButton";
-    String BACK_TO_CATEGORY_BUTTON = "backToCategoryButton";
-    String BACK_TO_LEVEL_BUTTON = "backToLevelButton";
-    String PREVIOUS_BUTTON = "<-Button";
-    String NEXT_BUTTON = "->Button";
-
     String BACK_BUTTON_CALLBACK = "backButtonCallBack";
     String BACK_TO_START_MENU_BUTTON_CALLBACK = "backToStartMenuButtonCallBack";
     String BACK_TO_CATEGORY_BUTTON_CALLBACK = "backToCategoryButtonCallBack";
@@ -53,11 +45,8 @@ class NavigationButtonButtonCallbacksHandlingTest {
   @MockBean
   private BotStateContext botStateContext;
 
-  @Mock
+  @Spy
   private CallbackQuery callbackQuery;
-
-  @Mock
-  private DataCache dataCache;
 
   @Mock
   private Message message;
@@ -98,9 +87,9 @@ class NavigationButtonButtonCallbacksHandlingTest {
   @ParameterizedTest
   @MethodSource("provideButtonsForHandleCallback")
   void handleCallback(ButtonCallbacks callbackData, String buttonText) {
-
+    callbackQuery.setData(callbackData.toString());
     BotApiMethod<?> botApiMethodCategoryOrSearchResult = navigationButtonCallbacks
-        .handleCallback(callbackQuery, callbackData, dataCache, 100, message);
+        .handleCallback(callbackQuery, 100, message);
     assertFalse(botApiMethodCategoryOrSearchResult.getMethod().isEmpty());
     assertEquals(((SendMessage) botApiMethodCategoryOrSearchResult).getText(), buttonText);
   }

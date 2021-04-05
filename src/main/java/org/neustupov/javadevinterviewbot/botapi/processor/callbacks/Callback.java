@@ -1,6 +1,5 @@
 package org.neustupov.javadevinterviewbot.botapi.processor.callbacks;
 
-import org.neustupov.javadevinterviewbot.cache.DataCache;
 import org.neustupov.javadevinterviewbot.model.buttons.ButtonCallbacks;
 import org.neustupov.javadevinterviewbot.utils.Emojis;
 import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
@@ -22,14 +21,11 @@ public interface Callback {
    * Обрабатывает колбек
    *
    * @param callbackQuery Колбек
-   * @param callbackData Данные колбека
-   * @param dataCache Кэш данных пользователя
    * @param userId userId
    * @param message Сообщение
    * @return Ответ приложения
    */
-  BotApiMethod<?> handleCallback(CallbackQuery callbackQuery, ButtonCallbacks callbackData,
-      DataCache dataCache, int userId, Message message);
+  BotApiMethod<?> handleCallback(CallbackQuery callbackQuery, int userId, Message message);
 
   /**
    * Отправляет сообщение пользователю в виде всплывающего окна
@@ -46,5 +42,15 @@ public interface Callback {
         .showAlert(alert)
         .text(text)
         .build();
+  }
+
+  /**
+   * Извлекает из колбека данные
+   *
+   * @param callbackQuery Колбек
+   * @return Данные колбека
+   */
+  default ButtonCallbacks getCallbackData(CallbackQuery callbackQuery) {
+    return ButtonCallbacks.valueOfName(callbackQuery.getData());
   }
 }
