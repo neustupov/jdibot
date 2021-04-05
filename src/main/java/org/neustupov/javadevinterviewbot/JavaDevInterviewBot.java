@@ -6,14 +6,13 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.neustupov.javadevinterviewbot.botapi.TelegramFacade;
 import org.neustupov.javadevinterviewbot.model.BotResponseData;
-import org.neustupov.javadevinterviewbot.model.MessageIdKeeper;
+import org.neustupov.javadevinterviewbot.model.MessageIdStorage;
 import org.telegram.telegrambots.bots.TelegramWebhookBot;
 import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -61,15 +60,15 @@ public class JavaDevInterviewBot extends TelegramWebhookBot {
         return method;
       }
 
-      MessageIdKeeper messageIdKeeper = botResponseData.getMessageIdKeeper();
+      MessageIdStorage messageIdStorage = botResponseData.getMessageIdStorage();
       if (update.hasCallbackQuery()) {
         User user = update.getCallbackQuery().getMessage().getFrom();
         if (user != null && user.getIsBot()) {
           updateMessage(botResponseData);
         }
-        deleteImage(messageIdKeeper);
+        deleteImage(messageIdStorage);
       } else {
-        deletePreviousMessages(messageIdKeeper);
+        deletePreviousMessages(messageIdStorage);
         return method;
       }
     }
@@ -94,11 +93,11 @@ public class JavaDevInterviewBot extends TelegramWebhookBot {
     }
   }
 
-  private void deletePreviousMessages(MessageIdKeeper messageIdKeeper) {
-    Long chatId = messageIdKeeper.getChatId();
+  private void deletePreviousMessages(MessageIdStorage messageIdStorage) {
+    Long chatId = messageIdStorage.getChatId();
 
-    Integer previousMessageId = messageIdKeeper.getPreviousMessageId();
-    if (previousMessageId != null && messageIdKeeper.isNeedDeletePrevious()) {
+    Integer previousMessageId = messageIdStorage.getPreviousMessageId();
+    if (previousMessageId != null && messageIdStorage.isNeedDeletePrevious()) {
 
       DeleteMessage deleteMessage = new DeleteMessage();
       deleteMessage.setChatId(chatId.toString());
@@ -110,12 +109,12 @@ public class JavaDevInterviewBot extends TelegramWebhookBot {
       }
 
       log.info("Delete message with ID:{}", previousMessageId);
-      messageIdKeeper.setNeedDeletePrevious(false);
-      messageIdKeeper.setPreviousMessageId(null);
+      messageIdStorage.setNeedDeletePrevious(false);
+      messageIdStorage.setPreviousMessageId(null);
     }
 
-    Integer previousPreviousMessageId = messageIdKeeper.getPreviousPreviousMessageId();
-    if (previousPreviousMessageId != null && messageIdKeeper.isNeedDeletePreviousPrevious()) {
+    Integer previousPreviousMessageId = messageIdStorage.getPreviousPreviousMessageId();
+    if (previousPreviousMessageId != null && messageIdStorage.isNeedDeletePreviousPrevious()) {
 
       DeleteMessage deleteMessage = new DeleteMessage();
       deleteMessage.setChatId(chatId.toString());
@@ -127,17 +126,17 @@ public class JavaDevInterviewBot extends TelegramWebhookBot {
       }
 
       log.info("Delete message with ID:{}", previousPreviousMessageId);
-      messageIdKeeper.setNeedDeletePreviousPrevious(false);
-      messageIdKeeper.setPreviousPreviousMessageId(null);
+      messageIdStorage.setNeedDeletePreviousPrevious(false);
+      messageIdStorage.setPreviousPreviousMessageId(null);
     }
 
-    deleteImage(messageIdKeeper);
+    deleteImage(messageIdStorage);
   }
 
-  private void deleteImage(MessageIdKeeper messageIdKeeper) {
-    Long chatId = messageIdKeeper.getChatId();
-    Integer imageMessageId = messageIdKeeper.getImageMessageId();
-    if (imageMessageId != null && messageIdKeeper.isNeedDeleteImage()) {
+  private void deleteImage(MessageIdStorage messageIdStorage) {
+    Long chatId = messageIdStorage.getChatId();
+    Integer imageMessageId = messageIdStorage.getImageMessageId();
+    if (imageMessageId != null && messageIdStorage.isNeedDeleteImage()) {
       DeleteMessage deleteImage = new DeleteMessage();
       deleteImage.setChatId(chatId.toString());
       deleteImage.setMessageId(imageMessageId);
@@ -148,9 +147,9 @@ public class JavaDevInterviewBot extends TelegramWebhookBot {
       }
 
       log.info("Delete message with Image and ID:{}", imageMessageId);
-      messageIdKeeper.setImageMessageId(null);
+      messageIdStorage.setImageMessageId(null);
     }
 
-    telegramFacade.saveMessageIdKeeper(messageIdKeeper);
+    telegramFacade.saveMessageIdKeeper(messageIdStorage);
   }
 }

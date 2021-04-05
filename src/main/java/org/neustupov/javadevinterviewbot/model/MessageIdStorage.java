@@ -9,7 +9,7 @@ import org.springframework.data.annotation.Id;
 @Data
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class MessageIdKeeper {
+public class MessageIdStorage {
 
   @Id
   Long chatId;
