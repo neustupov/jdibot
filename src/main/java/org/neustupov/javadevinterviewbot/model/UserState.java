@@ -6,13 +6,23 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.annotation.Id;
 
+/**
+ * Состояние пользователя
+ */
 @Data
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserState {
 
+  /**
+   * Id пользователя
+   */
   @Id
   long userId;
+
+  /**
+   * Состояние
+   */
   BotState botState;
 
   public UserState(long userId) {

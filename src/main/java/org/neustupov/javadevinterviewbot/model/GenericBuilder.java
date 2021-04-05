@@ -6,6 +6,10 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+/**
+ * Билдер для классов, в которых нельзя по тем или иным причинам использовать билдер ломбока
+ * @param <T>
+ */
 public class GenericBuilder<T>{
 
   private final Supplier<T> instantiator;
@@ -17,7 +21,7 @@ public class GenericBuilder<T>{
   }
 
   public static <T> GenericBuilder<T> of(Supplier<T> instantiator) {
-    return new GenericBuilder<T>(instantiator);
+    return new GenericBuilder<>(instantiator);
   }
 
   public <U> GenericBuilder<T> with(BiConsumer<T, U> consumer, U value) {

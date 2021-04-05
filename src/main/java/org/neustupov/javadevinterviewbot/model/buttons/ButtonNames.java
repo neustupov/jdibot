@@ -2,6 +2,9 @@ package org.neustupov.javadevinterviewbot.model.buttons;
 
 import lombok.AllArgsConstructor;
 
+/**
+ * Названия кнопок
+ */
 @AllArgsConstructor
 public enum ButtonNames {
 
@@ -29,8 +32,16 @@ public enum ButtonNames {
   PREVIOUS("Туда"),
   NEXT("Сюда");
 
+  /**
+   * Название
+   */
   private String name;
 
+  /**
+   * Возвращает название
+   *
+   * @return название
+   */
   @Override
   public String toString() {
     return name;

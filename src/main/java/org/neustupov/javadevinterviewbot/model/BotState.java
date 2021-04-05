@@ -1,5 +1,8 @@
 package org.neustupov.javadevinterviewbot.model;
 
+/**
+ * Состояния бота
+ */
 public enum  BotState {
 
   SHOW_START_MENU,

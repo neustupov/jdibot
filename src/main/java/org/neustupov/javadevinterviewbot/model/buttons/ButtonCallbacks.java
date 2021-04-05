@@ -2,6 +2,9 @@ package org.neustupov.javadevinterviewbot.model.buttons;
 
 import lombok.AllArgsConstructor;
 
+/**
+ * Колбеки кнопок
+ */
 @AllArgsConstructor
 public enum ButtonCallbacks {
 
@@ -30,8 +33,17 @@ public enum ButtonCallbacks {
   PREVIOUS_BUTTON("<-Button"),
   NEXT_BUTTON("->Button");
 
+  /**
+   * Название колбека
+   */
   private String name;
 
+  /**
+   * Ищет колбек по названию
+   *
+   * @param name Название
+   * @return Колбек
+   */
   public static ButtonCallbacks valueOfName(String name) {
     for (ButtonCallbacks e : values()) {
       if (e.name.equals(name)) {
@@ -41,6 +53,11 @@ public enum ButtonCallbacks {
     return null;
   }
 
+  /**
+   * Возвращает название колбека
+   *
+   * @return Название колбека
+   */
   @Override
   public String toString() {
     return name;
