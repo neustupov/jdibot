@@ -172,7 +172,7 @@ public class MessageProcessor {
     Optional<Binary> imageData = imageUtil.getImageData(inputMsg);
     Message message = null;
     if (imageData.isPresent()) {
-      File imageTempFile = imageUtil.getPhotoFile(imageData.get());
+      File imageTempFile = imageUtil.getImageFile(imageData.get());
       message = sendPhoto(chatId, imageTempFile);
       imageUtil.deleteTempFile(imageTempFile);
     }

@@ -3,6 +3,9 @@ package org.neustupov.javadevinterviewbot.utils;
 import com.vdurmont.emoji.EmojiParser;
 import lombok.AllArgsConstructor;
 
+/**
+ * Эмодзи
+ */
 @AllArgsConstructor
 public enum Emojis {
 
@@ -15,8 +18,16 @@ public enum Emojis {
   IN_DEV(EmojiParser.parseToUnicode(":hammer_and_wrench:")),
   MAN_STUDENT(EmojiParser.parseToUnicode(":man_student:"));
 
+  /**
+   * Название эмодзи
+   */
   private String emojiName;
 
+  /**
+   * Возвращает название эмодзи
+   *
+   * @return Название эмодзи
+   */
   @Override
   public String toString() {
     return emojiName;

@@ -10,6 +10,9 @@ import org.neustupov.javadevinterviewbot.model.Question;
 import org.neustupov.javadevinterviewbot.service.QuestionNumService;
 import org.springframework.stereotype.Component;
 
+/**
+ * Данные для временного наполнения
+ */
 @Component
 public class QuestionTempData {
 

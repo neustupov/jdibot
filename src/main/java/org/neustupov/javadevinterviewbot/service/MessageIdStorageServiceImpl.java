@@ -7,10 +7,16 @@ import org.neustupov.javadevinterviewbot.model.MessageIdStorage;
 import org.neustupov.javadevinterviewbot.repository.MessageIdStorageRepository;
 import org.springframework.stereotype.Service;
 
+/**
+ * Реализация сервиса хранилищ предыдущих сообщений
+ */
 @Slf4j
 @Service
 public class MessageIdStorageServiceImpl implements MessageIdStorageService {
 
+  /**
+   * Репозиторий хранилищь предыдущих сообщений
+   */
   private MessageIdStorageRepository messageIdStorageRepository;
 
   public MessageIdStorageServiceImpl(
@@ -18,6 +24,11 @@ public class MessageIdStorageServiceImpl implements MessageIdStorageService {
     this.messageIdStorageRepository = messageIdStorageRepository;
   }
 
+  /**
+   * Записывает хранилище
+   *
+   * @param messageIdStorage MessageIdStorage
+   */
   @Override
   public void save(MessageIdStorage messageIdStorage) {
     messageIdStorageRepository.save(messageIdStorage);
@@ -32,9 +43,16 @@ public class MessageIdStorageServiceImpl implements MessageIdStorageService {
         messageIdStorage.getChatId());
   }
 
+  /**
+   * Возвращает хранилище по Id чата
+   *
+   * @param chatId chatId
+   * @return MessageIdStorage
+   */
   @Override
   public MessageIdStorage getStorageByChatId(long chatId) {
-    Optional<MessageIdStorage> messageIdKeeperOptional = messageIdStorageRepository.findById(chatId);
+    Optional<MessageIdStorage> messageIdKeeperOptional = messageIdStorageRepository
+        .findById(chatId);
     return messageIdKeeperOptional
         .orElseGet(() ->
             messageIdStorageRepository.save(GenericBuilder.of(MessageIdStorage::new)

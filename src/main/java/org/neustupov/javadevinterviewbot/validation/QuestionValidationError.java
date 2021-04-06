@@ -6,12 +6,21 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 
+/**
+ * Ошибки валидации
+ */
 public class QuestionValidationError {
 
+  /**
+   * Список ошибок
+   */
   @Getter
   @JsonInclude(Include.NON_EMPTY)
   private List<String> errors = new ArrayList<>();
 
+  /**
+   * Текст ошибки
+   */
   @Getter
   private final String errorMessage;
 
@@ -19,7 +28,12 @@ public class QuestionValidationError {
     this.errorMessage = errorMessage;
   }
 
-  public void addValidationError(String error){
+  /**
+   * Добавляет ошибки в список
+   *
+   * @param error Ошибка
+   */
+  void addValidationError(String error) {
     errors.add(error);
   }
 }

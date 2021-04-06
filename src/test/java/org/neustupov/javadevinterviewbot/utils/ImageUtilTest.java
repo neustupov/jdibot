@@ -48,7 +48,7 @@ class ImageUtilTest {
   void getPhotoFile() throws Exception {
     byte[] bytes = new byte[]{4, 5, 6, 7, 8, 9, 0};
     Binary binary = new Binary(bytes);
-    File file = imageUtil.getPhotoFile(binary);
+    File file = imageUtil.getImageFile(binary);
     assertTrue(file.exists());
     assertArrayEquals(FileUtils.readFileToByteArray(file), bytes);
     FileUtils.deleteQuietly(file);
@@ -56,7 +56,7 @@ class ImageUtilTest {
 
   @Test
   void deleteTempFile() {
-    File file = imageUtil.getPhotoFile(new Binary(new byte[]{4, 5, 6, 7, 8, 9, 0}));
+    File file = imageUtil.getImageFile(new Binary(new byte[]{4, 5, 6, 7, 8, 9, 0}));
     assertTrue(file.exists());
 
     imageUtil.deleteTempFile(file);
