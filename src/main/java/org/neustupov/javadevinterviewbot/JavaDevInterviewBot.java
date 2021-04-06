@@ -18,36 +18,44 @@ import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+/**
+ * Бин бота
+ */
 @Slf4j
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class JavaDevInterviewBot extends TelegramWebhookBot {
 
+  /**
+   * Веб-хук
+   */
   String webHookPath;
+
+  /**
+   * Название бота
+   */
   String botUserName;
+
+  /**
+   * Токен бота
+   */
   String botToken;
 
+  /**
+   * Фасад бота
+   */
   TelegramFacade telegramFacade;
 
   public JavaDevInterviewBot(TelegramFacade telegramFacade) {
     this.telegramFacade = telegramFacade;
   }
 
-  @Override
-  public String getBotUsername() {
-    return botUserName;
-  }
-
-  @Override
-  public String getBotToken() {
-    return botToken;
-  }
-
-  @Override
-  public String getBotPath() {
-    return webHookPath;
-  }
-
+  /**
+   * Обрабатывает поступающий апдейты
+   *
+   * @param update Update
+   * @return Ответ приложения
+   */
   @Override
   public BotApiMethod<?> onWebhookUpdateReceived(Update update) {
     if ((update.getMessage() != null && update.getMessage().hasText()) || update
@@ -75,6 +83,11 @@ public class JavaDevInterviewBot extends TelegramWebhookBot {
     return null;
   }
 
+  /**
+   * Обновляет сообщение
+   *
+   * @param botResponseData Данные ответа
+   */
   private void updateMessage(BotResponseData botResponseData) {
     SendMessage sendMessage = (SendMessage) botResponseData.getBotApiMethod();
     if (sendMessage != null) {
@@ -93,17 +106,18 @@ public class JavaDevInterviewBot extends TelegramWebhookBot {
     }
   }
 
+  /**
+   * Удаляет предыдущие сообщения
+   *
+   * @param messageIdStorage Хранилище предыдущих сообщений
+   */
   private void deletePreviousMessages(MessageIdStorage messageIdStorage) {
-    Long chatId = messageIdStorage.getChatId();
+    String chatId = messageIdStorage.getChatId().toString();
 
     Integer previousMessageId = messageIdStorage.getPreviousMessageId();
     if (previousMessageId != null && messageIdStorage.isNeedDeletePrevious()) {
-
-      DeleteMessage deleteMessage = new DeleteMessage();
-      deleteMessage.setChatId(chatId.toString());
-      deleteMessage.setMessageId(previousMessageId);
       try {
-        execute(deleteMessage);
+        execute(getDeleteMessage(chatId, previousMessageId));
       } catch (TelegramApiException e) {
         log.error(e.getMessage(), e);
       }
@@ -115,12 +129,8 @@ public class JavaDevInterviewBot extends TelegramWebhookBot {
 
     Integer previousPreviousMessageId = messageIdStorage.getPreviousPreviousMessageId();
     if (previousPreviousMessageId != null && messageIdStorage.isNeedDeletePreviousPrevious()) {
-
-      DeleteMessage deleteMessage = new DeleteMessage();
-      deleteMessage.setChatId(chatId.toString());
-      deleteMessage.setMessageId(previousPreviousMessageId);
       try {
-        execute(deleteMessage);
+        execute(getDeleteMessage(chatId, previousPreviousMessageId));
       } catch (TelegramApiException e) {
         log.error(e.getMessage(), e);
       }
@@ -133,15 +143,17 @@ public class JavaDevInterviewBot extends TelegramWebhookBot {
     deleteImage(messageIdStorage);
   }
 
+  /**
+   * Удаляет сообщение с изображением
+   *
+   * @param messageIdStorage Хранилище предыдущих сообщений
+   */
   private void deleteImage(MessageIdStorage messageIdStorage) {
-    Long chatId = messageIdStorage.getChatId();
+    String chatId = messageIdStorage.getChatId().toString();
     Integer imageMessageId = messageIdStorage.getImageMessageId();
     if (imageMessageId != null && messageIdStorage.isNeedDeleteImage()) {
-      DeleteMessage deleteImage = new DeleteMessage();
-      deleteImage.setChatId(chatId.toString());
-      deleteImage.setMessageId(imageMessageId);
       try {
-        execute(deleteImage);
+        execute(getDeleteMessage(chatId, imageMessageId));
       } catch (TelegramApiException e) {
         log.error(e.getMessage(), e);
       }
@@ -151,5 +163,49 @@ public class JavaDevInterviewBot extends TelegramWebhookBot {
     }
 
     telegramFacade.saveMessageIdKeeper(messageIdStorage);
+  }
+
+  /**
+   * Создает объект для удаления сообщения
+   *
+   * @param chatId chatId
+   * @param messageId messageId
+   * @return DeleteMessage
+   */
+  private DeleteMessage getDeleteMessage(String chatId, Integer messageId) {
+    return DeleteMessage.builder()
+        .chatId(chatId)
+        .messageId(messageId)
+        .build();
+  }
+
+  /**
+   * Возвращает название бота
+   *
+   * @return Название бота
+   */
+  @Override
+  public String getBotUsername() {
+    return botUserName;
+  }
+
+  /**
+   * Возвращает токен бота
+   *
+   * @return Токен бота
+   */
+  @Override
+  public String getBotToken() {
+    return botToken;
+  }
+
+  /**
+   * Возвращает веб-хук
+   *
+   * @return Веб-хук
+   */
+  @Override
+  public String getBotPath() {
+    return webHookPath;
   }
 }
