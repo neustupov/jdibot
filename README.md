@@ -15,6 +15,33 @@ Used:
 
 -----
 
+ ####Build Docker Image
+ 
+- in app directory: docker build -t jdibot .
+  
+  "-t" this is a "TAG", in this case it is "jdibot"
+  
+  "." this is the directory from which the image is being built
+
+####Run temp MongoDB image
+
+- docker run --rm -d -p 27017:27017 mongo
+
+  "--rm" remove image after stop
+  "-d" running in the background
+  "-p" ports from:to
+
+####Run docker image
+
+- docker run --rm --name jdibot -p 5000:5000 jdibot
+
+  "--rm" remove image after stop
+  "--name" name container 
+  "-p" ports from:to 
+  "jdibot" name of image for start container
+ 
+-----
+
 - @BotFather - for register and config bot
 - NGRok https://ngrok.com/download - for proxy requests
 - https://api.telegram.org/bot{my_bot_token}/setWebhook?url={url_to_send_updates_to} - for set bot webHook

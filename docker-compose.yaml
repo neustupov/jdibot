@@ -1,0 +1,20 @@
+version: "3"
+
+volumes:
+  mongodb_volume:
+
+services:
+  jdibot:
+    build: jdibot/
+    restart: always
+    ports:
+      - 5000:5000
+    environment:vscale
+      - MONGO_DB_ADDR=mongodb
+      - MONGO_DB_PORT=27017
+
+  mongo:
+    image: mongo:latest
+    volumes:
+      - mongodb_volume:/data/db
+    restart: always
