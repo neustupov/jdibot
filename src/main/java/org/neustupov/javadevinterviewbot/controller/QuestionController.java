@@ -33,12 +33,12 @@ public class QuestionController {
   /**
    * Сервис вопросов
    */
-  QuestionService questionService;
+  final QuestionService questionService;
 
   /**
    * Данные для предварительного запролнения репозитория
    */
-  QuestionTempData questionTempData;
+  final QuestionTempData questionTempData;
 
   public QuestionController(QuestionService questionService,
       QuestionTempData questionTempData) {
