@@ -13,6 +13,10 @@ Used:
 - Mockito
 - Embedded MongoDB 
 
+Used for containerization:
+- Docker
+- Docker Compose
+
 -----
 
  #### Build Docker Image
@@ -31,7 +35,7 @@ Used:
   "-d" running in the background
   "-p" ports from:to
 
-#### Run docker image
+#### Run app docker image
 
 - docker run --rm --name jdibot -p 5000:5000 jdibot
 
@@ -39,7 +43,15 @@ Used:
   "--name" name container 
   "-p" ports from:to 
   "jdibot" name of image for start container
- 
+
+#### With Docker Compose
+
+For run docker with docker-compose:
+$ docker-compose --env-file "./.env" up
+
+ - ".env" - config for docker-compose.yaml
+ - "mongo-init.js" - for init database at first start
+
 -----
 
 - @BotFather - for register and config bot
