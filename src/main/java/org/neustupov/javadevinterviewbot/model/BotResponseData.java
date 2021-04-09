@@ -1,17 +1,31 @@
 package org.neustupov.javadevinterviewbot.model;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 
+/**
+ * Объект с данными ответа
+ */
 @Data
-@NoArgsConstructor
+@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BotResponseData {
 
+  /**
+   * Id сообщения
+   */
   Integer messageId;
+
+  /**
+   * Объект ответа приложения
+   */
   BotApiMethod<?> botApiMethod;
-  MessageIdKeeper messageIdKeeper;
+
+  /**
+   * Объект, содержащий данные о предыдущих сообщениях
+   */
+  MessageIdStorage messageIdStorage;
 }

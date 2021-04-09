@@ -3,13 +3,16 @@ package org.neustupov.javadevinterviewbot.repository;
 import java.util.Arrays;
 import java.util.List;
 import lombok.Getter;
-import org.neustupov.javadevinterviewbot.botapi.states.Category;
-import org.neustupov.javadevinterviewbot.botapi.states.Level;
+import org.neustupov.javadevinterviewbot.model.menu.Category;
+import org.neustupov.javadevinterviewbot.model.menu.Level;
 import org.neustupov.javadevinterviewbot.model.GenericBuilder;
 import org.neustupov.javadevinterviewbot.model.Question;
 import org.neustupov.javadevinterviewbot.service.QuestionNumService;
 import org.springframework.stereotype.Component;
 
+/**
+ * Данные для временного наполнения
+ */
 @Component
 public class QuestionTempData {
 

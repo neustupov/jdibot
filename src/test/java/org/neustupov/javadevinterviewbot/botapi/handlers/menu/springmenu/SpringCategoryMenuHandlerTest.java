@@ -3,14 +3,16 @@ package org.neustupov.javadevinterviewbot.botapi.handlers.menu.springmenu;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
+import static org.neustupov.javadevinterviewbot.TestData.Buttons.SPRING_PART_1;
+import static org.neustupov.javadevinterviewbot.TestData.Buttons.SPRING_PART_2;
+import static org.neustupov.javadevinterviewbot.TestData.Buttons.SPRING_PART_3;
 import static org.neustupov.javadevinterviewbot.TestData.getMessage;
-import static org.neustupov.javadevinterviewbot.botapi.handlers.menu.springmenu.SpringCategoryMenuHandlerTest.Buttons.*;
-import static org.neustupov.javadevinterviewbot.botapi.states.BotState.*;
+import static org.neustupov.javadevinterviewbot.model.BotState.*;
 
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.neustupov.javadevinterviewbot.botapi.states.BotState;
+import org.neustupov.javadevinterviewbot.model.BotState;
 import org.neustupov.javadevinterviewbot.cache.UserDataCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -32,12 +34,6 @@ class SpringCategoryMenuHandlerTest {
   private UserDataCache dataCache;
 
   private Message message;
-
-  public interface Buttons {
-    String SPRING_PART_1 = "Spring part 1";
-    String SPRING_PART_2 = "Spring part 2";
-    String SPRING_PART_3 = "Spring part 3";
-  }
 
   @BeforeEach
   void setUp() {

@@ -3,15 +3,18 @@ package org.neustupov.javadevinterviewbot.botapi.handlers.menu;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
+import static org.neustupov.javadevinterviewbot.TestData.Buttons.COLLECTIONS;
+import static org.neustupov.javadevinterviewbot.TestData.Buttons.OOP;
+import static org.neustupov.javadevinterviewbot.TestData.Buttons.PATTERNS;
+import static org.neustupov.javadevinterviewbot.TestData.Buttons.SPRING;
 import static org.neustupov.javadevinterviewbot.TestData.getMessage;
-import static org.neustupov.javadevinterviewbot.botapi.handlers.menu.CategoryMenuHandlerTest.Buttons.*;
-import static org.neustupov.javadevinterviewbot.botapi.states.BotState.SHOW_CATEGORY;
-import static org.neustupov.javadevinterviewbot.botapi.states.BotState.SHOW_CATEGORY_MENU;
+import static org.neustupov.javadevinterviewbot.model.BotState.SHOW_CATEGORY;
+import static org.neustupov.javadevinterviewbot.model.BotState.SHOW_CATEGORY_MENU;
 
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.neustupov.javadevinterviewbot.botapi.states.BotState;
+import org.neustupov.javadevinterviewbot.model.BotState;
 import org.neustupov.javadevinterviewbot.cache.UserDataCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,13 +36,6 @@ class CategoryMenuHandlerTest {
   private UserDataCache dataCache;
 
   private Message message;
-
-  public interface Buttons {
-    String OOP = "ООП";
-    String COLLECTIONS = "Коллекции";
-    String PATTERNS = "Паттерны";
-    String SPRING = "Spring";
-  }
 
   @BeforeEach
   void setUp() {

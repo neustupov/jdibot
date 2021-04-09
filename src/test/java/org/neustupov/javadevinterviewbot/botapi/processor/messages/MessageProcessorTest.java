@@ -16,7 +16,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.neustupov.javadevinterviewbot.botapi.BotStateContext;
-import org.neustupov.javadevinterviewbot.botapi.states.BotState;
+import org.neustupov.javadevinterviewbot.model.BotState;
 import org.neustupov.javadevinterviewbot.cache.UserDataCache;
 import org.neustupov.javadevinterviewbot.model.GenericBuilder;
 import org.neustupov.javadevinterviewbot.model.UserContext;
@@ -91,7 +91,7 @@ class MessageProcessorTest {
   @MethodSource("provideButtonsForHandleMessage")
   void handleInputMessage(String text, String callback, BotState state) {
     message.setText(text);
-    SendMessage sendMessage = messageProcessor.handleInputMessage(message, null);
+    SendMessage sendMessage = messageProcessor.handleInputMessage(message);
     assertFalse(sendMessage.getText().isEmpty());
     assertEquals(sendMessage.getText(), callback);
     assertEquals(dataCache.getUserCurrentBotState(100), state);

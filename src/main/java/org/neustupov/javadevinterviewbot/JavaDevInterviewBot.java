@@ -6,89 +6,97 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.neustupov.javadevinterviewbot.botapi.TelegramFacade;
 import org.neustupov.javadevinterviewbot.model.BotResponseData;
-import org.neustupov.javadevinterviewbot.model.MessageIdKeeper;
+import org.neustupov.javadevinterviewbot.model.MessageIdStorage;
 import org.telegram.telegrambots.bots.TelegramWebhookBot;
 import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
-import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+/**
+ * Бин бота
+ */
 @Slf4j
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class JavaDevInterviewBot extends TelegramWebhookBot {
 
+  /**
+   * Веб-хук
+   */
   String webHookPath;
+
+  /**
+   * Название бота
+   */
   String botUserName;
+
+  /**
+   * Токен бота
+   */
   String botToken;
 
+  /**
+   * Фасад бота
+   */
   TelegramFacade telegramFacade;
 
   public JavaDevInterviewBot(TelegramFacade telegramFacade) {
     this.telegramFacade = telegramFacade;
   }
 
-  @Override
-  public String getBotUsername() {
-    return botUserName;
-  }
-
-  @Override
-  public String getBotToken() {
-    return botToken;
-  }
-
-  @Override
-  public String getBotPath() {
-    return webHookPath;
-  }
-
+  /**
+   * Обрабатывает поступающий апдейты
+   *
+   * @param update Update
+   * @return Ответ приложения
+   */
   @Override
   public BotApiMethod<?> onWebhookUpdateReceived(Update update) {
     if ((update.getMessage() != null && update.getMessage().hasText()) || update
         .hasCallbackQuery()) {
+
       BotResponseData botResponseData = telegramFacade.handleUpdate(update);
       BotApiMethod<?> method = botResponseData.getBotApiMethod();
-      MessageIdKeeper messageIdKeeper = botResponseData.getMessageIdKeeper();
 
       if (method instanceof AnswerCallbackQuery) {
         return method;
-      } else if (update.hasCallbackQuery()) {
-        CallbackQuery callbackQuery = update.getCallbackQuery();
-        Message message = callbackQuery.getMessage();
-        User user = message.getFrom();
+      }
+
+      MessageIdStorage messageIdStorage = botResponseData.getMessageIdStorage();
+      if (update.hasCallbackQuery()) {
+        User user = update.getCallbackQuery().getMessage().getFrom();
         if (user != null && user.getIsBot()) {
           updateMessage(botResponseData);
         }
-        deleteImage(messageIdKeeper);
+        deleteImage(messageIdStorage);
       } else {
-        deletePreviousMessages(messageIdKeeper);
-        return botResponseData.getBotApiMethod();
+        deletePreviousMessages(messageIdStorage);
+        return method;
       }
     }
     return null;
   }
 
+  /**
+   * Обновляет сообщение
+   *
+   * @param botResponseData Данные ответа
+   */
   private void updateMessage(BotResponseData botResponseData) {
-    BotApiMethod<?> method = botResponseData.getBotApiMethod();
-    SendMessage sendMessage = (SendMessage) method;
-    EditMessageText editMessageText = null;
+    SendMessage sendMessage = (SendMessage) botResponseData.getBotApiMethod();
     if (sendMessage != null) {
-      editMessageText = EditMessageText.builder()
+      EditMessageText editMessageText = EditMessageText.builder()
           .chatId(sendMessage.getChatId())
           .messageId(botResponseData.getMessageId())
           .text(sendMessage.getText())
           .replyMarkup((InlineKeyboardMarkup) sendMessage.getReplyMarkup())
           .build();
-    }
-    if (editMessageText != null) {
       try {
         execute(editMessageText);
       } catch (TelegramApiException e) {
@@ -98,63 +106,106 @@ public class JavaDevInterviewBot extends TelegramWebhookBot {
     }
   }
 
-  private void deletePreviousMessages(MessageIdKeeper messageIdKeeper) {
-    Long chatId = messageIdKeeper.getChatId();
+  /**
+   * Удаляет предыдущие сообщения
+   *
+   * @param messageIdStorage Хранилище предыдущих сообщений
+   */
+  private void deletePreviousMessages(MessageIdStorage messageIdStorage) {
+    String chatId = messageIdStorage.getChatId().toString();
 
-    Integer previousMessageId = messageIdKeeper.getPreviousMessageId();
-    if (previousMessageId != null && messageIdKeeper.isNeedDeletePrevious()) {
-
-      DeleteMessage deleteMessage = new DeleteMessage();
-      deleteMessage.setChatId(chatId.toString());
-      deleteMessage.setMessageId(previousMessageId);
+    Integer previousMessageId = messageIdStorage.getPreviousMessageId();
+    if (previousMessageId != null && messageIdStorage.isNeedDeletePrevious()) {
       try {
-        execute(deleteMessage);
+        execute(getDeleteMessage(chatId, previousMessageId));
       } catch (TelegramApiException e) {
         log.error(e.getMessage(), e);
       }
 
       log.info("Delete message with ID:{}", previousMessageId);
-      messageIdKeeper.setNeedDeletePrevious(false);
-      messageIdKeeper.setPreviousMessageId(null);
+      messageIdStorage.setNeedDeletePrevious(false);
+      messageIdStorage.setPreviousMessageId(null);
     }
 
-    Integer previousPreviousMessageId = messageIdKeeper.getPreviousPreviousMessageId();
-    if (previousPreviousMessageId != null && messageIdKeeper.isNeedDeletePreviousPrevious()) {
-
-      DeleteMessage deleteMessage = new DeleteMessage();
-      deleteMessage.setChatId(chatId.toString());
-      deleteMessage.setMessageId(previousPreviousMessageId);
+    Integer previousPreviousMessageId = messageIdStorage.getPreviousPreviousMessageId();
+    if (previousPreviousMessageId != null && messageIdStorage.isNeedDeletePreviousPrevious()) {
       try {
-        execute(deleteMessage);
+        execute(getDeleteMessage(chatId, previousPreviousMessageId));
       } catch (TelegramApiException e) {
         log.error(e.getMessage(), e);
       }
 
       log.info("Delete message with ID:{}", previousPreviousMessageId);
-      messageIdKeeper.setNeedDeletePreviousPrevious(false);
-      messageIdKeeper.setPreviousPreviousMessageId(null);
+      messageIdStorage.setNeedDeletePreviousPrevious(false);
+      messageIdStorage.setPreviousPreviousMessageId(null);
     }
 
-    deleteImage(messageIdKeeper);
+    deleteImage(messageIdStorage);
   }
 
-  private void deleteImage(MessageIdKeeper messageIdKeeper) {
-    Long chatId = messageIdKeeper.getChatId();
-    Integer imageMessageId = messageIdKeeper.getImageMessageId();
-    if (imageMessageId != null && messageIdKeeper.isNeedDeleteImage()) {
-      DeleteMessage deleteImage = new DeleteMessage();
-      deleteImage.setChatId(chatId.toString());
-      deleteImage.setMessageId(imageMessageId);
+  /**
+   * Удаляет сообщение с изображением
+   *
+   * @param messageIdStorage Хранилище предыдущих сообщений
+   */
+  private void deleteImage(MessageIdStorage messageIdStorage) {
+    String chatId = messageIdStorage.getChatId().toString();
+    Integer imageMessageId = messageIdStorage.getImageMessageId();
+    if (imageMessageId != null && messageIdStorage.isNeedDeleteImage()) {
       try {
-        execute(deleteImage);
+        execute(getDeleteMessage(chatId, imageMessageId));
       } catch (TelegramApiException e) {
         log.error(e.getMessage(), e);
       }
 
       log.info("Delete message with Image and ID:{}", imageMessageId);
-      messageIdKeeper.setImageMessageId(null);
+      messageIdStorage.setImageMessageId(null);
     }
 
-    telegramFacade.saveMessageIdKeeper(messageIdKeeper);
+    telegramFacade.saveMessageIdKeeper(messageIdStorage);
+  }
+
+  /**
+   * Создает объект для удаления сообщения
+   *
+   * @param chatId chatId
+   * @param messageId messageId
+   * @return DeleteMessage
+   */
+  private DeleteMessage getDeleteMessage(String chatId, Integer messageId) {
+    return DeleteMessage.builder()
+        .chatId(chatId)
+        .messageId(messageId)
+        .build();
+  }
+
+  /**
+   * Возвращает название бота
+   *
+   * @return Название бота
+   */
+  @Override
+  public String getBotUsername() {
+    return botUserName;
+  }
+
+  /**
+   * Возвращает токен бота
+   *
+   * @return Токен бота
+   */
+  @Override
+  public String getBotToken() {
+    return botToken;
+  }
+
+  /**
+   * Возвращает веб-хук
+   *
+   * @return Веб-хук
+   */
+  @Override
+  public String getBotPath() {
+    return webHookPath;
   }
 }

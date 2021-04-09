@@ -5,13 +5,13 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.neustupov.javadevinterviewbot.TestData.getMessage;
-import static org.neustupov.javadevinterviewbot.botapi.states.BotState.SHOW_CATEGORY;
+import static org.neustupov.javadevinterviewbot.model.BotState.SHOW_CATEGORY;
 
 import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.neustupov.javadevinterviewbot.botapi.states.BotState;
+import org.neustupov.javadevinterviewbot.model.BotState;
 import org.neustupov.javadevinterviewbot.cache.UserDataCache;
 import org.neustupov.javadevinterviewbot.model.GenericBuilder;
 import org.neustupov.javadevinterviewbot.model.Question;
@@ -62,10 +62,7 @@ class CategoryListsHandlerTest {
     when(questionRepository.getAllByCategoryAndLevel(any(), any()))
         .thenReturn(qListForCategory);
 
-    RangePair rangePair = GenericBuilder.of(RangePair::new)
-        .with(RangePair::setFrom, 0)
-        .with(RangePair::setTo, 1)
-        .build();
+    RangePair rangePair = RangePair.builder().from(0).to(1).build();
 
     when(userContext.getRoute()).thenReturn("next");
     when(userContext.getRange())
@@ -77,7 +74,7 @@ class CategoryListsHandlerTest {
   void handle() {
     SendMessage sendMessage = categoryListsHandler.handle(message);
     assertFalse(sendMessage.getText().isEmpty());
-    assertEquals(sendMessage.getText(), "/q0 For Category 1\n");
+    assertEquals(sendMessage.getText(), "/q0 For Category 1\n\n");
 
     List<List<InlineKeyboardButton>> keyboard = ((InlineKeyboardMarkup) sendMessage
         .getReplyMarkup()).getKeyboard();

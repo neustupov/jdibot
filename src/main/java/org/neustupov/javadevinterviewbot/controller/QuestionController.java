@@ -22,12 +22,22 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+/**
+ * Контроллер вопросов
+ */
 @RestController
 @RequestMapping("/api")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class QuestionController {
 
+  /**
+   * Сервис вопросов
+   */
   QuestionService questionService;
+
+  /**
+   * Данные для предварительного запролнения репозитория
+   */
   QuestionTempData questionTempData;
 
   public QuestionController(QuestionService questionService,
@@ -36,6 +46,11 @@ public class QuestionController {
     this.questionTempData = questionTempData;
   }
 
+  /**
+   * Заполняет репозиторий временными данными
+   *
+   * @return ResponseEntity
+   */
   @GetMapping("/init")
   public ResponseEntity<Iterable<Question>> init() {
     questionTempData.initSeq();
@@ -45,11 +60,22 @@ public class QuestionController {
     return ResponseEntity.ok(questionService.findAll());
   }
 
+  /**
+   * Получить все вопросы
+   *
+   * @return Список вопросов
+   */
   @GetMapping("/question")
   public ResponseEntity<Iterable<Question>> getQuestion() {
     return ResponseEntity.ok(questionService.findAll());
   }
 
+  /**
+   * Получить вопрос по Id
+   *
+   * @param id Id вопроса
+   * @return Вопрос
+   */
   @GetMapping("/question/{id}")
   public ResponseEntity<Question> getQuestionById(@PathVariable Long id) {
     Optional<Question> questionOptional = questionService.findById(id);
@@ -57,6 +83,13 @@ public class QuestionController {
         .orElseGet(() -> ResponseEntity.notFound().build());
   }
 
+  /**
+   * Создать вопрос
+   *
+   * @param question Вопрос
+   * @param errors Ошибки
+   * @return Урл для доступа к созданному вопросу в хидере ответа
+   */
   @RequestMapping(value = "/question", method = {RequestMethod.POST, RequestMethod.PUT})
   public ResponseEntity<?> createQuestion(@Valid @RequestBody Question question, Errors errors) {
     if (errors.hasErrors()) {
@@ -69,6 +102,13 @@ public class QuestionController {
     return ResponseEntity.created(location).build();
   }
 
+  /**
+   * Создает вопросы из списка
+   *
+   * @param question Список вопросов
+   * @param errors Ошибки
+   * @return Id созданных вопросов
+   */
   @RequestMapping(value = "/questions", method = {RequestMethod.POST, RequestMethod.PUT})
   public ResponseEntity<?> createQuestions(@Valid @RequestBody List<Question> question,
       Errors errors) {
@@ -76,10 +116,19 @@ public class QuestionController {
       return ResponseEntity.badRequest()
           .body(QuestionValidationErrorBuilder.fromBindingsErrors(errors));
     }
-    List<Long> questionIds = question.stream().map(q -> questionService.save(q).getId()).collect(Collectors.toList());
+    List<Long> questionIds = question.stream().map(q -> questionService.save(q).getId())
+        .collect(Collectors.toList());
     return ResponseEntity.ok(questionIds);
   }
 
+  /**
+   * Добавляет изображение к вопросу
+   *
+   * @param id Id вопроса
+   * @param multipartFile Изображение
+   * @return ResponseEntity
+   * @throws IOException IOException
+   */
   @PostMapping(value = "/question/{id}/image")
   public ResponseEntity<?> addImageToQuestion(@PathVariable Long id,
       @RequestParam("image") MultipartFile multipartFile) throws IOException {
@@ -93,6 +142,12 @@ public class QuestionController {
     return ResponseEntity.notFound().build();
   }
 
+  /**
+   * Удаляет вопрос по Id
+   *
+   * @param id Id вопроса
+   * @return ResponseEntity
+   */
   @DeleteMapping("/question/{id}")
   public ResponseEntity<Question> deleteQuestion(@PathVariable String id) {
     questionService
@@ -100,12 +155,24 @@ public class QuestionController {
     return ResponseEntity.noContent().build();
   }
 
+  /**
+   * Удаляет вопрос
+   *
+   * @param question Вопрос
+   * @return ResponseEntity
+   */
   @DeleteMapping("/question")
   public ResponseEntity<Question> deleteQuestion(@RequestBody Question question) {
     questionService.delete(question);
     return ResponseEntity.noContent().build();
   }
 
+  /**
+   * Хендлер ошибок
+   *
+   * @param exception Ошибка
+   * @return Ошибка валидации
+   */
   @ExceptionHandler
   @ResponseStatus(value = HttpStatus.BAD_REQUEST)
   public QuestionValidationError handleException(Exception exception) {

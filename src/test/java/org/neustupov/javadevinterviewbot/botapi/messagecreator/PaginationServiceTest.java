@@ -6,7 +6,6 @@ import static org.neustupov.javadevinterviewbot.TestData.getListOfQuestion;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.neustupov.javadevinterviewbot.model.GenericBuilder;
 import org.neustupov.javadevinterviewbot.model.Question;
 import org.neustupov.javadevinterviewbot.model.RangePair;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +26,7 @@ class PaginationServiceTest {
   void setUp() {
     qList = getListOfQuestion();
 
-    rangePair = GenericBuilder.of(RangePair::new)
-        .with(RangePair::setFrom, 0)
-        .with(RangePair::setTo, 1)
-        .build();
+    rangePair = RangePair.builder().from(0).to(1).build();
   }
 
   @Test
@@ -45,10 +41,7 @@ class PaginationServiceTest {
     assertEquals(resultRangePairNext.getFrom(), 1);
     assertEquals(resultRangePairNext.getTo(), 2);
 
-    RangePair rangePairPrev = GenericBuilder.of(RangePair::new)
-        .with(RangePair::setFrom, 5)
-        .with(RangePair::setTo, 6)
-        .build();
+    RangePair rangePairPrev = RangePair.builder().from(5).to(6).build();
     RangePair resultRangePairPrev = paginationService.getNewRange(10, rangePairPrev, "previous");
     assertEquals(resultRangePairPrev.getFrom(), 4);
     assertEquals(resultRangePairPrev.getTo(), 5);
@@ -58,10 +51,7 @@ class PaginationServiceTest {
   void addNextButton() {
     assertTrue(paginationService.addNextButton(qList, rangePair));
 
-    RangePair rp = GenericBuilder.of(RangePair::new)
-        .with(RangePair::setFrom, 1)
-        .with(RangePair::setTo, 2)
-        .build();
+    RangePair rp = RangePair.builder().from(1).to(2).build();
 
     assertFalse(paginationService.addNextButton(qList, rp));
   }
@@ -70,10 +60,7 @@ class PaginationServiceTest {
   void addPreviousButton() {
     assertFalse(paginationService.addPreviousButton(rangePair));
 
-    RangePair rp = GenericBuilder.of(RangePair::new)
-        .with(RangePair::setFrom, 1)
-        .with(RangePair::setTo, 2)
-        .build();
+    RangePair rp = RangePair.builder().from(1).to(2).build();
 
     assertTrue(paginationService.addPreviousButton(rp));
   }

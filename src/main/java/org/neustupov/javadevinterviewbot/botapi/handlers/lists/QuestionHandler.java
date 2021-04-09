@@ -1,56 +1,74 @@
 package org.neustupov.javadevinterviewbot.botapi.handlers.lists;
 
-import static org.neustupov.javadevinterviewbot.botapi.states.BotState.SHOW_QUESTION;
+import static org.neustupov.javadevinterviewbot.model.buttons.ButtonCallbacks.BACK_BUTTON;
 
 import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
-import org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker;
 import org.neustupov.javadevinterviewbot.botapi.handlers.InputMessageHandler;
-import org.neustupov.javadevinterviewbot.botapi.states.BotState;
+import org.neustupov.javadevinterviewbot.botapi.messagecreator.ResponseMessageCreator;
+import org.neustupov.javadevinterviewbot.model.BotState;
 import org.neustupov.javadevinterviewbot.model.Question;
 import org.neustupov.javadevinterviewbot.repository.QuestionRepository;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
-@Slf4j
+/**
+ * Хэндлер отображения вопроса
+ */
 @Component
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class QuestionHandler implements InputMessageHandler {
 
-  //TODO сообщения должен готовить ResponseMessageCreator вынести все туда
+  /**
+   * Класс, собирающий сообщение
+   */
+  ResponseMessageCreator responseMessageCreator;
+
+  /**
+   * Репозиторий вопросов
+   */
   QuestionRepository questionRepository;
-  ButtonMaker buttonMaker;
 
   public QuestionHandler(
-      QuestionRepository questionRepository,
-      ButtonMaker buttonMaker) {
+      ResponseMessageCreator responseMessageCreator,
+      QuestionRepository questionRepository) {
+    this.responseMessageCreator = responseMessageCreator;
     this.questionRepository = questionRepository;
-    this.buttonMaker = buttonMaker;
   }
 
+  /**
+   * Обрабатывает входящее сообщение
+   *
+   * @param message Входящее сообщение
+   * @return SendMessage
+   */
   @Override
   public SendMessage handle(Message message) {
-    Long chatId = message.getChatId();
-    Long id = getIdFromMessage(message);
-    Optional<Question> questionOptional = questionRepository.findById(id);
-    SendMessage sm = null;
-    if (questionOptional.isPresent()) {
-      sm = SendMessage.builder().chatId(chatId.toString())
-          .text(questionOptional.get().getLargeDescription()).build();
-      sm.setReplyMarkup(buttonMaker.getBackToQuestionsButton());
-    }
-    return sm;
+    Optional<Question> questionOptional = questionRepository.findById(getIdFromMessage(message));
+    return questionOptional.map(question -> responseMessageCreator
+        .getSimplyMessage(message.getChatId(), question.getLargeDescription(),
+            BotState.SHOW_QUESTION, BACK_BUTTON)).orElse(null);
   }
 
-  private Long getIdFromMessage(Message message){
+  /**
+   * Извлекает Id вопроса из тела сообщения
+   *
+   * @param message Сообщение
+   * @return Id вопроса
+   */
+  private Long getIdFromMessage(Message message) {
     return Long.parseLong(message.getText().replace("/q", ""));
   }
 
+  /**
+   * Возвращает сстояние, соответствующее хендлеру
+   *
+   * @return BotState
+   */
   @Override
   public BotState getHandlerName() {
-    return SHOW_QUESTION;
+    return BotState.SHOW_QUESTION;
   }
 }

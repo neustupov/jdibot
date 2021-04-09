@@ -5,9 +5,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.neustupov.javadevinterviewbot.botapi.states.Category;
-import org.neustupov.javadevinterviewbot.botapi.states.Level;
+import org.neustupov.javadevinterviewbot.model.menu.Category;
+import org.neustupov.javadevinterviewbot.model.menu.Level;
 import org.neustupov.javadevinterviewbot.model.GenericBuilder;
 import org.neustupov.javadevinterviewbot.model.RangePair;
 import org.neustupov.javadevinterviewbot.model.UserContext;
@@ -15,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @DataMongoTest
 @ActiveProfiles("test")
@@ -29,10 +27,7 @@ class UserContextRepositoryTest {
 
   @Test
   void saveTest(){
-    RangePair rangePairOne = GenericBuilder.of(RangePair::new)
-        .with(RangePair::setFrom, 0)
-        .with(RangePair::setTo, 2)
-        .build();
+    RangePair rangePairOne = RangePair.builder().from(0).to(2).build();
 
     UserContext userContextOne = GenericBuilder.of(UserContext::new)
         .with(UserContext::setUserId, 666L)
@@ -57,10 +52,7 @@ class UserContextRepositoryTest {
 
   @Test
   void findByIdTest(){
-    RangePair rangePairThree = GenericBuilder.of(RangePair::new)
-        .with(RangePair::setFrom, 0)
-        .with(RangePair::setTo, 2)
-        .build();
+    RangePair rangePairThree = RangePair.builder().from(0).to(2).build();
 
     UserContext userContextThree = GenericBuilder.of(UserContext::new)
         .with(UserContext::setUserId, 888L)

@@ -1,15 +1,12 @@
 package org.neustupov.javadevinterviewbot.botapi.handlers.common;
 
-import static org.neustupov.javadevinterviewbot.botapi.states.BotState.CATEGORY_OR_SEARCH_RESULT;
-
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
 import org.neustupov.javadevinterviewbot.botapi.handlers.InputMessageHandler;
 import org.neustupov.javadevinterviewbot.botapi.handlers.filldata.FillSearchHandler;
 import org.neustupov.javadevinterviewbot.botapi.handlers.lists.CategoryListsHandler;
-import org.neustupov.javadevinterviewbot.botapi.states.BotState;
-import org.neustupov.javadevinterviewbot.botapi.states.Category;
+import org.neustupov.javadevinterviewbot.model.BotState;
+import org.neustupov.javadevinterviewbot.model.menu.Category;
 import org.neustupov.javadevinterviewbot.cache.UserDataCache;
 import org.neustupov.javadevinterviewbot.model.UserContext;
 import org.springframework.stereotype.Component;
@@ -19,13 +16,23 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 /**
  * Хендлер выбора действия для кнопки возврата
  */
-@Slf4j
 @Component
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CategoryOrSearchResultHandler implements InputMessageHandler {
 
+  /**
+   * Хендлер списка категорий
+   */
   CategoryListsHandler categoryListsHandler;
+
+  /**
+   * Хендлер заполнения результатов поиска
+   */
   FillSearchHandler fillSearchHandler;
+
+  /**
+   * Кеш данных пользователя
+   */
   UserDataCache userDataCache;
 
   public CategoryOrSearchResultHandler(
@@ -37,6 +44,12 @@ public class CategoryOrSearchResultHandler implements InputMessageHandler {
     this.userDataCache = userDataCache;
   }
 
+  /**
+   * В зависимости от текущего состояния передаёт работу в соответствующий хендлер
+   *
+   * @param message Сообщение
+   * @return SendMessage
+   */
   @Override
   public SendMessage handle(Message message) {
     int userId = message.getChatId().intValue();
@@ -53,8 +66,13 @@ public class CategoryOrSearchResultHandler implements InputMessageHandler {
     return null;
   }
 
+  /**
+   * Возвращает сстояние, соответствующее хендлеру
+   *
+   * @return BotState
+   */
   @Override
   public BotState getHandlerName() {
-    return CATEGORY_OR_SEARCH_RESULT;
+    return BotState.CATEGORY_OR_SEARCH_RESULT;
   }
 }

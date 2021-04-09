@@ -8,26 +8,27 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.neustupov.javadevinterviewbot.botapi.BotStateContext;
-import org.neustupov.javadevinterviewbot.botapi.states.BotState;
-import org.neustupov.javadevinterviewbot.cache.DataCache;
+import org.neustupov.javadevinterviewbot.model.BotState;
 import org.neustupov.javadevinterviewbot.model.GenericBuilder;
+import org.neustupov.javadevinterviewbot.model.buttons.ButtonCallbacks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
 @SpringBootTest
 @ActiveProfiles("test")
-class ButtonCallbacksTest {
+class NavigationButtonButtonCallbacksTest {
 
   @Autowired
-  private ButtonCallbacks buttonCallbacks;
+  private NavigationButtonCallbacks navigationButtonCallbacks;
 
   @Spy
-  private DataCache dataCache;
+  private CallbackQuery callbackQuery;
   private Message message;
 
   @MockBean
@@ -35,7 +36,7 @@ class ButtonCallbacksTest {
 
   @BeforeEach
   void setUp() {
-    buttonCallbacks.setBotStateContext(botStateContext);
+    navigationButtonCallbacks.setBotStateContext(botStateContext);
     message = GenericBuilder.of(Message::new).build();
 
     SendMessage isCategorySearchResult = GenericBuilder.of(SendMessage::new)
@@ -53,17 +54,16 @@ class ButtonCallbacksTest {
 
   @Test
   void handleCallback() {
-
-    String backButton = "backButton";
-    BotApiMethod<?> backButtonResponse = buttonCallbacks
-        .handleCallback(null, backButton, dataCache, 100500, message);
+    callbackQuery.setData(ButtonCallbacks.BACK_BUTTON.toString());
+    BotApiMethod<?> backButtonResponse = navigationButtonCallbacks
+        .handleCallback(callbackQuery, 100500, message);
     assertFalse(backButtonResponse.getMethod().isEmpty());
     assertEquals(backButtonResponse.getMethod(), "sendmessage");
     assertEquals(((SendMessage) backButtonResponse).getText(), "Is category search result");
 
-    String backToStartMenuButton = "backToStartMenuButton";
-    BotApiMethod<?> backToStartMenuButtonResponse = buttonCallbacks
-        .handleCallback(null, backToStartMenuButton, dataCache, 100500, message);
+    callbackQuery.setData(ButtonCallbacks.BACK_TO_START_MENU_BUTTON.toString());
+    BotApiMethod<?> backToStartMenuButtonResponse = navigationButtonCallbacks
+        .handleCallback(callbackQuery, 100500, message);
     assertEquals(backButtonResponse.getMethod(), "sendmessage");
     assertEquals(((SendMessage) backToStartMenuButtonResponse).getText(), "Is show start menu");
   }

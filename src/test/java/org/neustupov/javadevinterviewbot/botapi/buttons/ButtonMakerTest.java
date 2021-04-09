@@ -1,14 +1,16 @@
 package org.neustupov.javadevinterviewbot.botapi.buttons;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Buttons.*;
-import static org.neustupov.javadevinterviewbot.botapi.buttons.ButtonMaker.Callbacks.*;
+import static org.neustupov.javadevinterviewbot.TestData.Buttons.COLLECTIONS;
+import static org.neustupov.javadevinterviewbot.TestData.Buttons.OOP;
+import static org.neustupov.javadevinterviewbot.model.buttons.ButtonCallbacks.COLLECTIONS_CATEGORY_BUTTON;
+import static org.neustupov.javadevinterviewbot.model.buttons.ButtonCallbacks.OOP_CATEGORY_BUTTON;
 
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.neustupov.javadevinterviewbot.botapi.states.BotState;
+import org.neustupov.javadevinterviewbot.model.BotState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -36,7 +38,7 @@ class ButtonMakerTest {
 
   @Test
   void getBackToQuestionsButton() {
-    InlineKeyboardMarkup inlineKeyboardMarkup = buttonMaker.getBackToQuestionsButton();
+    InlineKeyboardMarkup inlineKeyboardMarkup = buttonMaker.getBackButton();
     assertFalse(inlineKeyboardMarkup.getKeyboard().isEmpty());
     assertFalse(inlineKeyboardMarkup.getKeyboard().get(0).isEmpty());
     assertFalse(inlineKeyboardMarkup.getKeyboard().get(0).get(0).getText().isEmpty());
@@ -66,8 +68,8 @@ class ButtonMakerTest {
 
   private Map<String, String> getButtonNames() {
     Map<String, String> resultMap = new HashMap<>();
-    resultMap.put(OOP, OOP_CATEGORY_BUTTON);
-    resultMap.put(COLLECTIONS, COLLECTIONS_CATEGORY_BUTTON);
+    resultMap.put(OOP, OOP_CATEGORY_BUTTON.toString());
+    resultMap.put(COLLECTIONS, COLLECTIONS_CATEGORY_BUTTON.toString());
     return resultMap;
   }
 }

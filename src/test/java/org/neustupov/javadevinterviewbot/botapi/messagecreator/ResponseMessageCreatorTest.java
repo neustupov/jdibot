@@ -3,12 +3,18 @@ package org.neustupov.javadevinterviewbot.botapi.messagecreator;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
+import static org.neustupov.javadevinterviewbot.TestData.Buttons.QUESTIONS;
+import static org.neustupov.javadevinterviewbot.TestData.Buttons.QUESTIONS_BUTTON;
+import static org.neustupov.javadevinterviewbot.TestData.Buttons.SEARCH;
+import static org.neustupov.javadevinterviewbot.TestData.Buttons.SEARCH_BUTTON;
+import static org.neustupov.javadevinterviewbot.TestData.Buttons.TESTS;
+import static org.neustupov.javadevinterviewbot.TestData.Buttons.TESTS_BUTTON;
 import static org.neustupov.javadevinterviewbot.TestData.getListOfQuestion;
-import static org.neustupov.javadevinterviewbot.botapi.messagecreator.ResponseMessageCreatorTest.Buttons.*;
-import static org.neustupov.javadevinterviewbot.botapi.states.BotState.FILLING_SEARCH;
-import static org.neustupov.javadevinterviewbot.botapi.states.BotState.SHOW_LEVEL_MENU;
-import static org.neustupov.javadevinterviewbot.botapi.states.BotState.SHOW_START_MENU;
-import static org.neustupov.javadevinterviewbot.botapi.states.Category.OOP;
+import static org.neustupov.javadevinterviewbot.model.BotState.FILLING_SEARCH;
+import static org.neustupov.javadevinterviewbot.model.BotState.SHOW_LEVEL_MENU;
+import static org.neustupov.javadevinterviewbot.model.BotState.SHOW_START_MENU;
+import static org.neustupov.javadevinterviewbot.model.buttons.ButtonCallbacks.BACK_TO_START_MENU_BUTTON;
+import static org.neustupov.javadevinterviewbot.model.menu.Category.OOP;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -16,7 +22,6 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.neustupov.javadevinterviewbot.cache.UserDataCache;
-import org.neustupov.javadevinterviewbot.model.GenericBuilder;
 import org.neustupov.javadevinterviewbot.model.Question;
 import org.neustupov.javadevinterviewbot.model.RangePair;
 import org.neustupov.javadevinterviewbot.model.UserContext;
@@ -43,17 +48,6 @@ class ResponseMessageCreatorTest {
 
   private List<Question> qList;
 
-  public interface Buttons {
-
-    String QUESTIONS = "Вопросы";
-    String SEARCH = "Поиск";
-    String TESTS = "Тестирование";
-
-    String QUESTIONS_BUTTON = "buttonQuestions";
-    String SEARCH_BUTTON = "buttonSearch";
-    String TESTS_BUTTON = "buttonTest";
-  }
-
   @BeforeEach
   void setUp() {
     qList = getListOfQuestion();
@@ -62,13 +56,13 @@ class ResponseMessageCreatorTest {
   @Test
   void getSimplyMessage() {
     SendMessage sendMessageStart = messageCreator
-        .getSimplyMessage(100L, "reply.menu", SHOW_START_MENU, false);
+        .getSimplyMessage(100L, "reply.menu", SHOW_START_MENU, null);
 
     assertFalse(sendMessageStart.getText().isEmpty());
     assertEquals(sendMessageStart.getText(), "С чего начнем?");
 
     SendMessage sendMessageLevel = messageCreator
-        .getSimplyMessage(100L, "reply.level", SHOW_LEVEL_MENU, true);
+        .getSimplyMessage(100L, "reply.level", SHOW_LEVEL_MENU, BACK_TO_START_MENU_BUTTON);
 
     assertTrue(!sendMessageLevel.getText().isEmpty());
     assertEquals(sendMessageLevel.getText(), "Выбери уровень.");
@@ -106,10 +100,7 @@ class ResponseMessageCreatorTest {
   void getMessage() {
     when(dataCache.getUserCurrentBotState(anyLong())).thenReturn(FILLING_SEARCH);
 
-    RangePair rangePair = GenericBuilder.of(RangePair::new)
-        .with(RangePair::setFrom, 0)
-        .with(RangePair::setTo, 1)
-        .build();
+    RangePair rangePair = RangePair.builder().from(0).to(1).build();
 
     when(dataCache.getUserContext(anyLong())).thenReturn(userContext);
     when(userContext.getRange()).thenReturn(null).thenReturn(rangePair);
@@ -118,7 +109,7 @@ class ResponseMessageCreatorTest {
     SendMessage sendMessage = messageCreator.getMessage(qList, 100L, 200, "next");
 
     assertFalse(sendMessage.getText().isEmpty());
-    assertEquals(sendMessage.getText(), "Категория - ООП\n\n/q700 Test 1\n");
+    assertEquals(sendMessage.getText(), "Категория - ООП\n\n/q700 Test 1\n\n");
     List<List<InlineKeyboardButton>> keyboard = ((InlineKeyboardMarkup) sendMessage
         .getReplyMarkup()).getKeyboard();
 

@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
-import static org.neustupov.javadevinterviewbot.botapi.processor.callbacks.ButtonCallbacksHandlingTest.Buttons.*;
+import static org.neustupov.javadevinterviewbot.botapi.processor.callbacks.NavigationButtonButtonCallbacksHandlingTest.Buttons.*;
 
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,10 +13,11 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 import org.neustupov.javadevinterviewbot.botapi.BotStateContext;
-import org.neustupov.javadevinterviewbot.botapi.states.BotState;
-import org.neustupov.javadevinterviewbot.cache.DataCache;
+import org.neustupov.javadevinterviewbot.model.BotState;
 import org.neustupov.javadevinterviewbot.model.GenericBuilder;
+import org.neustupov.javadevinterviewbot.model.buttons.ButtonCallbacks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -28,17 +29,9 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 
 @SpringBootTest
 @ActiveProfiles("test")
-class ButtonCallbacksHandlingTest {
+class NavigationButtonButtonCallbacksHandlingTest {
 
   public interface Buttons {
-
-    String BACK_BUTTON = "backButton";
-    String BACK_TO_START_MENU_BUTTON = "backToStartMenuButton";
-    String BACK_TO_CATEGORY_BUTTON = "backToCategoryButton";
-    String BACK_TO_LEVEL_BUTTON = "backToLevelButton";
-    String PREVIOUS_BUTTON = "<-Button";
-    String NEXT_BUTTON = "->Button";
-
     String BACK_BUTTON_CALLBACK = "backButtonCallBack";
     String BACK_TO_START_MENU_BUTTON_CALLBACK = "backToStartMenuButtonCallBack";
     String BACK_TO_CATEGORY_BUTTON_CALLBACK = "backToCategoryButtonCallBack";
@@ -47,16 +40,13 @@ class ButtonCallbacksHandlingTest {
   }
 
   @Autowired
-  private ButtonCallbacks buttonCallbacks;
+  private NavigationButtonCallbacks navigationButtonCallbacks;
 
   @MockBean
   private BotStateContext botStateContext;
 
-  @Mock
+  @Spy
   private CallbackQuery callbackQuery;
-
-  @Mock
-  private DataCache dataCache;
 
   @Mock
   private Message message;
@@ -96,22 +86,22 @@ class ButtonCallbacksHandlingTest {
 
   @ParameterizedTest
   @MethodSource("provideButtonsForHandleCallback")
-  void handleCallback(String callbackData, String buttonText) {
-
-    BotApiMethod<?> botApiMethodCategoryOrSearchResult = buttonCallbacks
-        .handleCallback(callbackQuery, callbackData, dataCache, 100, message);
+  void handleCallback(ButtonCallbacks callbackData, String buttonText) {
+    callbackQuery.setData(callbackData.toString());
+    BotApiMethod<?> botApiMethodCategoryOrSearchResult = navigationButtonCallbacks
+        .handleCallback(callbackQuery, 100, message);
     assertFalse(botApiMethodCategoryOrSearchResult.getMethod().isEmpty());
     assertEquals(((SendMessage) botApiMethodCategoryOrSearchResult).getText(), buttonText);
   }
 
   private static Stream<Arguments> provideButtonsForHandleCallback() {
     return Stream.of(
-        Arguments.of(BACK_BUTTON, BACK_BUTTON_CALLBACK),
-        Arguments.of(BACK_TO_START_MENU_BUTTON, BACK_TO_START_MENU_BUTTON_CALLBACK),
-        Arguments.of(BACK_TO_CATEGORY_BUTTON, BACK_TO_CATEGORY_BUTTON_CALLBACK),
-        Arguments.of(BACK_TO_LEVEL_BUTTON, BACK_TO_LEVEL_BUTTON_CALLBACK),
-        Arguments.of(NEXT_BUTTON, PAGINATION_BUTTON_CALLBACK),
-        Arguments.of(PREVIOUS_BUTTON, PAGINATION_BUTTON_CALLBACK)
+        Arguments.of(ButtonCallbacks.BACK_BUTTON, BACK_BUTTON_CALLBACK),
+        Arguments.of(ButtonCallbacks.BACK_TO_START_MENU_BUTTON, BACK_TO_START_MENU_BUTTON_CALLBACK),
+        Arguments.of(ButtonCallbacks.BACK_TO_CATEGORY_BUTTON, BACK_TO_CATEGORY_BUTTON_CALLBACK),
+        Arguments.of(ButtonCallbacks.BACK_TO_LEVEL_BUTTON, BACK_TO_LEVEL_BUTTON_CALLBACK),
+        Arguments.of(ButtonCallbacks.NEXT_BUTTON, PAGINATION_BUTTON_CALLBACK),
+        Arguments.of(ButtonCallbacks.PREVIOUS_BUTTON, PAGINATION_BUTTON_CALLBACK)
     );
   }
 }

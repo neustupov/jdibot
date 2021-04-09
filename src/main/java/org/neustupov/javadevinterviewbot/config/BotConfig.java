@@ -1,4 +1,4 @@
-package org.neustupov.javadevinterviewbot.appconfig;
+package org.neustupov.javadevinterviewbot.config;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 
 /**
- * Класс конфигурации бота
+ * Основная конфигурация бота
  */
 @Getter
 @Setter
@@ -22,10 +22,27 @@ import org.springframework.context.support.ReloadableResourceBundleMessageSource
 @ConfigurationProperties(prefix = "telegrambot")
 public class BotConfig {
 
+  /**
+   * Путь к веб хуку - при тестировании используется ngrok.io
+   */
   String webHookPath;
+
+  /**
+   * Название бота
+   */
   String botUserName;
+
+  /**
+   * Токен бота
+   */
   String botToken;
 
+  /**
+   * Бин бота
+   *
+   * @param telegramFacade Основной фасад бота
+   * @return Бин бота
+   */
   @Bean
   public JavaDevInterviewBot javaDevInterviewBot(TelegramFacade telegramFacade) {
     JavaDevInterviewBot javaDevInterviewBot = new JavaDevInterviewBot(telegramFacade);
@@ -35,6 +52,11 @@ public class BotConfig {
     return javaDevInterviewBot;
   }
 
+  /**
+   * Бин ресурсов сообщений
+   *
+   * @return MessageSource
+   */
   @Bean
   public MessageSource messageSource() {
     ReloadableResourceBundleMessageSource messageSource =

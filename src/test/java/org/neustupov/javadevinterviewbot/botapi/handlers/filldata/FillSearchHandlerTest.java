@@ -4,11 +4,11 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.neustupov.javadevinterviewbot.TestData.getMessage;
-import static org.neustupov.javadevinterviewbot.botapi.states.BotState.FILLING_SEARCH;
+import static org.neustupov.javadevinterviewbot.model.BotState.FILLING_SEARCH;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.neustupov.javadevinterviewbot.botapi.states.BotState;
+import org.neustupov.javadevinterviewbot.model.BotState;
 import org.neustupov.javadevinterviewbot.cache.UserDataCache;
 import org.neustupov.javadevinterviewbot.model.GenericBuilder;
 import org.neustupov.javadevinterviewbot.model.Question;
@@ -87,7 +87,7 @@ class FillSearchHandlerTest {
     message.setFrom(botUser);
     SendMessage sendMessage = fillSearchHandler.handle(message);
     assertFalse(sendMessage.getText().isEmpty());
-    assertEquals(sendMessage.getText(), "/q2 From bot\n");
+    assertEquals(sendMessage.getText(), "/q2 From bot\n\n");
   }
 
   @Test
@@ -96,7 +96,7 @@ class FillSearchHandlerTest {
     message.setText("From user");
     SendMessage sendMessage = fillSearchHandler.handle(message);
     assertFalse(sendMessage.getText().isEmpty());
-    assertEquals(sendMessage.getText(), "/q1 From user\n");
+    assertEquals(sendMessage.getText(), "/q1 From user\n\n");
   }
 
   @Test

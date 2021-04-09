@@ -11,33 +11,56 @@ import org.neustupov.javadevinterviewbot.model.Question;
 import org.neustupov.javadevinterviewbot.repository.QuestionRepository;
 import org.springframework.stereotype.Component;
 
+/**
+ * Утилита для работы с изображениями
+ */
 @Slf4j
 @Component
 public class ImageUtil {
 
+  /**
+   * Репозиторий вопросов
+   */
   private QuestionRepository repository;
 
   public ImageUtil(QuestionRepository repository) {
     this.repository = repository;
   }
 
+  /**
+   * Извлекает данные изображения из репозитория вопросов
+   *
+   * @param inputMsg Сообщение
+   * @return Optional<Binary>
+   */
   public Optional<Binary> getImageData(String inputMsg) {
     return repository.findById(Long.parseLong(inputMsg.replace("/q", "")))
         .map(Question::getImage);
   }
 
-  public File getPhotoFile(Binary imageData) {
+  /**
+   * Создает файл изображения
+   *
+   * @param imageData Данные изображения
+   * @return Файл
+   */
+  public File getImageFile(Binary imageData) {
     File imageFile = new File(UUID.randomUUID().toString());
-      try {
-        FileUtils.writeByteArrayToFile(imageFile, imageData.getData());
-      } catch (IOException e) {
-        log.error(e.getMessage(), e);
-      }
-      log.info("File with name: " + imageFile.getName() + " is created");
+    try {
+      FileUtils.writeByteArrayToFile(imageFile, imageData.getData());
+    } catch (IOException e) {
+      log.error(e.getMessage(), e);
+    }
+    log.info("File with name: " + imageFile.getName() + " is created");
     return imageFile;
   }
 
-  public void deleteTempFile(File imageTempFile){
+  /**
+   * Удаляет файл
+   *
+   * @param imageTempFile Файл
+   */
+  public void deleteTempFile(File imageTempFile) {
     FileUtils.deleteQuietly(imageTempFile);
     log.info("File with name: " + imageTempFile.getName() + " is deleted");
   }

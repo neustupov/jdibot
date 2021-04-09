@@ -5,7 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
-import static org.neustupov.javadevinterviewbot.botapi.processor.callbacks.CategoryCallbacksTest.Buttons.*;
+import static org.neustupov.javadevinterviewbot.TestData.Buttons.*;
 
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -15,9 +15,11 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 import org.neustupov.javadevinterviewbot.botapi.BotStateContext;
-import org.neustupov.javadevinterviewbot.botapi.states.BotState;
-import org.neustupov.javadevinterviewbot.botapi.states.Category;
+import org.neustupov.javadevinterviewbot.model.BotState;
+import org.neustupov.javadevinterviewbot.model.buttons.ButtonCallbacks;
+import org.neustupov.javadevinterviewbot.model.menu.Category;
 import org.neustupov.javadevinterviewbot.cache.UserDataCache;
 import org.neustupov.javadevinterviewbot.model.GenericBuilder;
 import org.neustupov.javadevinterviewbot.model.UserContext;
@@ -33,18 +35,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 
 @SpringBootTest
 @ActiveProfiles("test")
-class CategoryCallbacksTest {
-
-  public interface Buttons {
-
-    String OOP_CATEGORY_BUTTON = "buttonOOP";
-    String COLLECTIONS_CATEGORY_BUTTON = "buttonCollections";
-    String PATTERNS_CATEGORY_BUTTON = "buttonPatterns";
-    String SPRING_BUTTON = "buttonSpring";
-
-    String CATEGORY_BUTTON_CALLBACK = "buttonCategoryCallback";
-    String SPRING_BUTTON_CALLBACK = "buttonSpringCallback";
-  }
+class CategoryButtonCallbacksTest {
 
   @Autowired
   private CategoryCallbacks categoryCallbacks;
@@ -58,7 +49,7 @@ class CategoryCallbacksTest {
   @MockBean
   private UserContextRepository contextRepository;
 
-  @Mock
+  @Spy
   private CallbackQuery callbackQuery;
 
   @Mock
@@ -89,9 +80,10 @@ class CategoryCallbacksTest {
 
   @ParameterizedTest
   @MethodSource("provideButtonsForHandleCallback")
-  void handleCallback(String callbackData, String buttonText, Category category) {
+  void handleCallback(ButtonCallbacks callbackData, String buttonText, Category category) {
+    callbackQuery.setData(callbackData.toString());
     BotApiMethod<?> botApiMethodCategoryOrSearchResult = categoryCallbacks
-        .handleCallback(callbackQuery, callbackData, dataCache, 100, message);
+        .handleCallback(callbackQuery, 100, message);
     assertFalse(botApiMethodCategoryOrSearchResult.getMethod().isEmpty());
     assertEquals(((SendMessage) botApiMethodCategoryOrSearchResult).getText(), buttonText);
     assertEquals(dataCache.getUserContext(100).getCategory(), category);
@@ -99,10 +91,10 @@ class CategoryCallbacksTest {
 
   private static Stream<Arguments> provideButtonsForHandleCallback() {
     return Stream.of(
-        Arguments.of(OOP_CATEGORY_BUTTON, CATEGORY_BUTTON_CALLBACK, Category.OOP),
-        Arguments.of(COLLECTIONS_CATEGORY_BUTTON, CATEGORY_BUTTON_CALLBACK, Category.COLLECTIONS),
-        Arguments.of(PATTERNS_CATEGORY_BUTTON, CATEGORY_BUTTON_CALLBACK, Category.PATTERNS),
-        Arguments.of(SPRING_BUTTON, SPRING_BUTTON_CALLBACK, Category.SPRING)
+        Arguments.of(ButtonCallbacks.OOP_CATEGORY_BUTTON, CATEGORY_BUTTON_CALLBACK, Category.OOP),
+        Arguments.of(ButtonCallbacks.COLLECTIONS_CATEGORY_BUTTON, CATEGORY_BUTTON_CALLBACK, Category.COLLECTIONS),
+        Arguments.of(ButtonCallbacks.PATTERNS_CATEGORY_BUTTON, CATEGORY_BUTTON_CALLBACK, Category.PATTERNS),
+        Arguments.of(ButtonCallbacks.SPRING_BUTTON, SPRING_BUTTON_CALLBACK, Category.SPRING)
     );
   }
 }

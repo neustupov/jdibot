@@ -1,22 +1,26 @@
 package org.neustupov.javadevinterviewbot.botapi.handlers.search;
 
-import static org.neustupov.javadevinterviewbot.botapi.states.BotState.SHOW_SEARCH;
+import static org.neustupov.javadevinterviewbot.model.buttons.ButtonCallbacks.BACK_TO_START_MENU_BUTTON;
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
 import org.neustupov.javadevinterviewbot.botapi.handlers.InputMessageHandler;
 import org.neustupov.javadevinterviewbot.botapi.messagecreator.ResponseMessageCreator;
-import org.neustupov.javadevinterviewbot.botapi.states.BotState;
+import org.neustupov.javadevinterviewbot.model.BotState;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
-@Slf4j
+/**
+ * Хендлер поиска
+ */
 @Component
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SearchHandler implements InputMessageHandler {
 
+  /**
+   * Класс, собирающий сообщение
+   */
   ResponseMessageCreator responseMessageCreator;
 
   public SearchHandler(
@@ -24,19 +28,36 @@ public class SearchHandler implements InputMessageHandler {
     this.responseMessageCreator = responseMessageCreator;
   }
 
+  /**
+   * Обрабатывает входящее сообщение
+   *
+   * @param message Входящее сообщение
+   * @return SendMessage
+   */
   @Override
   public SendMessage handle(Message message) {
     return processUsersInput(message);
   }
 
+  /**
+   * Создает сообщение-ответ
+   *
+   * @param message Входящее сообщение
+   * @return Сообщение-ответ
+   */
   private SendMessage processUsersInput(Message message) {
-    long chatId = message.getChatId();
     return responseMessageCreator
-        .getSimplyMessage(chatId, "reply.search", BotState.FILLING_SEARCH, true);
+        .getSimplyMessage(message.getChatId(), "reply.search", BotState.FILLING_SEARCH,
+            BACK_TO_START_MENU_BUTTON);
   }
 
+  /**
+   * Возвращает сстояние, соответствующее хендлеру
+   *
+   * @return BotState
+   */
   @Override
   public BotState getHandlerName() {
-    return SHOW_SEARCH;
+    return BotState.SHOW_SEARCH;
   }
 }

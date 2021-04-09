@@ -5,8 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
-import static org.neustupov.javadevinterviewbot.botapi.processor.callbacks.LevelCallbacksTest.Buttons.JUNIOR_LEVEL_BUTTON;
-import static org.neustupov.javadevinterviewbot.botapi.processor.callbacks.LevelCallbacksTest.Buttons.JUNIOR_LEVEL_BUTTON_CALLBACK;
+import static org.neustupov.javadevinterviewbot.botapi.processor.callbacks.StartMenuButtonCallbacksTest.Buttons.*;
 
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -16,12 +15,12 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 import org.neustupov.javadevinterviewbot.botapi.BotStateContext;
-import org.neustupov.javadevinterviewbot.botapi.states.BotState;
-import org.neustupov.javadevinterviewbot.botapi.states.Level;
-import org.neustupov.javadevinterviewbot.cache.UserDataCache;
+import org.neustupov.javadevinterviewbot.model.BotState;
 import org.neustupov.javadevinterviewbot.model.GenericBuilder;
 import org.neustupov.javadevinterviewbot.model.UserContext;
+import org.neustupov.javadevinterviewbot.model.buttons.ButtonCallbacks;
 import org.neustupov.javadevinterviewbot.repository.UserContextRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -34,24 +33,21 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 
 @SpringBootTest
 @ActiveProfiles("test")
-class LevelCallbacksTest {
+public class StartMenuButtonCallbacksTest {
 
   public interface Buttons {
 
-    String JUNIOR_LEVEL_BUTTON = "buttonJunior";
-    String MIDDLE_LEVEL_BUTTON = "buttonMiddle";
-    String SENIOR_LEVEL_BUTTON = "buttonSenior";
+    String QUESTIONS_BUTTON = "buttonQuestions";
+    String SEARCH_BUTTON = "buttonSearch";
+    String TESTS_BUTTON = "buttonTest";
 
-    String JUNIOR_LEVEL_BUTTON_CALLBACK = "buttonJuniorCallback";
-    String MIDDLE_LEVEL_BUTTON_CALLBACK = "buttonMiddleCallback";
-    String SENIOR_LEVEL_BUTTON_CALLBACK = "buttonSeniorCallback";
+    String QUESTIONS_BUTTON_CALLBACK = "buttonQuestionsCallback";
+    String SEARCH_BUTTON_CALLBACK = "buttonSearchCallback";
+    String TESTS_BUTTON_CALLBACK = "buttonTestCallback";
   }
 
   @Autowired
-  private LevelCallbacks levelCallbacks;
-
-  @Autowired
-  private UserDataCache dataCache;
+  private StartMenuCallbacks startMenuCallbacks;
 
   @MockBean
   private BotStateContext botStateContext;
@@ -59,7 +55,7 @@ class LevelCallbacksTest {
   @MockBean
   private UserContextRepository contextRepository;
 
-  @Mock
+  @Spy
   private CallbackQuery callbackQuery;
 
   @Mock
@@ -69,12 +65,17 @@ class LevelCallbacksTest {
   void setUp() {
     MockitoAnnotations.openMocks(this);
 
-    SendMessage smJunior = GenericBuilder.of(SendMessage::new)
-        .with(SendMessage::setText, JUNIOR_LEVEL_BUTTON_CALLBACK)
+    SendMessage smQuestions = GenericBuilder.of(SendMessage::new)
+        .with(SendMessage::setText, QUESTIONS_BUTTON_CALLBACK)
+        .build();
+    SendMessage smSearch = GenericBuilder.of(SendMessage::new)
+        .with(SendMessage::setText, SEARCH_BUTTON_CALLBACK)
         .build();
 
-    when(botStateContext.processInputMessage(eq(BotState.SHOW_CATEGORY_MENU), any(Message.class)))
-        .thenReturn(smJunior);
+    when(botStateContext.processInputMessage(eq(BotState.SHOW_LEVEL_MENU), any(Message.class)))
+        .thenReturn(smQuestions);
+    when(botStateContext.processInputMessage(eq(BotState.SHOW_SEARCH), any(Message.class)))
+        .thenReturn(smSearch);
 
     Optional<UserContext> userContextOptional = Optional
         .of(GenericBuilder.of(UserContext::new).build());
@@ -84,17 +85,18 @@ class LevelCallbacksTest {
 
   @ParameterizedTest
   @MethodSource("provideButtonsForHandleCallback")
-  void handleCallback(String callbackData, String buttonText, Level level) {
-    BotApiMethod<?> botApiMethodCategoryOrSearchResult = levelCallbacks
-        .handleCallback(callbackQuery, callbackData, dataCache, 100, message);
+  void handleCallback(ButtonCallbacks callbackData, String buttonText) {
+    callbackQuery.setData(callbackData.toString());
+    BotApiMethod<?> botApiMethodCategoryOrSearchResult = startMenuCallbacks
+        .handleCallback(callbackQuery, 100, message);
     assertFalse(botApiMethodCategoryOrSearchResult.getMethod().isEmpty());
     assertEquals(((SendMessage) botApiMethodCategoryOrSearchResult).getText(), buttonText);
-    assertEquals(dataCache.getUserContext(100).getLevel(), level);
   }
 
   private static Stream<Arguments> provideButtonsForHandleCallback() {
     return Stream.of(
-        Arguments.of(JUNIOR_LEVEL_BUTTON, JUNIOR_LEVEL_BUTTON_CALLBACK, Level.JUNIOR)
+        Arguments.of(ButtonCallbacks.QUESTIONS_BUTTON, QUESTIONS_BUTTON_CALLBACK),
+        Arguments.of(ButtonCallbacks.SEARCH_BUTTON, SEARCH_BUTTON_CALLBACK)
     );
   }
 }
