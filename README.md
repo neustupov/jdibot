@@ -1,4 +1,6 @@
-#### jdibot
+#### **jdibot**
+
+![](https://travis-ci.org/neustupov/jdibot.svg?branch=master)
 
 Used:
 
