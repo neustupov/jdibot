@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
  * Реализация сервиса вопросов
  */
 @Service
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(makeFinal=true, level = AccessLevel.PRIVATE)
 public class QuestionServiceImpl implements QuestionService {
 
   /**

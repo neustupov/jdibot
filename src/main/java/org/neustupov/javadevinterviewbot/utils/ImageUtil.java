@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;
+
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.bson.types.Binary;
@@ -16,12 +19,13 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
+@FieldDefaults(makeFinal=true, level = AccessLevel.PRIVATE)
 public class ImageUtil {
 
   /**
    * Репозиторий вопросов
    */
-  private QuestionRepository repository;
+  QuestionRepository repository;
 
   public ImageUtil(QuestionRepository repository) {
     this.repository = repository;

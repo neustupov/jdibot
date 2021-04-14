@@ -28,7 +28,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
  */
 @Slf4j
 @Component
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(makeFinal=true, level = AccessLevel.PRIVATE)
 public class MessageProcessor {
 
   /**

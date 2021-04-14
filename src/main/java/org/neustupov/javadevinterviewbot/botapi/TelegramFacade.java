@@ -21,7 +21,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
  */
 @Slf4j
 @Component
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(makeFinal=true, level = AccessLevel.PRIVATE)
 public class TelegramFacade {
 
   /**

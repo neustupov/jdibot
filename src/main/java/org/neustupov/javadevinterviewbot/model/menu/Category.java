@@ -1,11 +1,14 @@
 package org.neustupov.javadevinterviewbot.model.menu;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.experimental.FieldDefaults;
 
 /**
  * Категории
  */
 @AllArgsConstructor
+@FieldDefaults(makeFinal=true, level = AccessLevel.PRIVATE)
 public enum Category {
 
   OOP("Категория - ООП"),
@@ -16,7 +19,7 @@ public enum Category {
   /**
    * Название категории
    */
-  private String name;
+  String name;
 
   /**
    * Возвращает название категории

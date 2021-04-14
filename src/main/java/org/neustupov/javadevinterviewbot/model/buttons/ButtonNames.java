@@ -1,11 +1,14 @@
 package org.neustupov.javadevinterviewbot.model.buttons;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.experimental.FieldDefaults;
 
 /**
  * Названия кнопок
  */
 @AllArgsConstructor
+@FieldDefaults(makeFinal=true, level = AccessLevel.PRIVATE)
 public enum ButtonNames {
 
   BACK("Назад"),
@@ -35,7 +38,7 @@ public enum ButtonNames {
   /**
    * Название
    */
-  private String name;
+  String name;
 
   /**
    * Возвращает название

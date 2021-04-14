@@ -13,7 +13,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
  * Начинает цепочку по обработке колбеков
  */
 @Component
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(makeFinal=true, level = AccessLevel.PRIVATE)
 public class CallbackProcessor {
 
   /**

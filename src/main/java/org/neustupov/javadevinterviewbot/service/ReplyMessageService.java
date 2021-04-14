@@ -1,5 +1,7 @@
 package org.neustupov.javadevinterviewbot.service;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
@@ -7,12 +9,13 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
  * Сервис создания сообщений ответов
  */
 @Service
+@FieldDefaults(makeFinal=true, level = AccessLevel.PRIVATE)
 public class ReplyMessageService {
 
   /**
    * Сервис локализации сообщений
    */
-  private LocaleMessageService localeMessageService;
+  LocaleMessageService localeMessageService;
 
   public ReplyMessageService(
       LocaleMessageService localeMessageService) {

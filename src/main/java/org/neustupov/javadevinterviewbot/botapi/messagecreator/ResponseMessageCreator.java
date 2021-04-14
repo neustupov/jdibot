@@ -35,22 +35,22 @@ public class ResponseMessageCreator {
   /**
    * Сервис ответов
    */
-  ReplyMessageService replyMessageService;
+  final ReplyMessageService replyMessageService;
 
   /**
    * Класс, создающий кнопки
    */
-  ButtonMaker buttonMaker;
+  final ButtonMaker buttonMaker;
 
   /**
    * Кеш данных пользователя
    */
-  DataCache dataCache;
+  final DataCache dataCache;
 
   /**
    * Сервис пагинации
    */
-  PaginationService paginationService;
+  final PaginationService paginationService;
 
   public ResponseMessageCreator(
       ReplyMessageService replyMessageService,

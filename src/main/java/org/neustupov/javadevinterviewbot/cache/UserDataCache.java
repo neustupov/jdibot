@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
  * Кеш пользователя
  */
 @Component
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(makeFinal=true, level = AccessLevel.PRIVATE)
 public class UserDataCache implements DataCache {
 
   /**

@@ -17,7 +17,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
  * Хендлер меню категории Spring
  */
 @Component
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(makeFinal=true, level = AccessLevel.PRIVATE)
 public class SpringCategoryMenuHandler implements InputMessageHandler {
 
   /**

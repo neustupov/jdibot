@@ -1,5 +1,7 @@
 package org.neustupov.javadevinterviewbot.service;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.neustupov.javadevinterviewbot.model.QuestionNum;
 import org.neustupov.javadevinterviewbot.repository.QuestionNumRepository;
 import org.springframework.stereotype.Service;
@@ -8,12 +10,13 @@ import org.springframework.stereotype.Service;
  * Реализация сервиса нумерации вопросов
  */
 @Service
+@FieldDefaults(makeFinal=true, level = AccessLevel.PRIVATE)
 public class QuestionNumServiceImpl implements QuestionNumService {
 
   /**
    * Репозиторий объектов нумерации вопросов
    */
-  private QuestionNumRepository questionNumRepository;
+  QuestionNumRepository questionNumRepository;
 
   public QuestionNumServiceImpl(
       QuestionNumRepository questionNumRepository) {

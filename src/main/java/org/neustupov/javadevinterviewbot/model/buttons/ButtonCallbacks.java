@@ -1,11 +1,14 @@
 package org.neustupov.javadevinterviewbot.model.buttons;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.experimental.FieldDefaults;
 
 /**
  * Колбеки кнопок
  */
 @AllArgsConstructor
+@FieldDefaults(makeFinal=true, level = AccessLevel.PRIVATE)
 public enum ButtonCallbacks {
 
   BACK_BUTTON("backButton"),
@@ -36,7 +39,7 @@ public enum ButtonCallbacks {
   /**
    * Название колбека
    */
-  private String name;
+  String name;
 
   /**
    * Ищет колбек по названию

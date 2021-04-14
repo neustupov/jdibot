@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class QuestionTempData {
 
-  private QuestionNumService questionNumService;
+  private final QuestionNumService questionNumService;
 
   public QuestionTempData(
       QuestionNumService questionNumService) {

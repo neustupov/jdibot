@@ -26,17 +26,17 @@ public class FillSearchHandler implements InputMessageHandler {
   /**
    * Кеш данных пользователя
    */
-  DataCache dataCache;
+  final DataCache dataCache;
 
   /**
    * Репозиторий вопросов
    */
-  QuestionRepository questionRepository;
+  final QuestionRepository questionRepository;
 
   /**
    * Класс, собирающий сообщение
    */
-  ResponseMessageCreator responseMessageCreator;
+  final ResponseMessageCreator responseMessageCreator;
 
   @Value("${telegrambot.botUserName}")
   String botName;

@@ -15,7 +15,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
  * Хендлер поиска
  */
 @Component
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(makeFinal=true, level = AccessLevel.PRIVATE)
 public class SearchHandler implements InputMessageHandler {
 
   /**

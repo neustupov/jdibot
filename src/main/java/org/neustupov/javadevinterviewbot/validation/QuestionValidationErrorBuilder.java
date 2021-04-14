@@ -8,19 +8,17 @@ import org.springframework.validation.ObjectError;
  */
 public class QuestionValidationErrorBuilder {
 
-  /**
-   * Создает объект QuestionValidationError
-   *
-   * @param errors Ошибки
-   * @return QuestionValidationError
-   */
-  public static QuestionValidationError fromBindingsErrors(Errors errors) {
-    QuestionValidationError error = new QuestionValidationError("Validation failed. " +
-        errors.getErrorCount() + " error(s)");
-    for (ObjectError objectError : errors.getAllErrors()) {
-      error.addValidationError(objectError.getDefaultMessage());
+    /**
+     * Создает объект QuestionValidationError
+     *
+     * @param errors Ошибки
+     * @return QuestionValidationError
+     */
+    public static QuestionValidationError fromBindingsErrors(Errors errors) {
+        QuestionValidationError error = new QuestionValidationError("Validation failed. " +
+                errors.getErrorCount() + " error(s)");
+        errors.getAllErrors().forEach(objectError -> error.addValidationError(objectError.getDefaultMessage()));
+        return error;
     }
-    return error;
-  }
 
 }

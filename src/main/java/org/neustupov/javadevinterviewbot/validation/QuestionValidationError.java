@@ -4,11 +4,15 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import java.util.ArrayList;
 import java.util.List;
+
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.experimental.FieldDefaults;
 
 /**
  * Ошибки валидации
  */
+@FieldDefaults(makeFinal=true, level = AccessLevel.PRIVATE)
 public class QuestionValidationError {
 
   /**
@@ -16,13 +20,13 @@ public class QuestionValidationError {
    */
   @Getter
   @JsonInclude(Include.NON_EMPTY)
-  private List<String> errors = new ArrayList<>();
+  List<String> errors = new ArrayList<>();
 
   /**
    * Текст ошибки
    */
   @Getter
-  private final String errorMessage;
+  String errorMessage;
 
   public QuestionValidationError(String errorMessage) {
     this.errorMessage = errorMessage;

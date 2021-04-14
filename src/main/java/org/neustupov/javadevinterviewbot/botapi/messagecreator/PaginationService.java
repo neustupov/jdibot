@@ -56,12 +56,7 @@ public class PaginationService {
         }
         break;
       case PREVIOUS:
-        int tempFrom = from - maxObjects;
-        if (tempFrom >= 0) {
-          from = tempFrom;
-        } else {
-          from = 0;
-        }
+        from = Math.max(from - maxObjects, 0);
         to = from + maxObjects;
         break;
     }
