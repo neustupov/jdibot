@@ -23,7 +23,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
  * тело сообщения вопросами + добавляет кнопки <- и ->
  */
 @Component
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(makeFinal=true, level = AccessLevel.PRIVATE)
 public class PaginationHandler implements InputMessageHandler {
 
   /**

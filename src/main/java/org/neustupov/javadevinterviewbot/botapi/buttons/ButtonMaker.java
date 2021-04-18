@@ -1,5 +1,6 @@
 package org.neustupov.javadevinterviewbot.botapi.buttons;
 
+import static java.util.stream.Collectors.toList;
 import static org.neustupov.javadevinterviewbot.model.buttons.ButtonCallbacks.*;
 import static org.neustupov.javadevinterviewbot.model.buttons.ButtonNames.*;
 
@@ -7,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+
 import org.neustupov.javadevinterviewbot.model.BotState;
 import org.neustupov.javadevinterviewbot.utils.Emojis;
 import org.springframework.stereotype.Component;
@@ -29,11 +31,10 @@ public class ButtonMaker {
    */
   public InlineKeyboardMarkup getInlineMessageButtons(Map<String, String> buttonMap,
       BotState botState) {
-    List<InlineKeyboardButton> menuButtons = new ArrayList<>();
-    buttonMap.keySet()
-        .forEach(key -> menuButtons
-            .add(
-                InlineKeyboardButton.builder().text(key).callbackData(buttonMap.get(key)).build()));
+    List<InlineKeyboardButton> menuButtons = buttonMap.keySet()
+            .stream()
+            .map(key -> InlineKeyboardButton.builder().text(key).callbackData(buttonMap.get(key)).build())
+            .collect(toList());
     List<List<InlineKeyboardButton>> rows = new ArrayList<>();
     rows.add(menuButtons);
     if (botState.equals(BotState.SHOW_CATEGORY_MENU)) {

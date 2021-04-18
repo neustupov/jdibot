@@ -1,5 +1,8 @@
 package org.neustupov.javadevinterviewbot.model;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -10,11 +13,12 @@ import java.util.function.Supplier;
  * Билдер для классов, в которых нельзя по тем или иным причинам использовать билдер ломбока
  * @param <T>
  */
+@FieldDefaults(makeFinal=true, level = AccessLevel.PRIVATE)
 public class GenericBuilder<T>{
 
-  private final Supplier<T> instantiator;
+  Supplier<T> instantiator;
 
-  private List<Consumer<T>> instanceModifiers = new ArrayList<>();
+  List<Consumer<T>> instanceModifiers = new ArrayList<>();
 
   public GenericBuilder(Supplier<T> instantiator) {
     this.instantiator = instantiator;

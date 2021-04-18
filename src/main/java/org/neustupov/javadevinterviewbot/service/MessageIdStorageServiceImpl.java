@@ -1,6 +1,9 @@
 package org.neustupov.javadevinterviewbot.service;
 
 import java.util.Optional;
+
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.neustupov.javadevinterviewbot.model.GenericBuilder;
 import org.neustupov.javadevinterviewbot.model.MessageIdStorage;
@@ -12,12 +15,13 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service
+@FieldDefaults(makeFinal=true, level = AccessLevel.PRIVATE)
 public class MessageIdStorageServiceImpl implements MessageIdStorageService {
 
   /**
    * Репозиторий хранилищь предыдущих сообщений
    */
-  private MessageIdStorageRepository messageIdStorageRepository;
+  MessageIdStorageRepository messageIdStorageRepository;
 
   public MessageIdStorageServiceImpl(
       MessageIdStorageRepository messageIdStorageRepository) {

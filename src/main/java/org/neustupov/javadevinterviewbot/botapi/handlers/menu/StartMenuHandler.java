@@ -17,7 +17,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
  * Хендлер главного меню
  */
 @Component
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(makeFinal=true, level = AccessLevel.PRIVATE)
 public class StartMenuHandler implements InputMessageHandler {
 
   /**

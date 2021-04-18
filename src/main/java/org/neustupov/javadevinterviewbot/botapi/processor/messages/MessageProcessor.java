@@ -28,7 +28,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
  */
 @Slf4j
 @Component
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(makeFinal=true, level = AccessLevel.PRIVATE)
 public class MessageProcessor {
 
   /**
@@ -97,11 +97,13 @@ public class MessageProcessor {
       botState = dataCache.getUserCurrentBotState(message.getFrom().getId());
     }
 
-    if (inputMsg.startsWith(QUESTION)) {
-      return processQuestionMessage(message, messageIdStorage);
-    }
+    SendMessage replyMessage;
 
-    SendMessage replyMessage = botStateContext.processInputMessage(botState, message);
+    if (inputMsg.startsWith(QUESTION)) {
+      replyMessage =  processQuestionMessage(message, messageIdStorage);
+    } else {
+      replyMessage = botStateContext.processInputMessage(botState, message);
+    }
 
     if (replyMessage != null) {
       setTextMessageIdsInKeeper(messageIdStorage);
@@ -152,11 +154,11 @@ public class MessageProcessor {
    * Фиксирует Id текстового сообщения или команды и необходимость его удалить
    */
   private void setTextMessageIdsInKeeper(MessageIdStorage messageIdStorage) {
-    messageIdStorage.setNeedDeletePrevious(true);
     if (messageIdStorage.getPreviousMessageId() != null
         && messageIdStorage.getPreviousPreviousMessageId() == null) {
       messageIdStorage.setPreviousPreviousMessageId(messageIdStorage.getPreviousMessageId() - 1);
     }
+    messageIdStorage.setNeedDeletePrevious(true);
     messageIdStorage.setNeedDeletePreviousPrevious(true);
     messageIdStorageService.save(messageIdStorage);
   }

@@ -14,7 +14,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
  * Обрабатывает колбеки кнопок главного меню
  */
 @Component
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(makeFinal=true, level = AccessLevel.PRIVATE)
 public class StartMenuCallbacks implements Callback {
 
   /**

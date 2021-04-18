@@ -1,12 +1,15 @@
 package org.neustupov.javadevinterviewbot.utils;
 
 import com.vdurmont.emoji.EmojiParser;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.experimental.FieldDefaults;
 
 /**
  * Эмодзи
  */
 @AllArgsConstructor
+@FieldDefaults(makeFinal=true, level = AccessLevel.PRIVATE)
 public enum Emojis {
 
   QUESTION(EmojiParser.parseToUnicode(":question:")),
@@ -21,7 +24,7 @@ public enum Emojis {
   /**
    * Название эмодзи
    */
-  private String emojiName;
+  String emojiName;
 
   /**
    * Возвращает название эмодзи

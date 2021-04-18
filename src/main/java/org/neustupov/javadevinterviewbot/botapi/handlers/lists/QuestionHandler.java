@@ -18,7 +18,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
  * Хэндлер отображения вопроса
  */
 @Component
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(makeFinal=true, level = AccessLevel.PRIVATE)
 public class QuestionHandler implements InputMessageHandler {
 
   /**

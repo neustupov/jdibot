@@ -15,7 +15,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
  * Обрабатывает колбеки кнопок уровней
  */
 @Component
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(makeFinal=true, level = AccessLevel.PRIVATE)
 public class LevelCallbacks implements Callback {
 
   /**

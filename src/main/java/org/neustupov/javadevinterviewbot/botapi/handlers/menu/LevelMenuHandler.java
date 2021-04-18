@@ -17,7 +17,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
  * Хендлер меню уровней
  */
 @Component
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(makeFinal=true, level = AccessLevel.PRIVATE)
 public class LevelMenuHandler implements InputMessageHandler {
 
   /**
